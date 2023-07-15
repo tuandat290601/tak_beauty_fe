@@ -1,0 +1,68 @@
+#header
+    background: var(--gradient-dark-theme)
+    .header
+        &-logo 
+            width: 100%
+        &-search
+            position: relative
+            width: 75%
+            margin: auto
+            &-box 
+                outline: 1px solid var(--dark)
+                border: .1rem solid #ccc 
+                border-radius: .2rem
+                &::placeholder
+                    font-size: .8rem
+            .btn
+                position: absolute
+                top: 0
+                right: 0
+                transform: translate(50%, -15%)
+                width: 3.5rem
+                height: 3.5rem
+                background: var(--dark)
+                border-radius: 50%
+                display: flex
+                justify-content: center
+                align-items: center
+                transition: .3s all ease
+                svg 
+                    color: white
+                    font-size: 1.5rem
+                &:hover
+                    -webkit-box-shadow: -2px -3px 37px -4px rgba(204,189,189,0.75)
+                    -moz-box-shadow: -2px -3px 37px -4px rgba(204,189,189,0.75)
+        &-user 
+            height: 100%
+            &-link
+                height: fit-content
+                display: flex
+                align-items: center
+                font-size: 1rem
+                padding: .1rem .5rem
+                font-weight: 600
+                font-weight: bold
+                color: var(--white) !important
+                &:hover
+                    color: var(--orange)
+                &:first-child
+                    border-right: .1rem solid var(--dark-brown)
+            &-cart 
+                position: relative
+                display: flex
+                align-items: center
+                a 
+                    font-size: 1.5rem
+                    color: var(--dark) !important
+                    border: none !important
+                    svg
+                        color: var(--white)
+                        transform: rotate(-10deg) 
+                span 
+                    position: absolute
+                    top: 0
+                    right: 0
+                    transform: translate(0, -50%)
+                    background: var(--beige)
+                    color: var(--dark)
+                    

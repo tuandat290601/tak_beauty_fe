@@ -1,0 +1,97 @@
+.product
+    cursor: pointer
+    background: white
+    transition: .3s all ease
+    &-item 
+        width: 100%
+        &-image 
+            position: relative
+            aspect-ratio: 1/1
+            img
+                width: 100%
+                object-fit: cover
+            span
+                position: absolute
+                top: 1rem
+                left: 1rem
+                background: var(--gradient-brown)
+                color: white
+                padding: .1rem .5rem
+            ul
+                position: absolute
+                top: 1rem
+                right: 1rem
+                display: flex
+                flex-direction: column
+                li
+                    margin-bottom: .5rem
+                    background: var(--grey)
+                    border-radius: .5rem
+                    width: 2rem
+                    height: 2rem
+                    display: flex
+                    justify-content: center
+                    align-items: center
+                    transition: .3s all ease
+                    cursor: pointer
+                    svg 
+                        stroke-width: .3
+                        transition: .3s all ease
+
+                    &:hover
+                        background: red
+                        svg
+                            color: white
+        &-subimages
+            width: 100%
+            display: flex
+            justify-content: center
+            div
+                margin: .5rem
+                width: 3rem
+                border: .1rem solid var(--grey)
+                aspect-ratio: 1/1
+                cursor: pointer
+                img
+                    width: 100%
+                    object-fit: contain
+        &-detail
+            width: 100%
+            background: var(--grey)
+            padding: 1.5rem 1rem
+            h2
+                font-size: .8rem
+                font-weight: 400
+                margin-bottom: 1rem
+                opacity: .8
+            h1
+                font-size: 1rem
+                font-weight: 400
+                letter-spacing: 1px
+                margin-bottom: 0
+            .price
+                color: red
+                font-weight: 500
+                font-size: 1.1rem
+                span
+                    color: #ccc
+                    text-decoration: line-through
+                    margin-left: 1rem
+                    font-size: 1rem
+                    font-weight: 400
+            .rating
+                display: flex
+                align-items: center
+                margin-top: -.3rem
+                span
+                    margin-left: .5rem
+                    margin-bottom: -.3rem
+                    font-size: .8rem
+            .buy
+                font-size: .8rem
+
+        a:hover 
+            color: inherit
+    &:hover
+        border-radius: 1rem
+        box-shadow: var(--bright-box-shadow)
