@@ -1,0 +1,148 @@
+#admin-menu {
+  width: 230px;
+  background-color: var(--menu-bg);
+  text-transform: capitalize;
+}
+#admin-menu-back {
+  position: fixed;
+  background-color: #263a53;
+  top: 0;
+  bottom: -120px;
+  width: 100%;
+}
+#admin-menu-wrap {
+  position: relative;
+  float: left;
+  z-index: 998;
+  padding-top: var(--header-height);
+  width: 230px;
+  background-color: var(--menu-bg);
+  text-transform: capitalize;
+
+  #admin-menu {
+    clear: left;
+    margin: 0 0 12px 0;
+    padding: 0 10px 0 10px;
+    list-style: none;
+
+    li {
+      padding-right: 0;
+      cursor: pointer;
+      margin: 3px 0 0;
+    }
+
+    li.menu-top {
+      border-radius: 5px;
+      min-height: 35px;
+      position: relative;
+
+      a.menu-top {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        padding: 0;
+        position: relative;
+        z-index: 1;
+      }
+      a.menu-top::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 100%;
+        background-color: transparent;
+        top: 0;
+        right: -20px;
+      }
+
+      .submenu {
+        list-style: none;
+        position: absolute;
+        top: -10px;
+        left: 220px;
+        word-wrap: break-word;
+        padding: 7px 0 8px;
+        z-index: 9999;
+        background-color: var(--menu-active-bg);
+        -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 0 5px 5px 0;
+        overflow: visible;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.4s ease;
+        min-width: 230px;
+        width: auto;
+
+        li {
+          padding: 0;
+          margin: 0;
+          overflow: hidden;
+          position: relative;
+        }
+        li:hover {
+          background-color: #263a53;
+        }
+
+        li > a {
+          padding-right: 16px;
+          padding-left: 14px;
+          -webkit-transition: all 0.1s ease-in-out;
+          transition: all 0.1s ease-in-out;
+        }
+
+        a {
+          color: rgba(240, 245, 250, 0.7);
+          font-size: 13px;
+          line-height: 2;
+          margin: 0;
+          padding: 6px 0;
+        }
+      }
+    }
+
+    li.menu-top:hover {
+      background-color: #232f3d;
+
+      .menu-name {
+        color: #12b9eb;
+      }
+
+      .submenu {
+        top: 0px;
+        opacity: 1;
+        overflow: hidden;
+        pointer-events: auto;
+      }
+    }
+
+    li.menu-top.has-current-submenu > a {
+      background: var(--menu-active-bg);
+      color: #fff;
+      height: var(--tab-height);
+    }
+
+    div.menu-image {
+      float: left;
+      width: 41px;
+      height: 41px;
+      line-height: 41px;
+      margin: 0;
+      text-align: center;
+
+      img {
+        padding: 9px 0 0;
+        opacity: 1;
+        max-width: 22px;
+        max-height: 22px;
+        padding-top: 0 !important;
+      }
+    }
+
+    div.menu-name {
+      padding: 12px 17px;
+      font-family: -apple-system, BlinkMacSystemFont, 'SFUFuturaBook',
+        'Segoe UI', sans-serif;
+      font-size: 14px;
+    }
+  }
+}

@@ -1,6 +1,6 @@
-import React from "react";
-import "./Footer.sass";
-import { Link } from "react-router-dom";
+import React from 'react';
+import './Footer.sass';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -23,9 +23,9 @@ const Footer = () => {
           <div className="col-6 col-md-4">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1841427352306!2d106.68778391021198!3d10.797204358766534!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528ce500cff0f%3A0xbbf71c8f52405d02!2zMjM4IFBoYW4gWMOtY2ggTG9uZywgUGjGsOG7nW5nIDcsIFBow7ogTmh14bqtbiwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1689440825875!5m2!1svi!2s"
-              width={"100%"}
-              style={{ aspectRatio: "1/1" }}
-              height={"auto"}
+              width={'100%'}
+              style={{ aspectRatio: '1/1' }}
+              height={'auto'}
               allowfullscreen=""
               loading="lazy"
               title="map"

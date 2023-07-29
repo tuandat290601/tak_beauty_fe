@@ -1,0 +1,30 @@
+.side-menu-footer {
+  position: fixed;
+  bottom: 0;
+  width: 230px;
+  background-color: var(--menu-bg);
+  z-index: 999;
+  box-shadow: 0 -2px 2px -2px rgba(0, 0, 0, 0.5);
+  display: table;
+
+  .account-info {
+    display: table-cell;
+  }
+
+  a {
+    display: block;
+    color: #fff;
+    padding: 10px 10px 10px 20px;
+
+    img {
+      height: 28px;
+      width: 28px;
+    }
+
+    span {
+      margin: 0 5px;
+      font-size: 13px;
+      position: relative;
+    }
+  }
+}
