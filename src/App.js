@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "react-datetime/css/react-datetime.css";
 
 import "./App.sass";
+import Course from "./pages/Course/Course";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/khoa-hoc" element={<Course />} />
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { BsCaretDownFill, BsList } from "react-icons/bs";
+import Dropdown from "react-multilevel-dropdown";
 
 import "./Navbar.sass";
-import Dropdown from "react-multilevel-dropdown";
 
 const NavItem = (props) => {
   const { title, path, isDropDown } = props;
@@ -24,7 +24,7 @@ const Navbar = () => {
     { title: "Sản phẩm", path: "/", isDropDown: true },
     { title: "Tin tức", path: "/" },
     { title: "Liên hệ", path: "/" },
-    { title: "Khóa học", path: "/" },
+    { title: "Khóa học", path: "/khoa-hoc" },
   ];
 
   const dropList = [
