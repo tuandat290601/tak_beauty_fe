@@ -27,14 +27,15 @@ const Footer = () => {
               style={{ aspectRatio: '1/1' }}
               height={'auto'}
               allowfullscreen=""
+
               loading="lazy"
               title="map"
-              referrerpolicy="no-referrer-when-downgrade"
+              referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
           <div className="col-6 col-md-4">
             <div
-              class="fb-page"
+              className="fb-page"
               data-href="https://www.facebook.com/profile.php?id=100054925261389"
               data-tabs="timeline"
               data-width=""
@@ -46,7 +47,7 @@ const Footer = () => {
             >
               <blockquote
                 cite="https://www.facebook.com/profile.php?id=100054925261389"
-                class="fb-xfbml-parse-ignore"
+                className="fb-xfbml-parse-ignore"
               >
                 <a href="https://www.facebook.com/profile.php?id=100054925261389">
                   CKwhite - Tổng Kho Sỉ Lẻ Filler Botox

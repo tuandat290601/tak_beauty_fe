@@ -9,6 +9,8 @@ import News from './News/News';
 import Feedback from './Feedback/Feedback';
 import Banner from './Banner/Banner';
 
+import "./Home.sass";
+
 const Home = () => {
   return (
     <div id="home">
