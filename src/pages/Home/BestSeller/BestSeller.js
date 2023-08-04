@@ -1,8 +1,8 @@
-import React from "react";
-import { ProductItem, SectionTitle } from "../../../components";
+import React from 'react';
+import { ProductItem, SectionTitle } from '../../../components';
 
-import "./BestSeller.sass";
-import { products } from "../../../helpers/data";
+import './BestSeller.sass';
+import { products } from '../../../helpers/data';
 
 const BestSeller = () => {
   return (
