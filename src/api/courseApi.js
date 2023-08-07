@@ -1,9 +1,10 @@
 import axiosClient from './axiosClient';
 
 const courseApi = {
-    getCourses: ({ data, signal }) => {
-        const url = '/courses';
-        return axiosClient.get(url, { query: data, signal });
+    getCourses: ({ payload, signal }) => {
+        const url = `/courses?currentPage=${payload.currentPage ?? 1}&pageSize=${payload.pageSize ?? 10
+            }&filters=${encodeURIComponent(payload.filters ?? "")}`
+        return axiosClient.get(url, { signal });
     },
 
     getCourseDetails: (id) => {
