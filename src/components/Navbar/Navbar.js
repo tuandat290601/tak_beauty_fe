@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BsCaretDownFill, BsList } from "react-icons/bs";
+import { BsList } from "react-icons/bs";
 import Dropdown from "react-multilevel-dropdown";
 
 import "./Navbar.sass";
 
 const NavItem = (props) => {
-  const { title, path, isDropDown } = props;
+  const { title, path } = props;
   return (
     <li className="navbar-item">
       <Link to={path}>
         {title}
-        {isDropDown && <BsCaretDownFill className="ms-1" />}
       </Link>
     </li>
   );
@@ -21,7 +20,7 @@ const Navbar = () => {
   const navList = [
     { title: "Trang chủ", path: "/" },
     { title: "Giới thiệu", path: "/" },
-    { title: "Sản phẩm", path: "/", isDropDown: true },
+    { title: "Sản phẩm", path: "/san-pham" },
     { title: "Tin tức", path: "/" },
     { title: "Liên hệ", path: "/" },
     { title: "Khóa học", path: "/khoa-hoc" },
