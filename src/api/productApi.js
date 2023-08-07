@@ -1,9 +1,10 @@
 import axiosClient from './axiosClient';
 
 const productApi = {
-    getProducts: ({ data, signal }) => {
-        const url = '/products';
-        return axiosClient.get(url, { query: data, signal });
+    getProducts: ({ payload, signal }) => {
+        const url = `/products?currentPage=${payload.currentPage ?? 1}&pageSize=${payload.pageSize ?? 10
+            }&filters=${encodeURIComponent(payload.filters ?? "")}`;
+        return axiosClient.get(url, { signal });
     },
 
     getProductDetails: (id) => {
