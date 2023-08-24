@@ -21,3 +21,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+typings
+dist
+openapitools.json
+src/api/.*
+src/api/docs
+src/api/test
+src/api/mocha.opts
+src/api/package.json 
+src/api/README.md
+src/api/git_push.sh
+.DS_Store
