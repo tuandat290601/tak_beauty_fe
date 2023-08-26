@@ -53,7 +53,7 @@ export const adminNavbar = [
     name: 'Sản phẩm',
     subMenu: [
       { name: 'Sản phẩm', path: '#' },
-      { name: 'danh mục', path: '#' },
+      { name: 'danh mục', path: 'products/products-categories' },
       { name: 'thuộc tính', path: '#' },
       { name: 'cài đặt', path: '#' },
     ],

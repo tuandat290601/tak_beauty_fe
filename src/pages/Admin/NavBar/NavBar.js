@@ -1,7 +1,7 @@
-import React from 'react';
-import './NavBar.scss';
-import { adminNavbar } from '../../../helpers/admin-data';
-import { Link } from 'react-router-dom';
+import React from "react";
+import "./NavBar.scss";
+import { adminNavbar } from "../../../helpers/admin-data";
+import { Link } from "react-router-dom";
 
 export const NavBar = () => {
   return (
@@ -29,7 +29,8 @@ export const NavBar = () => {
                     {item.subMenu.map((subItem, i) => {
                       return (
                         <li key={i}>
-                          <a href={subItem.path}>{subItem.name}</a>
+                          {/* <a href={subItem.path}>{subItem.name}</a> */}
+                          <Link to={subItem.path}>{subItem.name}</Link>
                         </li>
                       );
                     })}
