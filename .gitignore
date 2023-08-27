@@ -33,3 +33,5 @@ src/api/package.json
 src/api/README.md
 src/api/git_push.sh
 .DS_Store
+
+package-lock.json

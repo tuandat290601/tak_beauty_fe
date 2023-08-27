@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^3.3.0",
     "@openapitools/openapi-generator-cli": "^2.7.0",
     "@tanstack/react-query": "^4.32.6",
     "@testing-library/jest-dom": "^5.16.5",
@@ -16,7 +17,7 @@
     "react-countdown": "^2.3.5",
     "react-datetime": "^3.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.45.1",
+    "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
     "react-multilevel-dropdown": "^4.0.0",
     "react-player": "^2.12.0",
@@ -29,7 +30,8 @@
     "sass": "^1.63.6",
     "slick-carousel": "^1.8.1",
     "star-rating-react-component": "^3.2.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "gen-api": "rm -rf src/api && openapi-generator-cli generate -i ./swagger.json -g javascript -o src/api",
