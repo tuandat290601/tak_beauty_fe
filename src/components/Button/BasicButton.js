@@ -10,7 +10,7 @@ const BasicButton = ({
   return (
     <button
       type={type}
-      className={`bg-green-400 text-white py-2 px-3 rounded-md flex items-center gap-x-2 mr-2 ${className}`}
+      className={`bg-green-400 text-white py-2 px-3 rounded-md flex items-center gap-x-2 ${className}`}
       {...props}
     >
       {icon}
