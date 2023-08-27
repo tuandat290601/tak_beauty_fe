@@ -7,6 +7,7 @@ import CustomLink from "./CustomLink/CustomLink";
 import { NextButton, PrevButton } from "./SlickButton/SlickButton";
 import BasicTextBox from "./Input/BasicTextBox";
 import ImageTextBox from "./Input/ImageTextBox";
+import BasicDropdown from "./Dropdown/BasicDropdown";
 
 export {
   Header,
@@ -19,4 +20,5 @@ export {
   CustomLink,
   BasicTextBox,
   ImageTextBox,
+  BasicDropdown,
 };

@@ -47,7 +47,7 @@ const ImageTextBox = ({
         <BasicButton
           type="button"
           title={btnTitle}
-          className={`border rounded-l-none rounded-md text-white bg-blue-500 !p-2 min-w-[90px] ${btnClassName}`}
+          className={`border rounded-l-none rounded-md blue-btn !p-2 min-w-[90px] ${btnClassName}`}
           onClick={onBtnClick}
           icon={btnIcon}
         />
