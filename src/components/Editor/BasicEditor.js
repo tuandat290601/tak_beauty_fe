@@ -8,6 +8,7 @@ export const BasicEditor = ({
   theme = "snow",
   handleChange = (html) => {},
   value,
+  title,
   className = "",
   children,
   disabled = false,
@@ -15,7 +16,10 @@ export const BasicEditor = ({
   ...props
 }) => {
   return (
-    <>
+    <div>
+      {title && (
+        <h3 className="font-medium mb-1 text-black text-sm ">{title}</h3>
+      )}
       <ReactQuill
         ref={basicEditorRef}
         theme={theme}
@@ -33,7 +37,7 @@ export const BasicEditor = ({
         }}
         {...props}
       />
-    </>
+    </div>
   );
 };
 

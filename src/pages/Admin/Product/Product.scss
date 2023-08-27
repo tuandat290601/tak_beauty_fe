@@ -17,3 +17,22 @@
     padding: 10px;
   }
 }
+.btn:hover {
+  box-shadow: 0 0 20px 0 rgba(55, 42, 70, 0.5);
+  transition: all 0.3s;
+}
+.nav-tabs {
+  background-color: #f7fafc !important;
+}
+.nav-link {
+  @apply font-bold;
+  color: #8491a4 !important;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #e7eaef !important;
+}
+.active {
+  @apply rounded-md rounded-b-none;
+  border-bottom: 0 !important;
+  background: white !important;
+}
