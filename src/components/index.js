@@ -5,6 +5,9 @@ import ProductItem from "./ProductItem/ProductItem";
 import Footer from "./Footer/Footer";
 import CustomLink from "./CustomLink/CustomLink";
 import { NextButton, PrevButton } from "./SlickButton/SlickButton";
+import BasicTextBox from "./Input/BasicTextBox";
+import ImageTextBox from "./Input/ImageTextBox";
+
 export {
   Header,
   Navbar,
@@ -14,4 +17,6 @@ export {
   ProductItem,
   Footer,
   CustomLink,
+  BasicTextBox,
+  ImageTextBox,
 };

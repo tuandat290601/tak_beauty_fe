@@ -1,14 +1,28 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Course, Detail, Home, Product, Admin } from "./pages";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-datetime/css/react-datetime.css";
 import "./App.sass";
 import StandardLayout from "./components/Layout/StandardLayout";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) => console.error(`Something went wrong: ${error.message}`),
+  }),
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+      staleTime: 4 * (60 * 1000), // 4 minutes
+    },
+  },
+});
 const App = () => {
   return (
     <div id="App">
