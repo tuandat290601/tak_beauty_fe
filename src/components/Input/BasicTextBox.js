@@ -29,7 +29,7 @@ const BasicTextBox = ({
         type === "hidden" ? "hidden" : "flex"
       } flex-col text-slate-400 ${wrapperClass}`}
     >
-      <label className={`font-medium text-black text-sm ${labelClass}`}>
+      <label className={`font-medium text-black mb-1 text-sm ${labelClass}`}>
         {label}
       </label>
       {type === "textArea" ? (

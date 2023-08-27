@@ -1,3 +1,10 @@
 .ql-container {
   word-break: break-word;
 }
+
+.quill-summary .ql-container {
+  min-height: 80px;
+}
+.quill-content .ql-container {
+  min-height: 225px;
+}

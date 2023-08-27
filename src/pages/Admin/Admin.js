@@ -17,6 +17,7 @@ import ServicePack from "./ServicePack/ServicePack";
 import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
+import AddProduct from "./Product/add/AddProduct";
 
 const Admin = () => {
   return (
@@ -32,6 +33,7 @@ const Admin = () => {
           <Route path="/article" element={<Article />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/products/add" element={<AddProduct />} />
           <Route
             path="/products/products-categories"
             element={<ProductsCategories />}
