@@ -2,15 +2,13 @@ import React from "react";
 
 const BasicCheckbox = ({ children, ...props }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-center">
       <input
         type="checkbox"
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+        className="scale-150 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
         {...props}
       />
-      <label for="checkbox-table-1" className="sr-only">
-        {children}
-      </label>
+      <label className="sr-only">{children}</label>
     </div>
   );
 };
