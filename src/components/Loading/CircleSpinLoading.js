@@ -1,11 +1,11 @@
 import React from "react";
 
-const CircleSpinLoading = () => {
+const CircleSpinLoading = ({ className = "" }) => {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className="w-8 h-8 mr-2 text-slate-300 animate-spin fill-blue-600"
+        className={`w-8 h-8 text-slate-300 animate-spin fill-blue-600 ${className}`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

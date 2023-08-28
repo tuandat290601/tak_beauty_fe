@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "react-datetime/css/react-datetime.css";
 import "./App.sass";
 import StandardLayout from "./components/Layout/StandardLayout";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -27,6 +28,7 @@ const App = () => {
   return (
     <div id="App">
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
           <Suspense fallback={"Loading..."}>
             <Routes>

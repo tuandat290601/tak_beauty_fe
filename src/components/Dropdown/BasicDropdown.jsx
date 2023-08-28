@@ -23,11 +23,17 @@ const BasicDropdown = ({
   isAscDefault = true,
   loading = false,
   isSearch = false,
+  itemClass = "",
 }) => {
   const [isAsc, setIsAsc] = useState(isAscDefault);
   const [search, setSearch] = useState("");
   const { show, setShow, nodeRef } = useClickOutside();
   const handleClick = () => {
+    if (disabled) {
+      setShow(false);
+      return;
+    }
+
     setShow(!show);
   };
 
@@ -38,7 +44,7 @@ const BasicDropdown = ({
       className={`relative flex items-center border w-full border-gray-200 rounded-lg cursor-pointer 
       ${label ? "bg-inherit" : ""} 
       ${className}
-      ${!disabled ? "pointer-events-auto" : "pointer-events-none"}`}
+      ${!disabled ? "pointer-events-auto" : "!cursor-not-allowed"}`}
     >
       {label ? (
         <label
@@ -53,7 +59,7 @@ const BasicDropdown = ({
             {title} {isSort && (isAsc ? "tăng dần" : "giảm dần")}
           </span>
         </Tooltip> */}
-        <span className={`text-one-line ${classNameTitle}`}>
+        <span className={`text-one-line truncate ${classNameTitle}`}>
           {title} {isSort && (isAsc ? "tăng dần" : "giảm dần")}
         </span>
         {!isSort ? (
@@ -147,9 +153,10 @@ const BasicDropdown = ({
                   setShow(false);
                   item?.onClick(isAsc);
                 }}
-                className={`p-2 text-sm text-one-line hover:bg-gray-100 border-b border-gray-200 ${
-                  item?.title === title && `font-semibold ${highlightClass}`
-                } last:border-none`}
+                className={`p-2 text-sm text-one-line hover:bg-gray-100 border-b border-gray-200
+                ${item?.title === title && `font-semibold ${highlightClass}`}
+                ${itemClass}
+                last:border-none`}
               >
                 {item?.title}
               </div>

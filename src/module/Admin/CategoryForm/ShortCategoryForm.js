@@ -27,7 +27,10 @@ const ShortCategoryForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-[40%] bg-white p-3">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-[40%] bg-white p-3 rounded-md"
+    >
       <hr className="text-slate-400" />
 
       {/* Fields */}

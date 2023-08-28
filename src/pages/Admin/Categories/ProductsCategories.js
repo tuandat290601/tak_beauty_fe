@@ -27,7 +27,7 @@ const ProductsCategories = () => {
       </HeaderMainPage>
 
       {/* Content */}
-      <div className="flex gap-x-4 ui-layout">
+      <div className="flex gap-x-4 ui-layout items-start">
         {/* Category form */}
         <ShortCategoryForm />
 

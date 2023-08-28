@@ -1,124 +1,119 @@
 import React from "react";
 import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
 import BasicCheckbox from "../../../../components/Checkbox/BasicCheckbox";
+import { Link, useNavigate } from "react-router-dom";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import BasicButton from "../../../../components/Button/BasicButton";
 
 const CategoryTable = ({ isLoading, categoryList }) => {
-  console.log(
-    "🚀 ~ file: CategoryTable.js:5 ~ CategoryTable ~ categoryList:",
-    categoryList
-  );
+  const titleClass = "";
+  const actionClass = "w-[130px]";
+  const checkboxClass = "p-3 w-12";
+
   const headerList = [
     {
       title: "Tiêu đề",
-    },
-    {
-      title: "Nổi bật",
-    },
-    {
-      title: "Thứ tự",
-    },
-    {
-      title: "Hiển thị",
+      className: titleClass,
     },
     {
       title: "Hành động",
+      className: actionClass,
     },
   ];
 
-  return (
-    <>
-      {isLoading ? (
-        <CircleSpinLoading />
-      ) : (
-        <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100">
-            <tr>
-              <th scope="col" className="px-4 py-3">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label for="checkbox-all" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              {headerList.map((item) => (
-                <th
-                  key={item.title}
-                  scope="col"
-                  className="px-6 py-3 uppercase"
-                >
-                  {item.title}
-                </th>
-              ))}
-            </tr>
-          </thead>
+  function getCategoryName(categoryId) {
+    return categoryList?.responseData?.rows?.find(
+      (item) => item.id === categoryId
+    )?.title;
+  }
 
+  const navigate = useNavigate();
+
+  return (
+    <div className="relative overflow-x-auto sm:rounded-b-md">
+      <table className="w-full text-sm text-left text-gray-500 table-fixed">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-300">
+          <tr>
+            <th scope="col" className={checkboxClass}>
+              <BasicCheckbox />
+            </th>
+            {headerList.map((item) => (
+              <th
+                key={item.title}
+                scope="col"
+                className={`px-6 py-3 uppercase ${item.className}`}
+              >
+                {item.title}
+              </th>
+            ))}
+          </tr>
+        </thead>
+
+        {isLoading ? null : (
           <tbody>
-            <tr className="bg-white border-b hover:bg-gray-50">
-              <td className="w-4 p-4">
-                <BasicCheckbox />
-              </td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                Apple MacBook Pro 17
-              </th>
-              <td className="px-6 py-4">
-                <BasicCheckbox />
-              </td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">
-                <BasicCheckbox />
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-2"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label for="checkbox-table-2" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">White</td>
-              <td className="px-6 py-4">Laptop PC</td>
-              <td className="px-6 py-4">$1999</td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-              </td>
-            </tr>
+            {categoryList?.responseData?.count > 0
+              ? categoryList?.responseData?.rows?.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:!bg-gray-200 odd:!bg-gray-100"
+                  >
+                    <td className={checkboxClass}>
+                      <BasicCheckbox />
+                    </td>
+                    <td className={`p-3 text-gray-900 ${titleClass}`}>
+                      <div className="flex gap-x-1">
+                        {item.img ? (
+                          <img
+                            src={item.img}
+                            alt="category-img"
+                            className="h-[30px] object-cover"
+                          />
+                        ) : null}
+
+                        <p className="truncate">
+                          {item.parentId
+                            ? `${getCategoryName(item.parentId)} - 
+                                ${item.title}`
+                            : item.title}
+                        </p>
+                      </div>
+                    </td>
+                    <td className={`p-3 w-4 ${actionClass}`}>
+                      <div className="flex gap-x-1">
+                        <BasicButton
+                          icon={<FaPencilAlt className="w-4 h-4" />}
+                          className="border !p-2 blue-btn"
+                          onClick={() =>
+                            navigate(
+                              `products/products-categories/${item.id}/edit`
+                            )
+                          }
+                        />
+                        <BasicButton
+                          icon={<FaTrash className="w-4 h-4" />}
+                          className="border !p-2 red-btn"
+                          onClick={() =>
+                            navigate(
+                              `products/products-categories/${item.id}/edit`
+                            )
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              : "Empty"}
           </tbody>
-        </table>
-      )}
-    </>
+        )}
+      </table>
+
+      {/* Loading table */}
+      {isLoading ? (
+        <div className="bg-gray-100 flex justify-center items-center py-20">
+          <CircleSpinLoading className="!w-20 !h-20" />
+        </div>
+      ) : null}
+    </div>
   );
 };
 
