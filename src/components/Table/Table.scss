@@ -1,0 +1,30 @@
+.table-style {
+  /* overflow-x: auto; */
+  overflow-y: auto;
+  max-height: 650px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: rgb(0 0 0 / 15%) 0px 1px 4px 0px;
+  table {
+    width: 100%;
+  }
+  th,
+  td {
+    vertical-align: middle;
+  }
+  th {
+    padding: 10px 14px;
+    font-weight: 500;
+    font-size: 11px;
+    color: #575962;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background-color: #e5e5e6;
+  }
+  td {
+    padding: 10px 10px;
+  }
+}
