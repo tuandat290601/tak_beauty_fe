@@ -1,11 +1,11 @@
-import axiosFormData from './axiosFormData'
+import axiosFormData from "./axiosFormData";
 
 const fileApi = {
-    uploadFile: (file) => {
-        const url = "/";
+  uploadFile: (file) => {
+    const url = "/files";
 
-        return axiosFormData.post(url, file)
-    }
-}
+    return axiosFormData.post(url, file);
+  },
+};
 
-export default fileApi
+export default fileApi;

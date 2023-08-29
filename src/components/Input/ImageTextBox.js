@@ -1,58 +1,74 @@
-import React from "react";
-import { useController } from "react-hook-form";
-import BasicButton from "../Button/BasicButton";
-
+import React, { useState } from "react";
+import ImageIcon from "@mui/icons-material/Image";
+import fileApi from "../../api/file";
 const ImageTextBox = ({
-  name = "",
-  defaultValue = "",
-  type = "text",
-  label,
-  control,
-  errMsg = null,
-  className = "",
-  labelClass = "",
-  wrapperClass = "",
-  hideErrMsg = false,
-  btnTitle = "Chọn file",
-  onBtnClick = () => {},
-  btnClassName = "",
-  btnIcon = <></>,
+  name = "upload",
+  setPathName = () => {},
   ...props
 }) => {
-  const { field } = useController({
-    control,
-    name,
-    defaultValue,
-  });
-  const errBorderClass = "!border-red-600";
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const onSubmit = async () => {
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+    // const auth = {
+    //   ...JSON.parse(sessionStorage.getItem(Config.storageKey.auth)),
+    // };
+    // const res = await axios.post("/files", formData, {
+    //   baseURL: Config.apiConfig.endPoint,
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     Authorization: `Bearer ${auth.token}`,
+    //   },
+    // });
+    const res = await fileApi.uploadFile(formData);
+    if ((res.status = "success")) {
+      const { responseData } = res;
+      //save path
+      setPathName(responseData.path);
+    } else {
+      return setPathName("");
+    }
+  };
 
   return (
-    <div
-      className={`${
-        type === "hidden" ? "hidden" : "flex"
-      } flex-col text-slate-400 ${wrapperClass}`}
-    >
-      <label className={`font-medium text-black text-sm ${labelClass}`}>
-        {label}
-      </label>
-      <div className="flex">
+    <div>
+      <div className="flex gap-1 items-center">
         <input
-          type={type}
-          className={`focus:ring-0 rounded-md p-2 w-[80%] border !border-r-0 rounded-r-none flex-1
-          ${className}
-          ${errMsg ? errBorderClass : "border-slate-400"}`}
-          {...props}
-          {...field}
+          type="text"
+          className="text-sm focus:ring-0 border bg-white rounded-md p-2 text-black w-full"
+          disabled
+          value={selectedImage?.name || ""}
+          title={selectedImage?.name || ""}
         />
-        <BasicButton
-          type="button"
-          title={btnTitle}
-          className={`border rounded-l-none rounded-md blue-btn !p-2 min-w-[90px] ${btnClassName}`}
-          onClick={onBtnClick}
-          icon={btnIcon}
-        />
+        <label
+          htmlFor={name}
+          className="w-32 bg-blue-500 text-white text-xs h-10 flex items-center rounded-md gap-1 justify-center hover:opacity-75 cursor-pointer"
+        >
+          <ImageIcon className="w-[12px] h-[12px] text-white  " />
+          Chọn ảnh
+        </label>
       </div>
-      {!hideErrMsg ? <p className="text-red-600 mt-2">{errMsg}</p> : null}
+      <input
+        id={name}
+        className="hidden"
+        type="file"
+        name="myImage"
+        onChange={(event) => {
+          console.log(event.target.files[0]);
+          setSelectedImage(event.target.files[0]);
+        }}
+      />
+      {selectedImage && (
+        <div className="my-2">
+          <img
+            alt="not found"
+            className="object-contain max-w-36 max-h-36 rounded-md"
+            src={URL.createObjectURL(selectedImage)}
+          />
+        </div>
+      )}
+      <button onClick={onSubmit}>Test Upload Now</button>
     </div>
   );
 };
