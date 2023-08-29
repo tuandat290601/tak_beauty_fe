@@ -6,6 +6,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import "./Header.sass";
 import Navbar from "../Navbar/Navbar";
 import CustomLink from "../CustomLink/CustomLink";
+import { PAGE_PATH } from "../../configuration/routeConfig";
 
 const Header = () => {
   const { register, handleSubmit } = useForm();
@@ -40,7 +41,11 @@ const Header = () => {
           <div className="col-3">
             <div className="d-flex justify-content-end align-items-center header-user">
               <CustomLink path="/" text="Đăng ký" styleClass="py-2 px-3 me-2" />
-              <CustomLink path="/" text="Đăng nhập" styleClass="py-2 px-3" />
+              <CustomLink
+                path={PAGE_PATH.LOGIN}
+                text="Đăng nhập"
+                styleClass="py-2 px-3"
+              />
               <div className="header-user-cart">
                 <Link to="cart" className="header-user-link">
                   <FaCartShopping />

@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Course, Detail, Home, Product, Admin } from "./pages";
+import { Course, Detail, Home, Product, Admin, Login } from "./pages";
 import {
   QueryCache,
   QueryClient,
@@ -40,6 +40,7 @@ const App = () => {
                 </Route>
               </Route>
               <Route path="/admin/*" element={<Admin />} />
+              <Route path="/users/login" element={<Login />} />
             </Routes>
           </Suspense>
         </BrowserRouter>
