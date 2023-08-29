@@ -14,122 +14,98 @@ import Rating from "@mui/material/Rating";
 import useHover from "../../../hooks/useHover";
 import { BasicTag } from "../../../components/Tag/BasicTag";
 import BasicPagination from "../../../components/Pagination/BasicPagination";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import {
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../../api/productApi";
 import { useQuery } from "@tanstack/react-query";
 import Config from "../../../configuration";
+import { categoryApi } from "../../../api";
+import useCategories from "../../../hooks/Categories/useCategories";
+import useMenu from "../../../hooks/useMenu";
 const ITEMS_PER_PAGE = 10;
+const pageSizeOption = [
+  { size: 10 },
+  { size: 20 },
+  { size: 40 },
+  { size: 50 },
+  { size: 100 },
+];
+const ACTION = {
+  DELETE: 1,
+};
+const actions = [
+  {
+    value: ACTION.DELETE,
+    icon: <FaTrash></FaTrash>,
+    title: "Xóa sản phẩm",
+  },
+];
 export const ProductManagement = () => {
-  const listCategory = [
-    { value: "1", label: "Bóng đá" },
-    { value: "2", label: "Giày thể thao" },
-    { value: "3", label: "Áo quần" },
-  ];
-  const listCriteria = [
-    { value: "1", label: "Yêu thích" },
-    { value: "2", label: "Bán chạy" },
-    { value: "3", label: "Nổi bật" },
-  ];
-  const listItem = [
-    {
-      id: 1,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 2,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 3,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-  ];
+  // const listCriteria = [
+  //   { value: "1", label: "Yêu thích" },
+  //   { value: "2", label: "Bán chạy" },
+  //   { value: "3", label: "Nổi bật" },
+  // ];
   const navigate = useNavigate();
+  const {
+    anchorEl: anchorElActions,
+    handleCloseMenu: handleClosePopupActionsMenu,
+    handleOpenMenu: onShowActions,
+  } = useMenu();
   const [searchKey, setSearchKey] = useState("");
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("1");
-  const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("2");
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("");
+  // const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("");
   const [pageCount, setPageCount] = useState(5);
+  const [pageSize, setPageSize] = useState(pageSizeOption[0]);
   const [currentPage, setCurrentPage] = useState(1);
   const [listProduct, setListProduct] = useState([]);
-  const [checked, setChecked] = React.useState(
-    Array(listProduct.length).fill(false)
-  );
+  const [listCategories, setListCategories] = useState([]);
+  const [productQueries, setProductQueries] = useState({
+    currentPage: 1,
+    pageSize: pageSize,
+    filters: "",
+    sortField: null,
+    sortOrder: null,
+  });
+  const [checked, setChecked] = React.useState([]);
+  const onMenuActionSelect = (action) => {
+    switch (action) {
+      case ACTION.DELETE:
+        console.log("delete");
+        break;
+      default:
+        break;
+    }
+  };
   const handlePageClick = (event) => {};
+  const handleSetPageSize = (item) => {
+    setPageSize(item.size);
+    setProductQueries({
+      ...productQueries,
+      pageSize: item.size,
+    });
+  };
+  const handleSearchWithFilter = () => {
+    console.log(searchKey + ", " + selectedCategoryFilter);
+    setProductQueries({
+      ...productQueries,
+      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter}`,
+    });
+  };
   const handleOnChangeSearchKey = (e) => {
     setSearchKey(e.target.value);
   };
   const handleCheckAll = (event) => {
+    console.log("handleCheckAll");
     if (checked.every((item) => item === true)) {
       setChecked(Array(listProduct.length).fill(false));
     } else if (
@@ -150,30 +126,35 @@ export const ProductManagement = () => {
   const handleSelectCategoryFilter = (e) => {
     setSelectedCategoryFilter(e.target.value);
   };
-  const handleSelectCriteriaFilter = (e) => {
-    setSelectedCriteriaFilter(e.target.value);
-  };
-  const [productQueries, setProductQueries] = useState({
-    currentPage: 1,
-    pageSize: 10,
-    filters: "categoryId==49a30440-cc1a-4c0b-bda9-fd609d397f3d",
-    sortField: null,
-    sortOrder: null,
-  });
+  // const handleSelectCriteriaFilter = (e) => {
+  //   setSelectedCriteriaFilter(e.target.value);
+  // };
   const { data, isLoading, error, isError, isSuccess } = useQuery({
-    queryKey: ["getProducts"],
+    queryKey: ["getProducts", productQueries],
     queryFn: async ({ signal }) => {
       return await productApi.getProducts({ payload: productQueries, signal });
     },
   });
+  const {
+    categoryList,
+    tempFilterCategory,
+    createCategoryListDropdown,
+    isLoading: categoriesIsLoading,
+    isSuccess: categoriesIsSuccess,
+  } = useCategories({});
   useEffect(() => {
     const fetchData = async () => {
-      // const res = await productApi.getProducts({});
+      // const res = await categoryApi.getCategories();
+      if (categoriesIsSuccess) {
+        console.log(categoryList?.responseData?.rows);
+        categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+        setListCategories(categoryList?.responseData?.rows);
+      }
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);
         setCurrentPage(data.responseData.currentPage);
         setListProduct(data.responseData.rows);
-        console.log(data.responseData);
+        setChecked(Array(data.responseData.rows.length).fill(false));
       }
     };
     fetchData();
@@ -207,20 +188,53 @@ export const ProductManagement = () => {
                     <div className="flex gap-3">
                       <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
-                          10
+                          {listProduct.length > 10 ? "10+" : listProduct.length}
                         </div>
                         <BasicIconButton className="!bg-blue-500 border-none">
                           <MdEdit color="white" size={20}></MdEdit>
                         </BasicIconButton>
                       </div>
-                      <div className="relative">
+                      {checked?.length > 0 &&
+                        checked.some((item) => item === true) && (
+                          <BasicButton
+                            onClick={(e) => onShowActions(e)}
+                            className="!bg-green-400 border-none text-white h-fit"
+                            title="Thao tác"
+                          ></BasicButton>
+                        )}
+                      <Menu
+                        anchorEl={anchorElActions}
+                        id="account-menu"
+                        open={Boolean(anchorElActions)}
+                        onClose={handleClosePopupActionsMenu}
+                        keepMounted
+                        onClick={handleClosePopupActionsMenu}
+                      >
+                        {actions.map((item, index) => (
+                          <div key={item?.value}>
+                            <MenuItem
+                              onClick={() => {
+                                handleClosePopupActionsMenu();
+                                onMenuActionSelect(item?.value);
+                              }}
+                            >
+                              <ListItemIcon>{item?.icon}</ListItemIcon>
+                              {item?.title}
+                            </MenuItem>
+                            {index !== actions.length - 1 && (
+                              <Divider></Divider>
+                            )}
+                          </div>
+                        ))}
+                      </Menu>
+                      {/* <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
                           10
                         </div>
                         <BasicIconButton>
                           <FaTrash size={20}></FaTrash>
                         </BasicIconButton>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="flex gap-1">
                       <input
@@ -230,20 +244,18 @@ export const ProductManagement = () => {
                         placeholder="Từ khóa..."
                       ></input>
                       <TableDropdown
-                        value={selectedCategoryFilter}
-                        onChange={(e) => handleSelectCategoryFilter(e)}
-                        dropdownItems={listCategory}
+                        value={selectedCategoryFilter.title}
+                        onChange={handleSelectCategoryFilter}
+                        dropdownItems={listCategories}
                       ></TableDropdown>
-                      <TableDropdown
+                      {/* <TableDropdown
                         value={selectedCriteriaFilter}
                         onChange={(e) => handleSelectCriteriaFilter(e)}
                         dropdownItems={listCriteria}
-                      ></TableDropdown>
+                      ></TableDropdown> */}
                       <BasicIconButton
                         handleOnClick={() => {
-                          console.log(
-                            searchKey + ", " + selectedCategoryFilter
-                          );
+                          handleSearchWithFilter();
                         }}
                       >
                         <BsSearch size={14}></BsSearch>
@@ -259,7 +271,11 @@ export const ProductManagement = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={checked.every((item) => item === true)}
+                        checked={
+                          (checked?.length > 0 &&
+                            checked?.every((item) => item === true)) ||
+                          false
+                        }
                         indeterminate={
                           checked.some((item) => item === true) &&
                           !checked.every((item) => item === true)
@@ -282,7 +298,7 @@ export const ProductManagement = () => {
                 <TableItem
                   key={item.id}
                   product={item}
-                  checked={checked[index]}
+                  checked={checked[index] || false}
                   handleCheck={handleCheckItem}
                   index={index}
                   className={`${index % 2 === 0 ? "bg-gray-100" : ""}`}
@@ -294,11 +310,17 @@ export const ProductManagement = () => {
           <div className="mt-2 flex gap-2 justify-end items-center">
             <span className="text-sm">Số lượng sản phẩm/ trang</span>
             <div className="flex gap-1">
-              <BasicIconButton>10</BasicIconButton>
-              <BasicIconButton>20</BasicIconButton>
-              <BasicIconButton>40</BasicIconButton>
-              <BasicIconButton>50</BasicIconButton>
-              <BasicIconButton>100</BasicIconButton>
+              {pageSizeOption.map((item) => (
+                <BasicIconButton
+                  key={item.size}
+                  className={`${
+                    pageSize === item.size ? "!bg-blue-500 text-white" : ""
+                  } `}
+                  onClick={() => handleSetPageSize(item)}
+                >
+                  {item.size}
+                </BasicIconButton>
+              ))}
             </div>
             {pageCount > 1 && (
               <BasicPagination

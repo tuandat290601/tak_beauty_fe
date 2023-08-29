@@ -13,8 +13,8 @@ export const TableDropdown = ({
       {...props}
     >
       {dropdownItems.map((item) => (
-        <option key={item.value} value={item.value}>
-          {item.label}
+        <option key={item.id} value={item.id}>
+          {item.title}
         </option>
       ))}
     </select>

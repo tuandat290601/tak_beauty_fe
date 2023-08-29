@@ -16,7 +16,11 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     React.useState(defCategory);
 
   // Fetch
-  const { data: categoryList, isLoading } = useQuery({
+  const {
+    data: categoryList,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: reactQueryKey.GET_CATEGORIES,
     queryFn: async () => await categoryApi.getCategories(),
   });
@@ -39,6 +43,7 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     createCategoryListDropdown,
     categoryList,
     isLoading,
+    isSuccess,
   };
 };
 
