@@ -18,7 +18,7 @@ import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
 import AddProduct from "./Product/add/AddProduct";
-import { ProductManagement } from "./CourseManagement/ProductManagement";
+import { ProductManagement } from "./ProductManagement/ProductManagement";
 
 const Admin = () => {
   return (

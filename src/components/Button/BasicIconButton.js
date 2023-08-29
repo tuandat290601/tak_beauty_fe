@@ -1,4 +1,4 @@
-const IconButton = ({
+const BasicIconButton = ({
   children,
   handleOnClick = () => {},
   className = "",
@@ -18,4 +18,4 @@ const IconButton = ({
     </div>
   );
 };
-export default IconButton;
+export default BasicIconButton;

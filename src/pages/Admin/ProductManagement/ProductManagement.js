@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./ProductManagement.scss";
 import HeaderMainPage from "../Header/HeaderMainPage";
 import BasicButton from "../../../components/Button/BasicButton";
@@ -8,13 +8,15 @@ import { FaTrash } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
 import { AiFillEye, AiOutlineEye } from "react-icons/ai";
 import Table from "../../../components/Table/Table";
-import IconButton from "../../../components/Button/IconButton";
+import BasicIconButton from "../../../components/Button/BasicIconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Rating from "@mui/material/Rating";
 import useHover from "../../../hooks/useHover";
 import { BasicTag } from "../../../components/Tag/BasicTag";
 import BasicPagination from "../../../components/Pagination/BasicPagination";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
+import { BasicDropdown } from "../../../components/Dropdown/BasicDropdown";
 const ITEMS_PER_PAGE = 10;
 export const ProductManagement = () => {
   const listCategory = [
@@ -46,6 +48,54 @@ export const ProductManagement = () => {
     },
     {
       id: 3,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
+      name: "Sản phẩm test",
+      rating: 4.5,
+      ratingCount: 5,
+      category: "Thể thao",
+      price: 12000,
+    },
+    {
+      id: 4,
       name: "Sản phẩm test",
       rating: 4.5,
       ratingCount: 5,
@@ -124,17 +174,17 @@ export const ProductManagement = () => {
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
                           10
                         </div>
-                        <IconButton className="!bg-blue-500 border-none">
+                        <BasicIconButton className="!bg-blue-500 border-none">
                           <MdEdit color="white" size={20}></MdEdit>
-                        </IconButton>
+                        </BasicIconButton>
                       </div>
                       <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
                           10
                         </div>
-                        <IconButton>
+                        <BasicIconButton>
                           <FaTrash size={20}></FaTrash>
-                        </IconButton>
+                        </BasicIconButton>
                       </div>
                     </div>
                     <div className="flex gap-1">
@@ -154,7 +204,7 @@ export const ProductManagement = () => {
                         onChange={(e) => handleSelectCriteriaFilter(e)}
                         dropdownItems={listCriteria}
                       ></BasicDropdown>
-                      <IconButton
+                      <BasicIconButton
                         handleOnClick={() => {
                           console.log(
                             searchKey + ", " + selectedCategoryFilter
@@ -162,7 +212,7 @@ export const ProductManagement = () => {
                         }}
                       >
                         <BsSearch size={14}></BsSearch>
-                      </IconButton>
+                      </BasicIconButton>
                     </div>
                   </div>
                 </td>
@@ -208,11 +258,11 @@ export const ProductManagement = () => {
           <div className="mt-2 flex gap-2 justify-end items-center">
             <span className="text-sm">Số lượng sản phẩm/ trang</span>
             <div className="flex gap-1">
-              <IconButton>10</IconButton>
-              <IconButton>20</IconButton>
-              <IconButton>40</IconButton>
-              <IconButton>50</IconButton>
-              <IconButton>100</IconButton>
+              <BasicIconButton>10</BasicIconButton>
+              <BasicIconButton>20</BasicIconButton>
+              <BasicIconButton>40</BasicIconButton>
+              <BasicIconButton>50</BasicIconButton>
+              <BasicIconButton>100</BasicIconButton>
             </div>
             {pageCount > 1 && (
               <BasicPagination
@@ -287,9 +337,9 @@ const TableItem = ({ index, className, checked, handleCheck }) => {
       <td>
         <div className="flex gap-2">
           {/*Origin price*/}
-          <h4 className="editable-text text-center">12.000</h4>
+          <BasicEditablePopup initValue={120000}></BasicEditablePopup>
           {/*Discount price*/}
-          <h4 className="editable-text text-center">12.000</h4>
+          <BasicEditablePopup initValue={100000}></BasicEditablePopup>
         </div>
       </td>
       <td>
@@ -300,56 +350,33 @@ const TableItem = ({ index, className, checked, handleCheck }) => {
         </div>
       </td>
       <td>
-        <h4 className="editable-text text-center">0</h4>
+        <BasicEditablePopup initValue={0}></BasicEditablePopup>
       </td>
       <td>
         <div className="flex gap-1">
           <Tooltip title="Ẩn sản phẩm" arrow placement="top">
             <div>
-              <IconButton className="!bg-green-400">
+              <BasicIconButton className="!bg-green-400">
                 <AiOutlineEye color="white"></AiOutlineEye>
-              </IconButton>
+              </BasicIconButton>
             </div>
           </Tooltip>
           <Tooltip title="Cập nhật" arrow placement="top">
             <div>
-              <IconButton className="!bg-blue-500">
+              <BasicIconButton className="!bg-blue-500">
                 <MdEdit color="white"></MdEdit>
-              </IconButton>
+              </BasicIconButton>
             </div>
           </Tooltip>
           <Tooltip title="Xoá" arrow placement="top">
             <div>
-              <IconButton className="!bg-red-500">
+              <BasicIconButton className="!bg-red-500">
                 <FaTrash color="white"></FaTrash>
-              </IconButton>
+              </BasicIconButton>
             </div>
           </Tooltip>
         </div>
       </td>
     </tr>
-  );
-};
-
-const BasicDropdown = ({
-  value,
-  onChange,
-  dropdownItems,
-  className = "",
-  props,
-}) => {
-  return (
-    <select
-      className={`basic-select border border-gray-500 p-2 rounded-sm !max-w-[200px] text-ellipsis ${className}`}
-      value={value}
-      onChange={onChange}
-      {...props}
-    >
-      {dropdownItems.map((item) => (
-        <option key={item.value} value={item.value}>
-          {item.label}
-        </option>
-      ))}
-    </select>
   );
 };
