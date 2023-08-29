@@ -1,4 +1,4 @@
-export const BasicDropdown = ({
+export const TableDropdown = ({
   value,
   onChange,
   dropdownItems,

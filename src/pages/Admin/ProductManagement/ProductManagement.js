@@ -16,7 +16,7 @@ import { BasicTag } from "../../../components/Tag/BasicTag";
 import BasicPagination from "../../../components/Pagination/BasicPagination";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
-import { BasicDropdown } from "../../../components/Dropdown/BasicDropdown";
+import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 const ITEMS_PER_PAGE = 10;
 export const ProductManagement = () => {
   const listCategory = [
@@ -194,16 +194,16 @@ export const ProductManagement = () => {
                         value={searchKey}
                         placeholder="Từ khóa..."
                       ></input>
-                      <BasicDropdown
+                      <TableDropdown
                         value={selectedCategoryFilter}
                         onChange={(e) => handleSelectCategoryFilter(e)}
                         dropdownItems={listCategory}
-                      ></BasicDropdown>
-                      <BasicDropdown
+                      ></TableDropdown>
+                      <TableDropdown
                         value={selectedCriteriaFilter}
                         onChange={(e) => handleSelectCriteriaFilter(e)}
                         dropdownItems={listCriteria}
-                      ></BasicDropdown>
+                      ></TableDropdown>
                       <BasicIconButton
                         handleOnClick={() => {
                           console.log(
