@@ -1,43 +1,23 @@
 import React from "react";
-import { categoryApi } from "../../../api";
-import { useQuery } from "@tanstack/react-query";
 import { BasicDropdown } from "../../../components";
 import BasicButton from "../../../components/Button/BasicButton";
 import { BsSearch } from "react-icons/bs";
 import CategoryTable from "./CategoryTable/CategoryTable";
-import { reactQueryKey } from "../../../configuration/reactQueryKey";
+import useCategories from "../../../hooks/Categories/useCategories";
 
 const CategoryList = () => {
-  const defCategory = {
-    id: "",
-    title: "Tất cả danh mục",
-    onClick: () => {
-      setTempFilterCategory(defCategory);
-    },
-  };
-  const [tempFilterCategory, setTempFilterCategory] =
-    React.useState(defCategory);
   const searchTextbox = React.useRef("");
 
   const [filterCategory, setFilterCategory] = React.useState("");
   const [filterKeywordCategory, setFilterKeywordCategory] = React.useState("");
-  const { data, isLoading } = useQuery({
-    queryKey: reactQueryKey.GET_CATEGORIES(
-      filterCategory,
-      filterKeywordCategory
-    ),
-    queryFn: async () =>
-      await categoryApi.getCategories(filterCategory, filterKeywordCategory),
-  });
 
-  const CategoryListData = data?.responseData?.rows?.map((item) => ({
-    id: item.id,
-    title: item.title,
-    onClick: () => {
-      setTempFilterCategory(item);
-    },
-  }));
-  CategoryListData?.unshift(defCategory);
+  // Category list util
+  const {
+    categoryList,
+    tempFilterCategory,
+    createCategoryListDropdown,
+    isLoading,
+  } = useCategories({});
 
   function startFilter() {
     console.log("srch key", searchTextbox.current?.value);
@@ -59,15 +39,16 @@ const CategoryList = () => {
           disabled={isLoading}
         />
         <BasicDropdown
-          className="border-none !w-[160px] bg-white"
+          className="border-none !w-[180px] bg-white"
           classNameTitle="select-none"
           highlightClass="!bg-blue-500 rounded-md !text-white"
           itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
           dropdownClass=""
           title={tempFilterCategory.title}
           noTooltip={true}
-          items={CategoryListData}
+          items={createCategoryListDropdown()}
           disabled={isLoading}
+          titleWrapperClass="!px-2"
         />
         <BasicButton
           icon={<BsSearch />}
@@ -78,7 +59,7 @@ const CategoryList = () => {
       </div>
 
       <div className="category-list mt-1">
-        <CategoryTable isLoading={isLoading} categoryList={data} />
+        <CategoryTable isLoading={isLoading} categoryList={categoryList} />
       </div>
     </div>
   );

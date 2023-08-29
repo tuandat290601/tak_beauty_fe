@@ -43,7 +43,7 @@ const BasicTextBox = ({
       ) : (
         <input
           type={type}
-          className={`focus:ring-0 border rounded-md p-2
+          className={`focus:ring-0 border rounded-md p-2 text-black
           ${className}
           ${errMsg ? errBorderClass : "border-slate-400"}`}
           {...props}

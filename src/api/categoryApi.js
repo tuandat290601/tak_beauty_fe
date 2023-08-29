@@ -1,14 +1,17 @@
+import { removeEmptyValue } from "../helpers/ObjectUtil";
 import axiosClient from "./axiosClient";
 
 const categoryApi = {
-  getCategories: (filterCategory, filterKeywordCategory) => {
-    const url = `/categories/?filters=parentId@=${filterCategory},title@=${filterKeywordCategory}`;
+  getCategories: () => {
+    const url = `/categories`;
     return axiosClient.get(url);
   },
 
-  postCategory: (data) => {
+  postCategory: ({ title, parentId, image }) => {
+    const data = removeEmptyValue({ title, parentId, image });
+
     const url = "/categories";
-    return axiosClient.post(url, data);
+    return axiosClient.post(url, [data]);
   },
 
   updateCategoryById: (payload) => {

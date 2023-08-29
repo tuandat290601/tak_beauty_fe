@@ -19,6 +19,7 @@ import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
 import AddProduct from "./Product/add/AddProduct";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
+import { PAGE_PATH } from "../../configuration/routeConfig";
 
 const Admin = () => {
   return (
@@ -26,8 +27,8 @@ const Admin = () => {
       <SideMenu />
       <div className="page-content">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path={PAGE_PATH.HOME} element={<Dashboard />} />
+          <Route path={PAGE_PATH.ADMIN_DASHBOARD} element={<Dashboard />} />
           <Route path="/content" element={<Content />} />
           <Route path="/service-pack" element={<ServicePack />} />
           <Route path="/services" element={<Services />} />
@@ -36,7 +37,7 @@ const Admin = () => {
           <Route path="/product" element={<Product />} />
 
           <Route
-            path="/products/products-categories"
+            path={PAGE_PATH.PRODUCTS_CATEGORIES}
             element={<ProductsCategories />}
           />
           <Route
