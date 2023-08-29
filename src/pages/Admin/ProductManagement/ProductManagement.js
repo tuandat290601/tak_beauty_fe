@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ProductManagement.scss";
 import HeaderMainPage from "../Header/HeaderMainPage";
 import BasicButton from "../../../components/Button/BasicButton";
@@ -18,6 +18,9 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 import { useNavigate } from "react-router-dom";
+import productApi from "../../../api/productApi";
+import { useQuery } from "@tanstack/react-query";
+import Config from "../../../configuration";
 const ITEMS_PER_PAGE = 10;
 export const ProductManagement = () => {
   const listCategory = [
@@ -118,8 +121,9 @@ export const ProductManagement = () => {
   const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("2");
   const [pageCount, setPageCount] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [listProduct, setListProduct] = useState([]);
   const [checked, setChecked] = React.useState(
-    Array(listItem.length).fill(false)
+    Array(listProduct.length).fill(false)
   );
   const handlePageClick = (event) => {};
   const handleOnChangeSearchKey = (e) => {
@@ -127,14 +131,14 @@ export const ProductManagement = () => {
   };
   const handleCheckAll = (event) => {
     if (checked.every((item) => item === true)) {
-      setChecked(Array(listItem.length).fill(false));
+      setChecked(Array(listProduct.length).fill(false));
     } else if (
       checked.some((item) => item === true) &&
       !checked.every((item) => item === true)
     ) {
-      setChecked(Array(listItem.length).fill(false));
+      setChecked(Array(listProduct.length).fill(false));
     } else {
-      setChecked(Array(listItem.length).fill(true));
+      setChecked(Array(listProduct.length).fill(true));
     }
   };
   const handleCheckItem = (event, index) => {
@@ -149,6 +153,31 @@ export const ProductManagement = () => {
   const handleSelectCriteriaFilter = (e) => {
     setSelectedCriteriaFilter(e.target.value);
   };
+  const [productQueries, setProductQueries] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    filters: "categoryId==49a30440-cc1a-4c0b-bda9-fd609d397f3d",
+    sortField: null,
+    sortOrder: null,
+  });
+  const { data, isLoading, error, isError, isSuccess } = useQuery({
+    queryKey: ["getProducts"],
+    queryFn: async ({ signal }) => {
+      return await productApi.getProducts({ payload: productQueries, signal });
+    },
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      // const res = await productApi.getProducts({});
+      if (isSuccess) {
+        setPageCount(data.responseData.totalPages);
+        setCurrentPage(data.responseData.currentPage);
+        setListProduct(data.responseData.rows);
+        console.log(data.responseData);
+      }
+    };
+    fetchData();
+  }, [data, isSuccess]);
   return (
     <div className="page-body">
       <HeaderMainPage>
@@ -249,9 +278,10 @@ export const ProductManagement = () => {
                 <th>Thứ tự</th>
                 <th>Hành động</th>
               </tr>
-              {listItem.map((item, index) => (
+              {listProduct.map((item, index) => (
                 <TableItem
-                  // key={}
+                  key={item.id}
+                  product={item}
                   checked={checked[index]}
                   handleCheck={handleCheckItem}
                   index={index}
@@ -285,7 +315,7 @@ export const ProductManagement = () => {
   );
 };
 
-const TableItem = ({ index, className, checked, handleCheck }) => {
+const TableItem = ({ product, index, className, checked, handleCheck }) => {
   const [hoverRef, isHovered] = useHover();
   const handleAddFavTag = () => {};
   const handleAddHotSellTag = () => {};
@@ -304,7 +334,7 @@ const TableItem = ({ index, className, checked, handleCheck }) => {
       </td>
       <td className="!py-[10px]">
         <img
-          src="https://i.pinimg.com/564x/19/84/8e/19848eec0724e8c34ffd44eea72a1f24.jpg"
+          src={Config.apiConfig.imageEndPoint + product?.image}
           alt="thumb"
           className="w-[50px] rounded-md"
         />
@@ -312,14 +342,16 @@ const TableItem = ({ index, className, checked, handleCheck }) => {
       <td className="!py-[10px]">
         <div className="w-fit">
           <Tooltip title="Sản phẩm test" arrow placement="top" color="error">
-            <h4 className="font-semibold text-sm">Sản phẩm test</h4>
+            <h4 className="font-semibold text-sm">{product?.title}</h4>
           </Tooltip>
         </div>
         <div className="mt-2 flex justify-start items-center gap-1">
           <a href="#" target="_blank">
             <Rating value={5} size="small" readOnly></Rating>
           </a>
-          <span className="text-blue-500 text-xs">(0 đánh giá)</span>
+          <span className="text-blue-500 text-xs">
+            ({product.rating} đánh giá)
+          </span>
         </div>
         <div
           className={`flex gap-2 justify-start items-center ${
@@ -337,15 +369,21 @@ const TableItem = ({ index, className, checked, handleCheck }) => {
         </div>
       </td>
       <td>
-        <h4 className="text-blue-500 text-sm cursor-pointer">Thể thao</h4>
+        <h4 className="text-blue-500 text-sm cursor-pointer">
+          {product.category.title}
+        </h4>
       </td>
       <td></td>
       <td>
         <div className="flex gap-2">
           {/*Origin price*/}
-          <BasicEditablePopup initValue={120000}></BasicEditablePopup>
+          <BasicEditablePopup
+            initValue={product.originPrice}
+          ></BasicEditablePopup>
           {/*Discount price*/}
-          <BasicEditablePopup initValue={100000}></BasicEditablePopup>
+          <BasicEditablePopup
+            initValue={product.discountPrice}
+          ></BasicEditablePopup>
         </div>
       </td>
       <td>
