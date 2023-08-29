@@ -40,19 +40,19 @@ const AddProduct = () => {
       <div className="flex  px-[10px] py-5 !pb-16 mt-3 bg-gray-200 gap-[20px]">
         <div className="w-2/3 flex flex-col gap-2" ref={contentRef}>
           <Tab></Tab>
-          <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+          {/* <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
             <BasicEditor
               title="Khuyến mãi"
               className="quill-content"
             ></BasicEditor>
-          </div>
+          </div> */}
           <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
             <BasicTextBox
               wrapperClass="m-0"
               control={control}
-              name={"view"}
-              errMsg={errors["view"] ? errors["view"]?.message : null}
-              label={"Lượt xem sản phẩm"}
+              name={"rating"}
+              errMsg={errors["rating"] ? errors["rating"]?.message : null}
+              label={"Đánh giá"}
               hideSubtitle
               type="number"
               defaultValue="0"

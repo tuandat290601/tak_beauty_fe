@@ -34,12 +34,15 @@ const Tab = () => {
           </a>
         </li>
         <li
-          className="nav-item"
+          className="nav-item "
           onClick={() => {
-            if (index !== 1) setIndex(1);
+            // if (index !== 1) setIndex(1);
           }}
         >
-          <a className={`nav-link ${index === 1 && "active"}`} href="#">
+          <a
+            className={`nav-link cursor-no-drop ${index === 1 && "active"}`}
+            href="#"
+          >
             Liên kết
           </a>
         </li>

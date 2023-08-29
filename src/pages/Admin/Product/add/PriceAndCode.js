@@ -7,7 +7,7 @@ const PriceAndCode = ({ control, errors }) => {
       <Code control={control} errors={errors} />
       <Price control={control} errors={errors} />
       <ImageProduct control={control} errors={errors} />
-      <Slug control={control} errors={errors} />
+      {/* <Slug control={control} errors={errors} /> */}
     </div>
   );
 };
@@ -41,16 +41,18 @@ const Price = ({ control, errors }) => {
       <BasicTextBox
         wrapperClass="mb-2"
         control={control}
-        name={"price"}
-        errMsg={errors["price"] ? errors["price"]?.message : null}
+        name={"originPrice"}
+        errMsg={errors["originPrice"] ? errors["originPrice"]?.message : null}
         label={"Giá"}
         hideSubtitle
       />
       <BasicTextBox
         wrapperClass="m-0"
         control={control}
-        name={"discount"}
-        errMsg={errors["discount"] ? errors["discount"]?.message : null}
+        name={"discountPrice"}
+        errMsg={
+          errors["discountPrice"] ? errors["discountPrice"]?.message : null
+        }
         label={"Giá khuyến mãi"}
         hideSubtitle
         defaultValue={0}
@@ -63,6 +65,16 @@ const Price = ({ control, errors }) => {
         label={"Cân nặng"}
         hideSubtitle={false}
         subtitle="Đơn vị tính bằng gram"
+        defaultValue={"0"}
+      />{" "}
+      <BasicTextBox
+        wrapperClass="m-0"
+        control={control}
+        name={"size"}
+        errMsg={errors["size"] ? errors["size"]?.message : null}
+        label={"Kích thước"}
+        hideSubtitle={false}
+        subtitle="Đơn vị tính bằng cm"
         defaultValue={"0"}
       />
     </Wrapper>
