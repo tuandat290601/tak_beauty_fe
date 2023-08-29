@@ -9,6 +9,7 @@ import { usersApi } from "../../api";
 import { RESP_MSG } from "../../configuration/respMsg";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATH } from "../../configuration/routeConfig";
+import Config from "../../configuration";
 
 const Login = () => {
   const {
@@ -34,6 +35,12 @@ const Login = () => {
 
       if (resp?.status === "success") {
         console.log("Login success");
+        sessionStorage.setItem(
+          Config.storageKey.auth,
+          JSON.stringify({
+            token: resp?.responseData?.accessToken,
+          })
+        );
         navigate(`/admin${PAGE_PATH.ADMIN_DASHBOARD}`);
       }
     } catch (error) {
