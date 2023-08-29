@@ -1,9 +1,9 @@
 /* eslint-disable react/function-component-definition */
 import React from "react";
 import "./Table.scss";
-const Table = ({ children }) => {
+const Table = ({ children, className }) => {
   return (
-    <div className="table-style">
+    <div className={`table-style ${className}`}>
       <table>{children}</table>
     </div>
   );

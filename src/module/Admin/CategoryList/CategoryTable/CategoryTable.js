@@ -4,11 +4,12 @@ import BasicCheckbox from "../../../../components/Checkbox/BasicCheckbox";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import BasicButton from "../../../../components/Button/BasicButton";
+import Table from "../../../../components/Table/Table";
 
 const CategoryTable = ({ isLoading, categoryList }) => {
   const titleClass = "";
   const actionClass = "w-[130px]";
-  const checkboxClass = "p-3 w-12";
+  const checkboxClass = "p-3 w-12 z-[1]";
 
   const headerList = [
     {
@@ -30,8 +31,9 @@ const CategoryTable = ({ isLoading, categoryList }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-b-md">
-      <table className="w-full text-sm text-left text-gray-500 table-fixed">
+    <>
+      <Table className="!rounded-t-none">
+        {/* <table className="w-full text-sm text-left text-gray-500 table-fixed"> */}
         <thead className="text-xs text-gray-700 uppercase bg-gray-300">
           <tr>
             <th scope="col" className={checkboxClass}>
@@ -60,7 +62,7 @@ const CategoryTable = ({ isLoading, categoryList }) => {
                     <td className={checkboxClass}>
                       <BasicCheckbox />
                     </td>
-                    <td className={`p-3 text-gray-900 ${titleClass}`}>
+                    <td className={`px-6 py-3 text-gray-900 ${titleClass}`}>
                       <div className="flex gap-x-1">
                         {item.img ? (
                           <img
@@ -78,7 +80,7 @@ const CategoryTable = ({ isLoading, categoryList }) => {
                         </p>
                       </div>
                     </td>
-                    <td className={`p-3 w-4 ${actionClass}`}>
+                    <td className={`px-6 py-3 w-4 ${actionClass}`}>
                       <div className="flex gap-x-1">
                         <BasicButton
                           icon={<FaPencilAlt className="w-4 h-4" />}
@@ -105,7 +107,8 @@ const CategoryTable = ({ isLoading, categoryList }) => {
               : "Empty"}
           </tbody>
         )}
-      </table>
+        {/* </table> */}
+      </Table>
 
       {/* Loading table */}
       {isLoading ? (
@@ -113,7 +116,7 @@ const CategoryTable = ({ isLoading, categoryList }) => {
           <CircleSpinLoading className="!w-20 !h-20" />
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 

@@ -9,11 +9,15 @@ import { addCategorySchema } from "../../../helpers/form-schema";
 import useCategories from "../../../hooks/Categories/useCategories";
 import { categoryApi } from "../../../api";
 import { RESP_MSG } from "../../../configuration/respMsg";
+import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
+import { useQueryClient } from "@tanstack/react-query";
+import { reactQueryKey } from "../../../configuration/reactQueryKey";
 
 const ShortCategoryForm = () => {
   // Category list util
   const { tempFilterCategory, createCategoryListDropdown, isLoading } =
     useCategories({ defCategoryTitle: "Chọn danh mục" });
+  const queryClient = useQueryClient();
 
   const {
     handleSubmit,
@@ -30,7 +34,9 @@ const ShortCategoryForm = () => {
     mode: "onChange",
   });
 
+  const [isAddingCattegory, setIsAddingCattegory] = React.useState(false);
   async function onSubmit(data) {
+    setIsAddingCattegory(true);
     console.log("onSubmit", data);
 
     try {
@@ -40,14 +46,19 @@ const ShortCategoryForm = () => {
         resp
       );
 
-      if (resp.response.status === RESP_MSG.SUCCESS) {
+      if (resp.status === "success") {
         console.log("Add category success");
+        queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
+      } else {
+        console.error("Xảy ra lỗi trong quá trình thêm danh mục");
       }
     } catch (error) {
       console.error(
         "🚀 ~ file: ShortCategoryForm.js:42 ~ onSubmit ~ error:",
         error
       );
+    } finally {
+      setIsAddingCattegory(false);
     }
   }
 
@@ -60,8 +71,18 @@ const ShortCategoryForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[40%] bg-white p-3 rounded-md"
+      className="w-[40%] bg-white p-3 rounded-md relative"
     >
+      {/* Adding category */}
+      {isAddingCattegory ? (
+        <div
+          className="absolute w-full h-full z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black 
+        bg-opacity-70 flex justify-center items-center rounded-md cursor-wait"
+        >
+          <CircleSpinLoading className="!w-14 !h-14" />
+        </div>
+      ) : null}
+
       <hr className="text-slate-400" />
 
       {/* Fields */}
