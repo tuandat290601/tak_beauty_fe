@@ -24,6 +24,7 @@ const BasicDropdown = ({
   loading = false,
   isSearch = false,
   itemClass = "",
+  titleWrapperClass = "",
 }) => {
   const [isAsc, setIsAsc] = useState(isAscDefault);
   const [search, setSearch] = useState("");
@@ -53,7 +54,9 @@ const BasicDropdown = ({
           {label}
         </label>
       ) : null}
-      <div className="flex justify-between items-center px-4 py-2 w-full gap-2">
+      <div
+        className={`flex justify-between items-center px-4 py-2 w-full gap-2 ${titleWrapperClass}`}
+      >
         {/* <Tooltip title={!noTooltip ? toolTipContent : ""} placement="top" arrow>
           <span className={`text-one-line ${classNameTitle}`}>
             {title} {isSort && (isAsc ? "tăng dần" : "giảm dần")}
