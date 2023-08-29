@@ -17,6 +17,7 @@ import BasicPagination from "../../../components/Pagination/BasicPagination";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
+import { useNavigate } from "react-router-dom";
 const ITEMS_PER_PAGE = 10;
 export const ProductManagement = () => {
   const listCategory = [
@@ -111,6 +112,7 @@ export const ProductManagement = () => {
       price: 12000,
     },
   ];
+  const navigate = useNavigate();
   const [searchKey, setSearchKey] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("1");
   const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("2");
@@ -150,10 +152,14 @@ export const ProductManagement = () => {
   return (
     <div className="page-body">
       <HeaderMainPage>
-        <div className="flex justify-end">
+        <div className="flex justify-end ui-layout gap-x-2">
           <BasicButton
             icon={<AiOutlinePlusCircle></AiOutlinePlusCircle>}
             title="Thêm mới"
+            className="green-btn"
+            onClick={() => {
+              navigate("/admin/product/product-management/add");
+            }}
           />
         </div>
       </HeaderMainPage>

@@ -34,7 +34,7 @@ const Admin = () => {
           <Route path="/article" element={<Article />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/product" element={<Product />} />
-          <Route path="/products/add" element={<AddProduct />} />
+
           <Route
             path="/products/products-categories"
             element={<ProductsCategories />}
@@ -42,6 +42,10 @@ const Admin = () => {
           <Route
             path="/product/product-management"
             element={<ProductManagement />}
+          />
+          <Route
+            path="/product/product-management/add"
+            element={<AddProduct />}
           />
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
