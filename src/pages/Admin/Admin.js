@@ -18,6 +18,7 @@ import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
 import AddProduct from "./Product/add/AddProduct";
+import { ProductManagement } from "./ProductManagement/ProductManagement";
 
 const Admin = () => {
   return (
@@ -37,6 +38,10 @@ const Admin = () => {
           <Route
             path="/products/products-categories"
             element={<ProductsCategories />}
+          />
+          <Route
+            path="/product/product-management"
+            element={<ProductManagement />}
           />
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
