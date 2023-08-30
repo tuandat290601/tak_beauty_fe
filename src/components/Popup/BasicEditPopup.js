@@ -17,6 +17,7 @@ export const BasicEditablePopup = ({
     setShow(true);
   };
   const handleOnClosePopup = () => {
+    setEditValue(initValue);
     setShow(false);
   };
   // const handleClearInput = () => {
@@ -61,7 +62,10 @@ export const BasicEditablePopup = ({
           />
           <BasicIconButton
             className="!bg-blue-500 rounded-md border-2 !border-black"
-            handleOnClick={handleSubmitEditPrice}
+            handleOnClick={() => {
+              handleSubmitEditPrice(editValue);
+              handleOnClosePopup();
+            }}
           >
             <AiOutlineCheck></AiOutlineCheck>
           </BasicIconButton>

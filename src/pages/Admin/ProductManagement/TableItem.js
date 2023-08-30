@@ -12,6 +12,12 @@ import { BasicEditablePopup, BasicTag } from "../../../components";
 import BasicIconButton from "../../../components/Button/BasicIconButton";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { useState } from "react";
+import { SUBMIT_STATUS } from "../../../common/constant";
+import { productApi } from "../../../api";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { reactQueryKey } from "../../../configuration/reactQueryKey";
 
 export const TableItemSkeleton = () => {
   return (
@@ -48,11 +54,49 @@ export const TableItem = ({
   className,
   checked,
   handleCheck,
+  handleDeleteProduct,
 }) => {
   const [hoverRef, isHovered] = useHover();
+  const queryClient = useQueryClient();
   const handleAddFavTag = () => {};
   const handleAddHotSellTag = () => {};
   const handleAddOutStandingTag = () => {};
+  const [updateUpdateOriginPriceStatus, setUpdateOriginPriceStatus] =
+    useState();
+  const [updateUpdateDiscountPriceStatus, setUpdateDiscountPriceStatus] =
+    useState();
+  const handleUpdateDiscountPrice = async (editPrice) => {
+    setUpdateDiscountPriceStatus(SUBMIT_STATUS.LOADING);
+    const data = {
+      id: product.id,
+      discountPrice: parseInt(editPrice),
+    };
+    const res = await productApi.updateProduct(data);
+    if (res.status === "success") {
+      toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error(
+        "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
+      );
+    }
+  };
+  const handleUpdateOriginPrice = async (editPrice) => {
+    setUpdateOriginPriceStatus(SUBMIT_STATUS.LOADING);
+    const data = {
+      id: product.id,
+      originPrice: parseInt(editPrice),
+    };
+    const res = await productApi.updateProduct(data);
+    if (res.status === "success") {
+      toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error(
+        "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
+      );
+    }
+  };
   return (
     <tr className={className} ref={hoverRef}>
       <td className="!py-[10px] !px-[14px]">
@@ -113,10 +157,12 @@ export const TableItem = ({
         <div className="flex gap-2">
           {/*Origin price*/}
           <BasicEditablePopup
+            handleSubmitEditPrice={handleUpdateOriginPrice}
             initValue={product?.originPrice || 0}
           ></BasicEditablePopup>
           {/*Discount price*/}
           <BasicEditablePopup
+            handleSubmitEditPrice={handleUpdateDiscountPrice}
             initValue={product?.discountPrice || 0}
           ></BasicEditablePopup>
         </div>
@@ -149,7 +195,10 @@ export const TableItem = ({
           </Tooltip>
           <Tooltip title="Xoá" arrow placement="top">
             <div>
-              <BasicIconButton className="!bg-red-500">
+              <BasicIconButton
+                className="!bg-red-500"
+                handleOnClick={() => handleDeleteProduct(product)}
+              >
                 <FaTrash color="white"></FaTrash>
               </BasicIconButton>
             </div>

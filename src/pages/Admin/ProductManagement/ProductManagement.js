@@ -20,10 +20,14 @@ import {
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../../api/productApi";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useCategories from "../../../hooks/Categories/useCategories";
 import useMenu from "../../../hooks/useMenu";
 import { TableItem, TableItemSkeleton } from "./TableItem";
+import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
+import usePopup from "../../../hooks/usePopup";
+import { toast } from "react-toastify";
+import { reactQueryKey } from "../../../configuration/reactQueryKey";
 
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
@@ -50,11 +54,18 @@ export const ProductManagement = () => {
   //   { value: "3", label: "Nổi bật" },
   // ];
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     anchorEl: anchorElActions,
     handleCloseMenu: handleClosePopupActionsMenu,
     handleOpenMenu: onShowActions,
   } = useMenu();
+  const { open: openConfirm, handleOpenPopup, handleClosePopup } = usePopup();
+  const {
+    open: openConfirmDeleteListProudct,
+    handleOpenPopup: handleOpenDeleteListProudctPopup,
+    handleClosePopup: handleCloseDeleteListProudctPopup,
+  } = usePopup();
   const [searchKey, setSearchKey] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("");
   // const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("");
@@ -63,6 +74,7 @@ export const ProductManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [listProduct, setListProduct] = useState([]);
   const [listCategories, setListCategories] = useState([]);
+  const [currentSelectedProduct, setCurrentSelectedProduct] = useState();
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: pageSize,
@@ -74,7 +86,7 @@ export const ProductManagement = () => {
   const onMenuActionSelect = (action) => {
     switch (action) {
       case ACTION.DELETE:
-        console.log("delete");
+        handleOpenDeleteListProudctPopup();
         break;
       default:
         break;
@@ -120,8 +132,34 @@ export const ProductManagement = () => {
   const handleCheckItem = (event, index) => {
     const newChecked = checked;
     newChecked[index] = event.target.checked;
-    console.log(newChecked);
     setChecked([...newChecked]);
+  };
+  const handleDeleteProduct = (product) => {
+    setCurrentSelectedProduct(product);
+    handleOpenPopup();
+  };
+  const handleConfirmDeleteProduct = async () => {
+    const res = await productApi.deleteProduct(currentSelectedProduct.id);
+    if (res.status === "success") {
+      toast.success("Xoá sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
+    }
+  };
+  const handleConfirmDeleteListCheckedProduct = async () => {
+    const finalChecked = checked.filter((item) => item === true);
+    const listId = finalChecked.map((item, index) => listProduct[index].id);
+    console.log(listId);
+    const queryListId = listId.join("|");
+    const res = await productApi.deleteProduct(queryListId);
+    // console.log(queryListId);
+    if (res.status === "success") {
+      toast.success("Xoá sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
+    }
   };
   const handleSelectCategoryFilter = (e) => {
     setSelectedCategoryFilter(e.target.value);
@@ -318,6 +356,7 @@ export const ProductManagement = () => {
                       className={`${
                         index % 2 === 0 ? "bg-gray-100" : ""
                       } hover:bg-gray-200`}
+                      handleDeleteProduct={handleDeleteProduct}
                     ></TableItem>
                   ))}
                 </>
@@ -350,6 +389,29 @@ export const ProductManagement = () => {
           </div>
         </div>
       </div>
+      <ConfirmPopup
+        isOpen={openConfirm}
+        handleClose={() => {
+          handleClosePopup();
+        }}
+        handleConfirm={handleConfirmDeleteProduct}
+      >
+        Bạn có chắc chắn muốn xoá sản phẩm{" "}
+        <span className="text-blue-500 font-bold">
+          {currentSelectedProduct?.title}
+        </span>
+        '
+      </ConfirmPopup>
+      <ConfirmPopup
+        isOpen={openConfirmDeleteListProudct}
+        handleClose={() => {
+          handleCloseDeleteListProudctPopup();
+        }}
+        handleConfirm={handleConfirmDeleteListCheckedProduct}
+      >
+        Bạn có chắc chắn muốn xoá{" "}
+        {checked.filter((item) => item === true).length} sản phẩm '
+      </ConfirmPopup>
     </div>
   );
 };

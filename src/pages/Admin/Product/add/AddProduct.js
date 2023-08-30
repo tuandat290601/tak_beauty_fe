@@ -71,41 +71,41 @@ const AddProduct = () => {
     }
   };
   const onSumbit = async (data) => {
+    setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ image:", image);
-    // setSubmitStatus(SUBMIT_STATUS.LOADING);
-    // const createProductData = {
-    //   title: data[ADD_PRODUCT_OBJ.TITLE],
-    //   originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
-    //   discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
-    //   // rating: data[ADD_PRODUCT_OBJ.RATING],
-    //   // image: "/images/hinh_anh_1.jpg",
-    //   description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
-    //   detail: data[ADD_PRODUCT_OBJ.DETAIL],
-    //   // sku: "SKU1234",
-    //   attributes: {
-    //     size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-    //     weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
-    //   },
-    //   categoryId: data[ADD_PRODUCT_OBJ.CATEGORY_ID],
-    // };
-    // console.log(data);
-    // console.log(createProductData);
-    // if (createProductData.categoryId === "") {
-    //   delete createProductData.categoryId;
-    // }
-    // const res = await productApi.addNewProduct([createProductData]);
-    // if (res.status === "success") {
-    //   toast.success("Thêm sản phẩm thành công");
-    //   queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-    //   setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-    //   navigate("/admin/product/product-management");
-    // } else {
-    //   console.log("fail");
-    //   toast.error("Đã có lỗi xảy ra, thêm sản phẩm không thành công");
-    //   // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-    //   setSubmitStatus(SUBMIT_STATUS.ERROR);
-    // }
+    const createProductData = {
+      title: data[ADD_PRODUCT_OBJ.TITLE],
+      originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
+      discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
+      // rating: data[ADD_PRODUCT_OBJ.RATING],
+      // image: "/images/hinh_anh_1.jpg",
+      description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
+      detail: data[ADD_PRODUCT_OBJ.DETAIL],
+      // sku: "SKU1234",
+      attributes: {
+        size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
+        weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+      },
+      categoryId: data[ADD_PRODUCT_OBJ.CATEGORY_ID],
+    };
+    console.log(data);
+    console.log(createProductData);
+    if (createProductData.categoryId === "") {
+      delete createProductData.categoryId;
+    }
+    const res = await productApi.addNewProduct([createProductData]);
+    if (res.status === "success") {
+      toast.success("Thêm sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
+      navigate("/admin/product/product-management");
+    } else {
+      console.log("fail");
+      toast.error("Đã có lỗi xảy ra, thêm sản phẩm không thành công");
+      // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setSubmitStatus(SUBMIT_STATUS.ERROR);
+    }
   };
   return (
     <div className="">
