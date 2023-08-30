@@ -113,7 +113,7 @@ const AddProduct = () => {
                 label={"Đánh giá"}
                 hideSubtitle
                 type="number"
-                defaultValue="0"
+                defaultValue="5"
               />
             </div>
           </div>
