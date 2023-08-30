@@ -15,6 +15,14 @@ export const addProductShcema = yup.object({
     .string()
     .trim()
     .required("Vui lòng nhập tiêu đề"),
+  [ADD_PRODUCT_OBJ.RATING]: yup
+    .number("Vui lòng nhập số")
+    .min(1, "Đánh giá nhỏ nhất là 1 sao")
+    .max(5, "Đánh giá lớn nhất là 5 sao"),
+  [ADD_PRODUCT_OBJ.ORIGIN_PRICE]: yup.number("Vui lòng nhập số"),
+  [ADD_PRODUCT_OBJ.DISCOUNT_PRICE]: yup.number("Vui lòng nhập số"),
+  [ADD_PRODUCT_OBJ.SIZE]: yup.number("Vui lòng nhập số"),
+  [ADD_PRODUCT_OBJ.WEIGHT]: yup.number("Vui lòng nhập số"),
   // [ADD_PRODUCT_OBJ.DESCRIPTION]: yup
   //   .string()
   //   .required("Vui lòng nhập tóm tắt sản phẩm"),

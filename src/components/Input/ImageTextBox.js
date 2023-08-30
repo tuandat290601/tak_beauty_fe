@@ -3,34 +3,10 @@ import ImageIcon from "@mui/icons-material/Image";
 import fileApi from "../../api/file";
 const ImageTextBox = ({
   name = "upload",
-  setPathName = () => {},
+  setSelectedImage = () => {},
+  selectedImage = [],
   ...props
 }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const onSubmit = async () => {
-    const formData = new FormData();
-    formData.append("file", selectedImage);
-    // const auth = {
-    //   ...JSON.parse(sessionStorage.getItem(Config.storageKey.auth)),
-    // };
-    // const res = await axios.post("/files", formData, {
-    //   baseURL: Config.apiConfig.endPoint,
-    //   headers: {
-    //     "Content-Type": "multipart/form-data",
-    //     Authorization: `Bearer ${auth.token}`,
-    //   },
-    // });
-    const res = await fileApi.uploadFile(formData);
-    if ((res.status = "success")) {
-      const { responseData } = res;
-      //save path
-      setPathName(responseData.path);
-    } else {
-      return setPathName("");
-    }
-  };
-
   return (
     <div>
       <div className="flex gap-1 items-center">
@@ -68,7 +44,7 @@ const ImageTextBox = ({
           />
         </div>
       )}
-      <button onClick={onSubmit}>Test Upload Now</button>
+      {/* <button onClick={onSubmit}>Test Upload Now</button> */}
     </div>
   );
 };
