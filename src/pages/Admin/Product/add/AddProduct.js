@@ -7,9 +7,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PriceAndCode from "./PriceAndCode";
 import { BasicEditor } from "../../../../components/Editor/BasicEditor";
 import Footer from "./Footer";
+import { addProductShcema } from "../../../../helpers/form-schema";
+import productApi from "../../../../api/productApi";
+import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { reactQueryKey } from "../../../../configuration/reactQueryKey";
+import { SUBMIT_STATUS } from "../../../../common/constant";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
+  const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -28,40 +37,64 @@ const AddProduct = () => {
   const {
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(),
+    resolver: yupResolver(addProductShcema),
     defaultValues: {},
     mode: "onChange",
   });
+  const [submitStatus, setSubmitStatus] = useState();
+  const queryClient = useQueryClient();
+  const onSumbit = async (data) => {
+    setSubmitStatus(SUBMIT_STATUS.LOADING);
+    if (data.categoryId === "") {
+      delete data.categoryId;
+    }
+    const res = await productApi.addNewProduct(data);
+    if (res.status === "success") {
+      console.log("success");
+      toast.success("Thêm sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
+      // navigate("/admin/product/product-management");
+    } else {
+      console.log("fail");
+      toast.error("Đã có lỗi xảy ra, thêm sản phẩm không thành công");
+      // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setSubmitStatus(SUBMIT_STATUS.ERROR);
+    }
+  };
   return (
     <div className="">
-      <Header />
-      <div className="flex  px-[10px] py-5 !pb-16 mt-3 bg-gray-200 gap-[20px]">
-        <div className="w-2/3 flex flex-col gap-2" ref={contentRef}>
-          <Tab></Tab>
-          {/* <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+      <form onSubmit={handleSubmit(onSumbit)}>
+        <Header submitStatus={submitStatus} />
+        <div className="flex  px-[10px] py-5 !pb-16 mt-3 bg-gray-200 gap-[20px]">
+          <div className="w-2/3 flex flex-col gap-2" ref={contentRef}>
+            <Tab control={control} errors={errors} getValues={getValues}></Tab>
+            {/* <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
             <BasicEditor
-              title="Khuyến mãi"
-              className="quill-content"
+            title="Khuyến mãi"
+            className="quill-content"
             ></BasicEditor>
           </div> */}
-          <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
-            <BasicTextBox
-              wrapperClass="m-0"
-              control={control}
-              name={"rating"}
-              errMsg={errors["rating"] ? errors["rating"]?.message : null}
-              label={"Đánh giá"}
-              hideSubtitle
-              type="number"
-              defaultValue="0"
-            />
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <BasicTextBox
+                wrapperClass="m-0"
+                control={control}
+                name={ADD_PRODUCT_OBJ.RATING}
+                errMsg={errors["rating"] ? errors["rating"]?.message : null}
+                label={"Đánh giá"}
+                hideSubtitle
+                type="number"
+                defaultValue="0"
+              />
+            </div>
           </div>
+          <PriceAndCode control={control} errors={errors} />
         </div>
-        <PriceAndCode control={control} errors={errors} />
-      </div>
-      <Footer width={footerWidth} />
+        <Footer submitStatus={submitStatus} width={footerWidth} />
+      </form>
     </div>
   );
 };

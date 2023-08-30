@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProductManagement.scss";
 import HeaderMainPage from "../Header/HeaderMainPage";
 import BasicButton from "../../../components/Button/BasicButton";
@@ -6,130 +6,106 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
-import { AiFillEye, AiOutlineEye } from "react-icons/ai";
 import Table from "../../../components/Table/Table";
 import BasicIconButton from "../../../components/Button/BasicIconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Rating from "@mui/material/Rating";
-import useHover from "../../../hooks/useHover";
-import { BasicTag } from "../../../components/Tag/BasicTag";
 import BasicPagination from "../../../components/Pagination/BasicPagination";
-import { Checkbox, FormControlLabel } from "@mui/material";
-import { BasicEditablePopup } from "../../../components/Popup/BasicEditPopup";
+import {
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../../api/productApi";
 import { useQuery } from "@tanstack/react-query";
-import Config from "../../../configuration";
+import useCategories from "../../../hooks/Categories/useCategories";
+import useMenu from "../../../hooks/useMenu";
+import { TableItem, TableItemSkeleton } from "./TableItem";
+
 const ITEMS_PER_PAGE = 10;
+const pageSizeOption = [
+  { size: 10 },
+  { size: 20 },
+  { size: 40 },
+  { size: 50 },
+  { size: 100 },
+];
+const ACTION = {
+  DELETE: 1,
+};
+const actions = [
+  {
+    value: ACTION.DELETE,
+    icon: <FaTrash></FaTrash>,
+    title: "Xóa sản phẩm",
+  },
+];
 export const ProductManagement = () => {
-  const listCategory = [
-    { value: "1", label: "Bóng đá" },
-    { value: "2", label: "Giày thể thao" },
-    { value: "3", label: "Áo quần" },
-  ];
-  const listCriteria = [
-    { value: "1", label: "Yêu thích" },
-    { value: "2", label: "Bán chạy" },
-    { value: "3", label: "Nổi bật" },
-  ];
-  const listItem = [
-    {
-      id: 1,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 2,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 3,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-    {
-      id: 4,
-      name: "Sản phẩm test",
-      rating: 4.5,
-      ratingCount: 5,
-      category: "Thể thao",
-      price: 12000,
-    },
-  ];
+  // const listCriteria = [
+  //   { value: "1", label: "Yêu thích" },
+  //   { value: "2", label: "Bán chạy" },
+  //   { value: "3", label: "Nổi bật" },
+  // ];
   const navigate = useNavigate();
+  const {
+    anchorEl: anchorElActions,
+    handleCloseMenu: handleClosePopupActionsMenu,
+    handleOpenMenu: onShowActions,
+  } = useMenu();
   const [searchKey, setSearchKey] = useState("");
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("1");
-  const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("2");
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("");
+  // const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("");
   const [pageCount, setPageCount] = useState(5);
+  const [pageSize, setPageSize] = useState(pageSizeOption[0].size);
   const [currentPage, setCurrentPage] = useState(1);
   const [listProduct, setListProduct] = useState([]);
-  const [checked, setChecked] = React.useState(
-    Array(listProduct.length).fill(false)
-  );
-  const handlePageClick = (event) => {};
+  const [listCategories, setListCategories] = useState([]);
+  const [productQueries, setProductQueries] = useState({
+    currentPage: 1,
+    pageSize: pageSize,
+    filters: "",
+    sortField: null,
+    sortOrder: null,
+  });
+  const [checked, setChecked] = React.useState([]);
+  const onMenuActionSelect = (action) => {
+    switch (action) {
+      case ACTION.DELETE:
+        console.log("delete");
+        break;
+      default:
+        break;
+    }
+  };
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
+    setProductQueries({
+      ...productQueries,
+      currentPage: event.selected + 1,
+    });
+  };
+  const handleSetPageSize = (item) => {
+    setPageSize(item.size);
+    setProductQueries({
+      ...productQueries,
+      pageSize: item.size,
+    });
+  };
+  const handleSearchWithFilter = () => {
+    console.log(searchKey + ", " + selectedCategoryFilter);
+    setProductQueries({
+      ...productQueries,
+      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter}`,
+    });
+  };
   const handleOnChangeSearchKey = (e) => {
     setSearchKey(e.target.value);
   };
   const handleCheckAll = (event) => {
+    console.log("handleCheckAll");
     if (checked.every((item) => item === true)) {
       setChecked(Array(listProduct.length).fill(false));
     } else if (
@@ -150,30 +126,41 @@ export const ProductManagement = () => {
   const handleSelectCategoryFilter = (e) => {
     setSelectedCategoryFilter(e.target.value);
   };
-  const handleSelectCriteriaFilter = (e) => {
-    setSelectedCriteriaFilter(e.target.value);
-  };
-  const [productQueries, setProductQueries] = useState({
-    currentPage: 1,
-    pageSize: 10,
-    filters: "categoryId==49a30440-cc1a-4c0b-bda9-fd609d397f3d",
-    sortField: null,
-    sortOrder: null,
-  });
+  // const handleSelectCriteriaFilter = (e) => {
+  //   setSelectedCriteriaFilter(e.target.value);
+  // };
   const { data, isLoading, error, isError, isSuccess } = useQuery({
-    queryKey: ["getProducts"],
+    queryKey: ["getProducts", productQueries],
     queryFn: async ({ signal }) => {
       return await productApi.getProducts({ payload: productQueries, signal });
     },
   });
+  const {
+    categoryList,
+    tempFilterCategory,
+    createCategoryListDropdown,
+    isLoading: categoriesIsLoading,
+    isSuccess: categoriesIsSuccess,
+  } = useCategories({});
   useEffect(() => {
     const fetchData = async () => {
-      // const res = await productApi.getProducts({});
+      // const res = await categoryApi.getCategories();
+      if (categoriesIsSuccess) {
+        console.log(categoryList?.responseData?.rows);
+        if (
+          !categoryList?.responseData?.rows.some(
+            (item) => item.title === "Tất cả" && item.id === ""
+          )
+        ) {
+          categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+        }
+        setListCategories(categoryList?.responseData?.rows);
+      }
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);
         setCurrentPage(data.responseData.currentPage);
         setListProduct(data.responseData.rows);
-        console.log(data.responseData);
+        setChecked(Array(data.responseData.rows.length).fill(false));
       }
     };
     fetchData();
@@ -201,26 +188,59 @@ export const ProductManagement = () => {
         <div>
           <Table>
             <thead>
-              <tr>
-                <td colSpan={9} className="">
+              <tr className=" sticky z-10">
+                <th colSpan={9} className="!bg-white">
                   <div className="flex justify-between w-full">
                     <div className="flex gap-3">
                       <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
-                          10
+                          {listProduct.length > 10 ? "10+" : listProduct.length}
                         </div>
                         <BasicIconButton className="!bg-blue-500 border-none">
                           <MdEdit color="white" size={20}></MdEdit>
                         </BasicIconButton>
                       </div>
-                      <div className="relative">
+                      {checked?.length > 0 &&
+                        checked.some((item) => item === true) && (
+                          <BasicButton
+                            onClick={(e) => onShowActions(e)}
+                            className="!bg-green-400 border-none text-white h-fit"
+                            title="Thao tác"
+                          ></BasicButton>
+                        )}
+                      <Menu
+                        anchorEl={anchorElActions}
+                        id="account-menu"
+                        open={Boolean(anchorElActions)}
+                        onClose={handleClosePopupActionsMenu}
+                        keepMounted
+                        onClick={handleClosePopupActionsMenu}
+                      >
+                        {actions.map((item, index) => (
+                          <div key={item?.value}>
+                            <MenuItem
+                              onClick={() => {
+                                handleClosePopupActionsMenu();
+                                onMenuActionSelect(item?.value);
+                              }}
+                            >
+                              <ListItemIcon>{item?.icon}</ListItemIcon>
+                              {item?.title}
+                            </MenuItem>
+                            {index !== actions.length - 1 && (
+                              <Divider></Divider>
+                            )}
+                          </div>
+                        ))}
+                      </Menu>
+                      {/* <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
                           10
                         </div>
                         <BasicIconButton>
                           <FaTrash size={20}></FaTrash>
                         </BasicIconButton>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="flex gap-1">
                       <input
@@ -230,75 +250,94 @@ export const ProductManagement = () => {
                         placeholder="Từ khóa..."
                       ></input>
                       <TableDropdown
-                        value={selectedCategoryFilter}
-                        onChange={(e) => handleSelectCategoryFilter(e)}
-                        dropdownItems={listCategory}
+                        value={selectedCategoryFilter.title}
+                        onChange={handleSelectCategoryFilter}
+                        dropdownItems={listCategories}
                       ></TableDropdown>
-                      <TableDropdown
+                      {/* <TableDropdown
                         value={selectedCriteriaFilter}
                         onChange={(e) => handleSelectCriteriaFilter(e)}
                         dropdownItems={listCriteria}
-                      ></TableDropdown>
+                      ></TableDropdown> */}
                       <BasicIconButton
                         handleOnClick={() => {
-                          console.log(
-                            searchKey + ", " + selectedCategoryFilter
-                          );
+                          handleSearchWithFilter();
                         }}
                       >
                         <BsSearch size={14}></BsSearch>
                       </BasicIconButton>
                     </div>
                   </div>
-                </td>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr className="shadow-md">
-                <th>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={checked.every((item) => item === true)}
-                        indeterminate={
-                          checked.some((item) => item === true) &&
-                          !checked.every((item) => item === true)
+              {isLoading ? (
+                Array(pageSize)
+                  .fill(0)
+                  .map((item, index) => (
+                    <TableItemSkeleton key={index}></TableItemSkeleton>
+                  ))
+              ) : (
+                <>
+                  <tr className="sticky z-9 shadow-md">
+                    <th>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={
+                              (checked?.length > 0 &&
+                                checked?.every((item) => item === true)) ||
+                              false
+                            }
+                            indeterminate={
+                              checked.some((item) => item === true) &&
+                              !checked.every((item) => item === true)
+                            }
+                            onChange={handleCheckAll}
+                          />
                         }
-                        onChange={handleCheckAll}
                       />
-                    }
-                  />
-                </th>
-                <th>Hình</th>
-                <th>Tiêu đề</th>
-                <th>Chuyên mục</th>
-                <th>Phân loại</th>
-                <th>Giá</th>
-                <th>Nhóm</th>
-                <th>Thứ tự</th>
-                <th>Hành động</th>
-              </tr>
-              {listProduct.map((item, index) => (
-                <TableItem
-                  key={item.id}
-                  product={item}
-                  checked={checked[index]}
-                  handleCheck={handleCheckItem}
-                  index={index}
-                  className={`${index % 2 === 0 ? "bg-gray-100" : ""}`}
-                ></TableItem>
-              ))}
-              {/* <TableItem></TableItem> */}
+                    </th>
+                    <th>Hình</th>
+                    <th>Tiêu đề</th>
+                    <th>Chuyên mục</th>
+                    <th>Phân loại</th>
+                    <th>Giá</th>
+                    <th>Nhóm</th>
+                    <th>Thứ tự</th>
+                    <th>Hành động</th>
+                  </tr>
+                  {listProduct.map((item, index) => (
+                    <TableItem
+                      key={item.id}
+                      product={item}
+                      checked={checked[index] || false}
+                      handleCheck={handleCheckItem}
+                      index={index}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-100" : ""
+                      } hover:bg-gray-200`}
+                    ></TableItem>
+                  ))}
+                </>
+              )}
             </tbody>
           </Table>
           <div className="mt-2 flex gap-2 justify-end items-center">
             <span className="text-sm">Số lượng sản phẩm/ trang</span>
             <div className="flex gap-1">
-              <BasicIconButton>10</BasicIconButton>
-              <BasicIconButton>20</BasicIconButton>
-              <BasicIconButton>40</BasicIconButton>
-              <BasicIconButton>50</BasicIconButton>
-              <BasicIconButton>100</BasicIconButton>
+              {pageSizeOption.map((item) => (
+                <BasicIconButton
+                  key={item.size}
+                  className={`${
+                    pageSize === item.size ? "!bg-blue-500 text-white" : ""
+                  } `}
+                  onClick={() => handleSetPageSize(item)}
+                >
+                  {item.size}
+                </BasicIconButton>
+              ))}
             </div>
             {pageCount > 1 && (
               <BasicPagination
@@ -312,115 +351,5 @@ export const ProductManagement = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const TableItem = ({ product, index, className, checked, handleCheck }) => {
-  const [hoverRef, isHovered] = useHover();
-  const handleAddFavTag = () => {};
-  const handleAddHotSellTag = () => {};
-  const handleAddOutStandingTag = () => {};
-  return (
-    <tr className={className} ref={hoverRef}>
-      <td className="!py-[10px] !px-[14px]">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checked}
-              onChange={(e) => handleCheck(e, index)}
-            />
-          }
-        />
-      </td>
-      <td className="!py-[10px]">
-        <img
-          src={Config.apiConfig.imageEndPoint + product?.image}
-          alt="thumb"
-          className="w-[50px] rounded-md"
-        />
-      </td>
-      <td className="!py-[10px]">
-        <div className="w-fit">
-          <Tooltip title="Sản phẩm test" arrow placement="top" color="error">
-            <h4 className="font-semibold text-sm">{product?.title}</h4>
-          </Tooltip>
-        </div>
-        <div className="mt-2 flex justify-start items-center gap-1">
-          <a href="#" target="_blank">
-            <Rating value={5} size="small" readOnly></Rating>
-          </a>
-          <span className="text-blue-500 text-xs">
-            ({product.rating} đánh giá)
-          </span>
-        </div>
-        <div
-          className={`flex gap-2 justify-start items-center ${
-            isHovered ? "visible" : "invisible"
-          }`}
-        >
-          <h5 className="text-xs text-gray-300">ID: 6 |</h5>
-          <a href="#" target="_blank">
-            <AiFillEye
-              size={18}
-              color="blue"
-              className="cursor-pointer"
-            ></AiFillEye>
-          </a>
-        </div>
-      </td>
-      <td>
-        <h4 className="text-blue-500 text-sm cursor-pointer">
-          {product.category.title}
-        </h4>
-      </td>
-      <td></td>
-      <td>
-        <div className="flex gap-2">
-          {/*Origin price*/}
-          <BasicEditablePopup
-            initValue={product.originPrice}
-          ></BasicEditablePopup>
-          {/*Discount price*/}
-          <BasicEditablePopup
-            initValue={product.discountPrice}
-          ></BasicEditablePopup>
-        </div>
-      </td>
-      <td>
-        <div className="flex gap-1">
-          <BasicTag label={"Yêu thích"} onClick={handleAddFavTag} />
-          <BasicTag label={"Bán chạy"} onClick={handleAddHotSellTag} />
-          <BasicTag label={"Nổi bật"} onClick={handleAddOutStandingTag} />
-        </div>
-      </td>
-      <td>
-        <BasicEditablePopup initValue={0}></BasicEditablePopup>
-      </td>
-      <td>
-        <div className="flex gap-1">
-          <Tooltip title="Ẩn sản phẩm" arrow placement="top">
-            <div>
-              <BasicIconButton className="!bg-green-400">
-                <AiOutlineEye color="white"></AiOutlineEye>
-              </BasicIconButton>
-            </div>
-          </Tooltip>
-          <Tooltip title="Cập nhật" arrow placement="top">
-            <div>
-              <BasicIconButton className="!bg-blue-500">
-                <MdEdit color="white"></MdEdit>
-              </BasicIconButton>
-            </div>
-          </Tooltip>
-          <Tooltip title="Xoá" arrow placement="top">
-            <div>
-              <BasicIconButton className="!bg-red-500">
-                <FaTrash color="white"></FaTrash>
-              </BasicIconButton>
-            </div>
-          </Tooltip>
-        </div>
-      </td>
-    </tr>
   );
 };

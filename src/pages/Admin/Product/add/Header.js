@@ -5,12 +5,14 @@ import { FaReply } from "react-icons/fa";
 import { AiFillSave } from "react-icons/ai";
 import "../Product.scss";
 import { useNavigate } from "react-router-dom";
-const Header = () => {
+import { SUBMIT_STATUS } from "../../../../common/constant";
+const Header = ({ submitStatus }) => {
   const navigate = useNavigate();
   return (
     <HeaderMainPage>
       <div className="flex gap-[10px] mr-[10px] justify-end px-[10px] py-2 bg-white">
         <BasicButton
+          disabled={submitStatus === SUBMIT_STATUS.LOADING}
           icon={<AiFillSave />}
           className="btn text-white bg-[#08E783] rounded-md text-xs !px-5 !py-[7px]"
           title="Lưu"
