@@ -1,12 +1,19 @@
 import React from "react";
 import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
 import BasicCheckbox from "../../../../components/Checkbox/BasicCheckbox";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import BasicButton from "../../../../components/Button/BasicButton";
 import Table from "../../../../components/Table/Table";
+import { FaEye } from "react-icons/fa6";
+import ConfirmPopup from "../../../../components/Popup/ConfirmPopup";
+import usePopup from "../../../../hooks/usePopup";
 
-const CategoryTable = ({ isLoading, categoryList }) => {
+const CategoryTable = ({
+  isLoading = false,
+  categoryList = [],
+  delCategory = () => {},
+}) => {
   const titleClass = "";
   const actionClass = "w-[130px]";
   const checkboxClass = "p-3 w-12 z-[1]";
@@ -29,6 +36,24 @@ const CategoryTable = ({ isLoading, categoryList }) => {
   }
 
   const navigate = useNavigate();
+
+  const [delItem, setDelItem] = React.useState({});
+
+  function delBtnClick(item) {
+    setDelItem(item);
+    openConfirmDelete();
+  }
+
+  function closeDelBtnClick() {
+    setDelItem({});
+    closeConfirmDelete();
+  }
+
+  const {
+    open: isOpenConfirmDelete,
+    handleClosePopup: closeConfirmDelete,
+    handleOpenPopup: openConfirmDelete,
+  } = usePopup();
 
   return (
     <>
@@ -57,7 +82,7 @@ const CategoryTable = ({ isLoading, categoryList }) => {
               ? categoryList?.responseData?.rows?.map((item) => (
                   <tr
                     key={item.id}
-                    className="hover:!bg-gray-200 odd:!bg-gray-100"
+                    className="hover:!bg-gray-200 odd:!bg-gray-100 group"
                   >
                     <td className={checkboxClass}>
                       <BasicCheckbox />
@@ -72,12 +97,26 @@ const CategoryTable = ({ isLoading, categoryList }) => {
                           />
                         ) : null}
 
-                        <p className="truncate">
-                          {item.parentId
-                            ? `${getCategoryName(item.parentId)} - 
+                        <div className="max-w-[90%]">
+                          <p className="truncate">
+                            {item.parentId
+                              ? `${getCategoryName(item.parentId)} - 
                                 ${item.title}`
-                            : item.title}
-                        </p>
+                              : item.title}
+                          </p>
+                          <div className="text-sm flex items-center gap-x-2 invisible group-hover:!visible">
+                            <span className="text-slate-400 border-r-2 border-gray-400 pr-2">
+                              ID: {item.id}
+                            </span>
+                            <BasicButton
+                              icon={<FaEye />}
+                              className="!p-0 text-blue-500 hover:opacity-80"
+                              onClick={() => {
+                                console.log(`navigate to product ${item.id}`);
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className={`px-6 py-3 w-4 ${actionClass}`}>
@@ -87,18 +126,15 @@ const CategoryTable = ({ isLoading, categoryList }) => {
                           className="border !p-2 blue-btn"
                           onClick={() =>
                             navigate(
-                              `products/products-categories/${item.id}/edit`
+                              `/admin/products/products-categories/${item.id}/edit`
                             )
                           }
                         />
                         <BasicButton
                           icon={<FaTrash className="w-4 h-4" />}
                           className="border !p-2 red-btn"
-                          onClick={() =>
-                            navigate(
-                              `products/products-categories/${item.id}/edit`
-                            )
-                          }
+                          // onClick={() => delCategory(item.id)}
+                          onClick={() => delBtnClick(item)}
                         />
                       </div>
                     </td>
@@ -116,6 +152,23 @@ const CategoryTable = ({ isLoading, categoryList }) => {
           <CircleSpinLoading className="!w-20 !h-20" />
         </div>
       ) : null}
+
+      {/* Modal */}
+      <ConfirmPopup
+        isOpen={isOpenConfirmDelete}
+        handleClose={closeDelBtnClick}
+        handleConfirm={() => delCategory(delItem?.id)}
+        btnWrapperClass="px-4 !py-4"
+        yesBtnLabel="Đồng ý"
+        noBtnLabel="Đóng"
+        positionTop={true}
+      >
+        <h4 className="font-bold text-left text-xl mb-2">Xóa dữ liệu</h4>
+        <p className="text-left text-sm mb-2">
+          Bạn có chắc muốn xóa{" "}
+          <span className="font-bold">{delItem?.title}</span> ?
+        </p>
+      </ConfirmPopup>
     </>
   );
 };

@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import ImageIcon from "@mui/icons-material/Image";
+import { FaImage } from "react-icons/fa6";
 import fileApi from "../../api/file";
 const ImageTextBox = ({
   name = "upload",
   setSelectedImage = () => {},
   selectedImage = [],
+  setPathName = () => {},
+  label = null,
+  haveLabel = false,
+  btnTitle = "Chọn ảnh",
   ...props
 }) => {
   return (
     <div>
+      {haveLabel ? (
+        <label className="font-medium text-sm">{label}</label>
+      ) : null}
       <div className="flex gap-1 items-center">
         <input
           type="text"
@@ -21,8 +28,8 @@ const ImageTextBox = ({
           htmlFor={name}
           className="w-32 bg-blue-500 text-white text-xs h-10 flex items-center rounded-md gap-1 justify-center hover:opacity-75 cursor-pointer"
         >
-          <ImageIcon className="w-[12px] h-[12px] text-white  " />
-          Chọn ảnh
+          <FaImage className="w-[12px] h-[12px] text-white" />
+          {btnTitle}
         </label>
       </div>
       <input

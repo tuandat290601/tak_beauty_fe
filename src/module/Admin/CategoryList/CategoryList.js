@@ -17,6 +17,7 @@ const CategoryList = () => {
     tempFilterCategory,
     createCategoryListDropdown,
     isLoading,
+    delCategory,
   } = useCategories({});
 
   function startFilter() {
@@ -59,7 +60,11 @@ const CategoryList = () => {
       </div>
 
       <div className="category-list mt-1">
-        <CategoryTable isLoading={isLoading} categoryList={categoryList} />
+        <CategoryTable
+          isLoading={isLoading}
+          categoryList={categoryList}
+          delCategory={delCategory}
+        />
       </div>
     </div>
   );
