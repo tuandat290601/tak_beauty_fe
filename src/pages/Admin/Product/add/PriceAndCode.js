@@ -1,39 +1,144 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BasicTextBox, ImageTextBox } from "../../../../components";
 import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import CloseIcon from "@mui/icons-material/Close";
+import useClickOutside from "../../../../hooks/useClickOutSide";
+import CheckIcon from "@mui/icons-material/Check";
+const PriceAndCode = ({
+  control,
+  errors,
+  setCheckedCategories = () => {},
+  checkedCategories = [],
+}) => {
+  const { categoryList: resCategories } = useCategories("Danh mục");
+  const [categories, setCategories] = useState([]);
 
-const PriceAndCode = ({ control, errors }) => {
+  useEffect(() => {
+    if (resCategories?.status === "success") {
+      const data = resCategories.responseData.rows;
+      setCategories(data);
+    }
+  }, [resCategories]);
   return (
     <div className="w-1/3 flex flex-col gap-2">
-      <Code control={control} errors={errors} />
+      <Code
+        control={control}
+        errors={errors}
+        setCheckedCategories={setCheckedCategories}
+        checkedCategories={checkedCategories}
+        categories={categories}
+      />
       <Price control={control} errors={errors} />
       <ImageProduct control={control} errors={errors} />
-      {/* <Slug control={control} errors={errors} /> */}
     </div>
   );
 };
-const Code = ({ control, errors }) => {
+const Code = ({
+  control,
+  errors,
+  setCheckedCategories = () => {},
+  checkedCategories = [],
+  categories = [],
+}) => {
+  const { show, setShow, nodeRef } = useClickOutside();
+  const handleCheckCategories = (category) => {
+    const temp = [...checkedCategories];
+    const newArr = temp.filter((item) => item.id !== category.id);
+    if (newArr.length === temp.length) {
+      //not exist
+      newArr.push(category);
+    }
+    setCheckedCategories(newArr);
+  };
+  const inCheckedList = (id) => {
+    const filter = checkedCategories.filter((item) => item.id === id);
+    return filter.length > 0;
+  };
   return (
     <Wrapper>
-      {/* <BasicTextBox
+      <BasicTextBox
         wrapperClass="mb-2"
         control={control}
-        name={"product_code"}
-        errMsg={errors["selling"] ? errors["selling"]?.message : null}
+        name={"sku"}
+        errMsg={errors["sku"] ? errors["sku"]?.message : null}
         label={"Mã sản phẩm"}
         subtitle={"Nhập mã sản phẩm (SKU) nếu có."}
         hideSubtitle={false}
-      /> */}
-      <BasicTextBox
-        wrapperClass="m-0"
-        control={control}
-        name={ADD_PRODUCT_OBJ.CATEGORY_ID}
-        errMsg={errors["selling"] ? errors["selling"]?.message : null}
-        label={"Danh mục"}
-        hideSubtitle
-        placeholder="Tìm kiếm danh mục"
       />
+      <div className="relative" ref={nodeRef}>
+        <BasicTextBox
+          wrapperClass="m-0"
+          control={control}
+          name={ADD_PRODUCT_OBJ.CATEGORY_ID}
+          errMsg={errors["selling"] ? errors["selling"]?.message : null}
+          label={"Danh mục"}
+          hideSubtitle
+          placeholder="Tìm kiếm danh mục"
+          onFocus={() => setShow(true)}
+        />
+        {show && (
+          <DropdownCategories
+            categories={categories}
+            inCheckedList={inCheckedList}
+            handleCheckCategories={handleCheckCategories}
+          />
+        )}
+        <CheckedCategories
+          checkedCategories={checkedCategories}
+          handleCheckCategories={handleCheckCategories}
+        />
+      </div>
     </Wrapper>
+  );
+};
+const CheckedCategories = ({
+  checkedCategories = [],
+  handleCheckCategories = () => {},
+}) => {
+  return (
+    <div>
+      {checkedCategories?.length > 0 &&
+        checkedCategories?.map((item) => (
+          <div
+            className=" flex justify-between items-center text-sm px-2 py-1 border-b border-gray-100 hover:bg-gray-100"
+            key={item.id}
+          >
+            {item.title}{" "}
+            <CloseIcon
+              className="p-1 w-5 h-5 bg-white rounded-md cursor-pointer"
+              onClick={() => {
+                handleCheckCategories(item);
+              }}
+            />
+          </div>
+        ))}
+    </div>
+  );
+};
+const DropdownCategories = ({
+  categories = [],
+  handleCheckCategories = () => {},
+  inCheckedList = () => {},
+}) => {
+  return (
+    <div className="bg-white py-2 flex flex-col absolute left-0 right-0  shadow-md max-w-[350px] max-h-48 overflow-auto">
+      {categories?.length > 0 &&
+        categories.map((category) => (
+          <div
+            className="py-1 px-2 relative text-sm !pl-8  hover:bg-blue-100 cursor-pointer"
+            key={category.id}
+            onClick={() => {
+              handleCheckCategories(category);
+            }}
+          >
+            {inCheckedList(category.id) && (
+              <CheckIcon className="absolute left-2 !w-[14px] !h-[14px] top-1/2 -translate-y-1/2 text-gray-700" />
+            )}
+            {category.title}
+          </div>
+        ))}
+    </div>
   );
 };
 const Price = ({ control, errors }) => {
