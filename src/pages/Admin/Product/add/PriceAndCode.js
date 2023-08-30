@@ -42,6 +42,7 @@ const Code = ({
   categories = [],
 }) => {
   const { show, setShow, nodeRef } = useClickOutside();
+  const [search, setSearch] = useState("");
   const handleCheckCategories = (category) => {
     const temp = [...checkedCategories];
     const newArr = temp.filter((item) => item.id !== category.id);
@@ -67,21 +68,27 @@ const Code = ({
         hideSubtitle={false}
       />
       <div className="relative" ref={nodeRef}>
-        <BasicTextBox
-          wrapperClass="m-0"
-          control={control}
-          name={ADD_PRODUCT_OBJ.CATEGORY_ID}
-          errMsg={errors["selling"] ? errors["selling"]?.message : null}
-          label={"Danh mục"}
-          hideSubtitle
-          placeholder="Tìm kiếm danh mục"
+        <label
+          htmlFor="category"
+          className="font-medium text-black mb-1 text-sm"
+        >
+          Danh mục
+        </label>
+        <input
+          type="text"
+          id="category"
           onFocus={() => setShow(true)}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Tìm kiếm danh mục"
+          className="focus:ring-0 border rounded-md p-2 text-black w-full"
         />
         {show && (
           <DropdownCategories
             categories={categories}
             inCheckedList={inCheckedList}
             handleCheckCategories={handleCheckCategories}
+            search={search}
           />
         )}
         <CheckedCategories
@@ -120,11 +127,15 @@ const DropdownCategories = ({
   categories = [],
   handleCheckCategories = () => {},
   inCheckedList = () => {},
+  search = "",
 }) => {
+  const newCategories = categories?.filter((item) =>
+    item.title.toUpperCase().includes(search.toUpperCase())
+  );
   return (
-    <div className="bg-white py-2 flex flex-col absolute left-0 right-0  shadow-md max-w-[350px] max-h-48 overflow-auto">
-      {categories?.length > 0 &&
-        categories.map((category) => (
+    <div className=" bg-white py-2 flex flex-col mt-1 absolute left-0 right-0  shadow-md max-w-[350px] max-h-48 overflow-auto">
+      {newCategories?.length > 0 &&
+        newCategories.map((category) => (
           <div
             className="py-1 px-2 relative text-sm !pl-8  hover:bg-blue-100 cursor-pointer"
             key={category.id}
