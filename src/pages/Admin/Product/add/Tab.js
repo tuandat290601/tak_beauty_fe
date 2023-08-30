@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { BasicEditor } from "../../../../components/Editor/BasicEditor";
 import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
 
-const Tab = ({ control, errors, getValues }) => {
+const Tab = ({ control, errors, getValues, setValue }) => {
   const [index, setIndex] = useState(0);
   return (
     <div className="bg-white w-full  rounded-md">
@@ -42,12 +42,29 @@ const Tab = ({ control, errors, getValues }) => {
       {!!index ? (
         <OtherLink control={control} errors={errors} />
       ) : (
-        <Content control={control} errors={errors} getValues={getValues} />
+        <Content
+          control={control}
+          errors={errors}
+          getValues={getValues}
+          setValue={setValue}
+        />
       )}
     </div>
   );
 };
-const Content = ({ control, errors, getValues }) => {
+const Content = ({ control, errors, getValues, setValue }) => {
+  const handleSetFormValueFromEditor = (html, fieldName) => {
+    if (
+      html.replace(/<(.|\n)*?>/g, "").trim().length === 0 &&
+      !html.includes("<img")
+    ) {
+      // Empty editor
+      setValue(fieldName, "", { shouldDirty: true });
+    } else {
+      // Not empty editor
+      setValue(fieldName, html, { shouldDirty: true });
+    }
+  };
   return (
     <div className="py-3 px-[10px] flex flex-col gap-1">
       <BasicTextBox
@@ -65,6 +82,9 @@ const Content = ({ control, errors, getValues }) => {
         title="Tóm tắt"
         className="quill-summary"
         value={getValues(ADD_PRODUCT_OBJ.DESCRIPTION)}
+        onChange={(html) =>
+          handleSetFormValueFromEditor(html, ADD_PRODUCT_OBJ.DESCRIPTION)
+        }
       ></BasicEditor>
       <BasicEditor
         control={control}
@@ -72,6 +92,9 @@ const Content = ({ control, errors, getValues }) => {
         title="Nội dung"
         className="quill-content"
         value={getValues(ADD_PRODUCT_OBJ.DETAIL)}
+        onChange={(html) =>
+          handleSetFormValueFromEditor(html, ADD_PRODUCT_OBJ.DETAIL)
+        }
       ></BasicEditor>
     </div>
   );

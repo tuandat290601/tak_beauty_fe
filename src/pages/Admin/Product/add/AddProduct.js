@@ -38,6 +38,7 @@ const AddProduct = () => {
     handleSubmit,
     control,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(addProductShcema),
@@ -48,16 +49,32 @@ const AddProduct = () => {
   const queryClient = useQueryClient();
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
-    if (data.categoryId === "") {
-      delete data.categoryId;
+    const createProductData = {
+      title: data[ADD_PRODUCT_OBJ.TITLE],
+      originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
+      discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
+      // rating: data[ADD_PRODUCT_OBJ.RATING],
+      // image: "/images/hinh_anh_1.jpg",
+      description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
+      detail: data[ADD_PRODUCT_OBJ.DETAIL],
+      // sku: "SKU1234",
+      attributes: {
+        size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
+        weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+      },
+      categoryId: data[ADD_PRODUCT_OBJ.CATEGORY_ID],
+    };
+    console.log(data);
+    console.log(createProductData);
+    if (createProductData.categoryId === "") {
+      delete createProductData.categoryId;
     }
-    const res = await productApi.addNewProduct(data);
+    const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
-      console.log("success");
       toast.success("Thêm sản phẩm thành công");
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      // navigate("/admin/product/product-management");
+      navigate("/admin/product/product-management");
     } else {
       console.log("fail");
       toast.error("Đã có lỗi xảy ra, thêm sản phẩm không thành công");
@@ -71,7 +88,12 @@ const AddProduct = () => {
         <Header submitStatus={submitStatus} />
         <div className="flex  px-[10px] py-5 !pb-16 mt-3 bg-gray-200 gap-[20px]">
           <div className="w-2/3 flex flex-col gap-2" ref={contentRef}>
-            <Tab control={control} errors={errors} getValues={getValues}></Tab>
+            <Tab
+              control={control}
+              errors={errors}
+              getValues={getValues}
+              setValue={setValue}
+            ></Tab>
             {/* <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
             <BasicEditor
             title="Khuyến mãi"

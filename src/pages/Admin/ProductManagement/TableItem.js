@@ -80,10 +80,10 @@ export const TableItem = ({
         </div>
         <div className="mt-2 flex justify-start items-center gap-1">
           <a href="#" target="_blank">
-            <Rating value={5} size="small" readOnly></Rating>
+            <Rating value={product?.rating || 0} size="small" readOnly></Rating>
           </a>
           <span className="text-blue-500 text-xs">
-            ({product.rating} đánh giá)
+            ({product?.rating || 0} đánh giá)
           </span>
         </div>
         <div
@@ -92,7 +92,7 @@ export const TableItem = ({
           }`}
         >
           <h5 className="text-xs text-gray-400">
-            Mã sản phẩm: {product.sku} |
+            Mã sản phẩm: {product?.sku || ""} |
           </h5>
           <a href="#" target="_blank">
             <AiFillEye
@@ -105,7 +105,7 @@ export const TableItem = ({
       </td>
       <td>
         <h4 className="text-blue-500 text-sm cursor-pointer">
-          {product.category.title}
+          {product?.category?.title || ""}
         </h4>
       </td>
       <td></td>
@@ -113,11 +113,11 @@ export const TableItem = ({
         <div className="flex gap-2">
           {/*Origin price*/}
           <BasicEditablePopup
-            initValue={product.originPrice}
+            initValue={product?.originPrice || 0}
           ></BasicEditablePopup>
           {/*Discount price*/}
           <BasicEditablePopup
-            initValue={product.discountPrice}
+            initValue={product?.discountPrice || 0}
           ></BasicEditablePopup>
         </div>
       </td>
