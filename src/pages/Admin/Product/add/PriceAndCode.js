@@ -1,5 +1,6 @@
 import React from "react";
 import { BasicTextBox, ImageTextBox } from "../../../../components";
+import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
 
 const PriceAndCode = ({ control, errors }) => {
   return (
@@ -14,7 +15,7 @@ const PriceAndCode = ({ control, errors }) => {
 const Code = ({ control, errors }) => {
   return (
     <Wrapper>
-      <BasicTextBox
+      {/* <BasicTextBox
         wrapperClass="mb-2"
         control={control}
         name={"product_code"}
@@ -22,11 +23,11 @@ const Code = ({ control, errors }) => {
         label={"Mã sản phẩm"}
         subtitle={"Nhập mã sản phẩm (SKU) nếu có."}
         hideSubtitle={false}
-      />
+      /> */}
       <BasicTextBox
         wrapperClass="m-0"
         control={control}
-        name={"category"}
+        name={ADD_PRODUCT_OBJ.CATEGORY_ID}
         errMsg={errors["selling"] ? errors["selling"]?.message : null}
         label={"Danh mục"}
         hideSubtitle
@@ -41,17 +42,24 @@ const Price = ({ control, errors }) => {
       <BasicTextBox
         wrapperClass="mb-2"
         control={control}
-        name={"originPrice"}
-        errMsg={errors["originPrice"] ? errors["originPrice"]?.message : null}
+        name={ADD_PRODUCT_OBJ.ORIGIN_PRICE}
+        errMsg={
+          errors[ADD_PRODUCT_OBJ.ORIGIN_PRICE]
+            ? errors[ADD_PRODUCT_OBJ.ORIGIN_PRICE]?.message
+            : null
+        }
         label={"Giá"}
         hideSubtitle
+        defaultValue={0}
       />
       <BasicTextBox
         wrapperClass="m-0"
         control={control}
-        name={"discountPrice"}
+        name={ADD_PRODUCT_OBJ.DISCOUNT_PRICE}
         errMsg={
-          errors["discountPrice"] ? errors["discountPrice"]?.message : null
+          errors[ADD_PRODUCT_OBJ.DISCOUNT_PRICE]
+            ? errors[ADD_PRODUCT_OBJ.DISCOUNT_PRICE]?.message
+            : null
         }
         label={"Giá khuyến mãi"}
         hideSubtitle

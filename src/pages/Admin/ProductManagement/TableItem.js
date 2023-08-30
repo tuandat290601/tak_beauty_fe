@@ -91,7 +91,9 @@ export const TableItem = ({
             isHovered ? "visible" : "invisible"
           }`}
         >
-          <h5 className="text-xs text-gray-300">ID: 6 |</h5>
+          <h5 className="text-xs text-gray-400">
+            Mã sản phẩm: {product.sku} |
+          </h5>
           <a href="#" target="_blank">
             <AiFillEye
               size={18}

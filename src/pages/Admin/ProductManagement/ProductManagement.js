@@ -147,7 +147,13 @@ export const ProductManagement = () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
         console.log(categoryList?.responseData?.rows);
-        categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+        if (
+          !categoryList?.responseData?.rows.some(
+            (item) => item.title === "Tất cả" && item.id === ""
+          )
+        ) {
+          categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+        }
         setListCategories(categoryList?.responseData?.rows);
       }
       if (isSuccess) {

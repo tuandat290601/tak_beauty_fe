@@ -4,17 +4,9 @@ import { BasicTextBox } from "../../../../components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BasicEditor } from "../../../../components/Editor/BasicEditor";
+import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
 
-const Tab = () => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(),
-    defaultValues: {},
-    mode: "onChange",
-  });
+const Tab = ({ control, errors, getValues }) => {
   const [index, setIndex] = useState(0);
   return (
     <div className="bg-white w-full  rounded-md">
@@ -50,25 +42,37 @@ const Tab = () => {
       {!!index ? (
         <OtherLink control={control} errors={errors} />
       ) : (
-        <Content control={control} errors={errors} />
+        <Content control={control} errors={errors} getValues={getValues} />
       )}
     </div>
   );
 };
-const Content = ({ control, errors }) => {
+const Content = ({ control, errors, getValues }) => {
   return (
     <div className="py-3 px-[10px] flex flex-col gap-1">
       <BasicTextBox
         wrapperClass="m-0"
         control={control}
-        name={"title"}
+        name={ADD_PRODUCT_OBJ.TITLE}
         errMsg={errors["title"] ? errors["title"]?.message : null}
         label={"Tiêu đề"}
         subtitle="Tiêu đề được lấy làm thẻ H1"
         hideSubtitle={false}
       />
-      <BasicEditor title="Tóm tắt" className="quill-summary"></BasicEditor>
-      <BasicEditor title="Nội dung" className="quill-content"></BasicEditor>
+      <BasicEditor
+        control={control}
+        name={ADD_PRODUCT_OBJ.DESCRIPTION}
+        title="Tóm tắt"
+        className="quill-summary"
+        value={getValues(ADD_PRODUCT_OBJ.DESCRIPTION)}
+      ></BasicEditor>
+      <BasicEditor
+        control={control}
+        name={ADD_PRODUCT_OBJ.DETAIL}
+        title="Nội dung"
+        className="quill-content"
+        value={getValues(ADD_PRODUCT_OBJ.DETAIL)}
+      ></BasicEditor>
     </div>
   );
 };
