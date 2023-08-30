@@ -16,12 +16,18 @@ import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
 import useCategories from "../../../../hooks/Categories/useCategories";
+import { fileApi } from "../../../../api";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
   const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  console.log(
+    "🚀 ~ file: AddProduct.js:26 ~ AddProduct ~ selectedImage:",
+    selectedImage
+  );
 
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -50,8 +56,23 @@ const AddProduct = () => {
   });
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
+
+  const onUploadImage = async () => {
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+
+    const res = await fileApi.uploadFile(formData);
+    if ((res.status = "success")) {
+      const { responseData } = res;
+      return responseData.path;
+      //save path
+    } else {
+      return "";
+    }
+  };
   const onSumbit = async (data) => {
-    console.log("🚀 ~ file: AddProduct.js:51 ~ onSumbit ~ data:", data);
+    const image = await onUploadImage();
+    console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ image:", image);
     // setSubmitStatus(SUBMIT_STATUS.LOADING);
     // const createProductData = {
     //   title: data[ADD_PRODUCT_OBJ.TITLE],
@@ -122,6 +143,8 @@ const AddProduct = () => {
             errors={errors}
             setCheckedCategories={setCheckedCategories}
             checkedCategories={checkedCategories}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
           />
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />
