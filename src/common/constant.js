@@ -3,3 +3,8 @@ export const SUBMIT_STATUS = {
   SUCCESS: "success",
   LOADING: "loading",
 };
+
+export const PRODUCT_TYPE = {
+  PRODUCT: "PRODUCT",
+  COURSE: "COURSE",
+};

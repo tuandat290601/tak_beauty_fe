@@ -13,7 +13,7 @@ import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../../configuration/reactQueryKey";
-import { SUBMIT_STATUS } from "../../../../common/constant";
+import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
 import { fileApi } from "../../../../api";
 
@@ -58,7 +58,7 @@ const AddProduct = () => {
       formData.append("file", selectedImage);
 
       const res = await fileApi.uploadFile(formData);
-      if ((res.status = "success")) {
+      if ((res.status = SUBMIT_STATUS.SUCCESS)) {
         const { responseData } = res;
         return responseData.path;
         //save path
@@ -84,12 +84,13 @@ const AddProduct = () => {
         size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
         weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
       },
-      categoryId: listCategoriesId[0] || "", //single category
+      categoryIds: listCategoriesId, //single category
+      type: PRODUCT_TYPE.PRODUCT,
     };
     console.log(data);
     console.log(createProductData);
-    if (createProductData.categoryId === "") {
-      delete createProductData.categoryId;
+    if (createProductData.categoryIds.length === 0) {
+      delete createProductData.categoryIds;
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {

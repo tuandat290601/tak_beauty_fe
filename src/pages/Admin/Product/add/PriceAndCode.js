@@ -61,13 +61,13 @@ const Code = ({
     setCheckedCategories(newArr);
   };
   //single
-  const handleCheckCategory = (category) => {
-    const temp = [...checkedCategories];
-    const newArr = temp.filter((item) => item.id === category.id);
-    if (newArr.length > 0) {
-      setCheckedCategories([]);
-    } else setCheckedCategories([category]);
-  };
+  // const handleCheckCategory = (category) => {
+  //   const temp = [...checkedCategories];
+  //   const newArr = temp.filter((item) => item.id === category.id);
+  //   if (newArr.length > 0) {
+  //     setCheckedCategories([]);
+  //   } else setCheckedCategories([category]);
+  // };
   const inCheckedList = (id) => {
     const filter = checkedCategories.filter((item) => item.id === id);
     return filter.length > 0;
@@ -107,7 +107,7 @@ const Code = ({
           <DropdownCategories
             categories={categories}
             inCheckedList={inCheckedList}
-            handleCheckCategories={handleCheckCategory}
+            handleCheckCategories={handleCheckCategories}
             search={search}
           />
         )}
