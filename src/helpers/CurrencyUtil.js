@@ -1,6 +1,6 @@
 export const toVNDCurrency = (price) => {
   if (price) {
-    let formatted = price.toLocaleString("it-IT", {
+    let formatted = parseInt(price).toLocaleString("it-IT", {
       style: "currency",
       currency: "VND",
     });
