@@ -23,6 +23,9 @@ const AddProduct = () => {
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const page = window.location.href.includes("product")
+    ? PRODUCT_TYPE.PRODUCT
+    : PRODUCT_TYPE.COURSE;
 
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -71,7 +74,7 @@ const AddProduct = () => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
-    const createProductData = {
+    let createProductData = {
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
@@ -79,14 +82,20 @@ const AddProduct = () => {
       image: image,
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-      sku: data[ADD_PRODUCT_OBJ.SKU],
-      attributes: {
-        size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-        weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
-      },
-      categoryIds: listCategoriesId, //single category
-      type: PRODUCT_TYPE.PRODUCT,
+
+      categoryIds: listCategoriesId,
+      type: page,
     };
+    if (page === PRODUCT_TYPE.PRODUCT) {
+      createProductData = {
+        ...createProductData,
+        sku: data[ADD_PRODUCT_OBJ.SKU],
+        attributes: {
+          size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
+          weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+        },
+      };
+    }
     console.log(data);
     console.log(createProductData);
     if (createProductData.categoryIds.length === 0) {
@@ -94,13 +103,21 @@ const AddProduct = () => {
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
-      toast.success("Thêm sản phẩm thành công");
+      toast.success(
+        `Thêm ${
+          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+        } thành công`
+      );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
       navigate("/admin/product/product-management");
     } else {
       console.log("fail");
-      toast.error("Đã có lỗi xảy ra, thêm sản phẩm không thành công");
+      toast.error(
+        `Đã có lỗi xảy ra, thêm ${
+          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+        } không thành công`
+      );
       // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.ERROR);
     }
@@ -117,12 +134,7 @@ const AddProduct = () => {
               getValues={getValues}
               setValue={setValue}
             ></Tab>
-            {/* <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
-            <BasicEditor
-            title="Khuyến mãi"
-            className="quill-content"
-            ></BasicEditor>
-          </div> */}
+
             <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
               <BasicTextBox
                 wrapperClass="m-0"

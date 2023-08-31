@@ -5,6 +5,7 @@ import useCategories from "../../../../hooks/Categories/useCategories";
 import CloseIcon from "@mui/icons-material/Close";
 import useClickOutside from "../../../../hooks/useClickOutSide";
 import CheckIcon from "@mui/icons-material/Check";
+import { PRODUCT_TYPE } from "../../../../common/constant";
 const PriceAndCode = ({
   control,
   errors,
@@ -50,6 +51,9 @@ const Code = ({
 }) => {
   const { show, setShow, nodeRef } = useClickOutside();
   const [search, setSearch] = useState("");
+  const page = window.location.href.includes("product")
+    ? PRODUCT_TYPE.PRODUCT
+    : PRODUCT_TYPE.COURSE;
   //multiple
   const handleCheckCategories = (category) => {
     const temp = [...checkedCategories];
@@ -74,19 +78,21 @@ const Code = ({
   };
   return (
     <Wrapper>
-      <BasicTextBox
-        wrapperClass="mb-2"
-        control={control}
-        name={ADD_PRODUCT_OBJ.SKU}
-        errMsg={
-          errors[ADD_PRODUCT_OBJ.SKU]
-            ? errors[ADD_PRODUCT_OBJ.SKU]?.message
-            : null
-        }
-        label={"Mã sản phẩm"}
-        subtitle={"Nhập mã sản phẩm (SKU) nếu có."}
-        hideSubtitle={false}
-      />
+      {page === PRODUCT_TYPE.PRODUCT && (
+        <BasicTextBox
+          wrapperClass="mb-2"
+          control={control}
+          name={ADD_PRODUCT_OBJ.SKU}
+          errMsg={
+            errors[ADD_PRODUCT_OBJ.SKU]
+              ? errors[ADD_PRODUCT_OBJ.SKU]?.message
+              : null
+          }
+          label={"Mã sản phẩm"}
+          subtitle={"Nhập mã sản phẩm (SKU) nếu có."}
+          hideSubtitle={false}
+        />
+      )}
       <div className="relative" ref={nodeRef}>
         <label
           htmlFor="category"
@@ -173,6 +179,9 @@ const DropdownCategories = ({
   );
 };
 const Price = ({ control, errors }) => {
+  const page = window.location.href.includes("product")
+    ? PRODUCT_TYPE.PRODUCT
+    : PRODUCT_TYPE.COURSE;
   return (
     <Wrapper>
       <BasicTextBox
@@ -201,26 +210,30 @@ const Price = ({ control, errors }) => {
         hideSubtitle
         defaultValue={0}
       />
-      <BasicTextBox
-        wrapperClass="m-0"
-        control={control}
-        name={"weight"}
-        errMsg={errors["weight"] ? errors["weight"]?.message : null}
-        label={"Cân nặng"}
-        hideSubtitle={false}
-        subtitle="Đơn vị tính bằng gram"
-        defaultValue={"0"}
-      />{" "}
-      <BasicTextBox
-        wrapperClass="m-0"
-        control={control}
-        name={"size"}
-        errMsg={errors["size"] ? errors["size"]?.message : null}
-        label={"Kích thước"}
-        hideSubtitle={false}
-        subtitle="Đơn vị tính bằng cm"
-        defaultValue={"0"}
-      />
+      {page === PRODUCT_TYPE.PRODUCT && (
+        <BasicTextBox
+          wrapperClass="m-0"
+          control={control}
+          name={"weight"}
+          errMsg={errors["weight"] ? errors["weight"]?.message : null}
+          label={"Cân nặng"}
+          hideSubtitle={false}
+          subtitle="Đơn vị tính bằng gram"
+          defaultValue={"0"}
+        />
+      )}
+      {page === PRODUCT_TYPE.PRODUCT && (
+        <BasicTextBox
+          wrapperClass="m-0"
+          control={control}
+          name={"size"}
+          errMsg={errors["size"] ? errors["size"]?.message : null}
+          label={"Kích thước"}
+          hideSubtitle={false}
+          subtitle="Đơn vị tính bằng cm"
+          defaultValue={"0"}
+        />
+      )}
     </Wrapper>
   );
 };
