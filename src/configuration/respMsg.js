@@ -1,7 +1,9 @@
-export const RESP_MSG = {
-  SUCCESS: 200,
-  INVALID_TOKEN: 401,
+export const CATEGORY_RESP_MSG = {
+  // Add
+  ADD_SUCCESS: "Thêm danh mục thành công",
+  ADD_FAILED: "Xảy ra lỗi trong quá trình thêm danh mục",
 
-  // Authen
-  INVALID_PASSWORD: 401,
+  // Delete
+  DELETE_SUCCESS: "Xóa danh mục thành công",
+  DELETE_FAILED: "Xảy ra lỗi trong quá trình xóa danh mục",
 };

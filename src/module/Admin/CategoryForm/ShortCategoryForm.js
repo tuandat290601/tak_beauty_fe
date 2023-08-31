@@ -7,23 +7,25 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addCategorySchema } from "../../../helpers/form-schema";
 import useCategories from "../../../hooks/Categories/useCategories";
-import { categoryApi } from "../../../api";
-import { RESP_MSG } from "../../../configuration/respMsg";
 import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
-import { useQueryClient } from "@tanstack/react-query";
-import { reactQueryKey } from "../../../configuration/reactQueryKey";
 
 const ShortCategoryForm = () => {
   // Category list util
-  const { tempFilterCategory, createCategoryListDropdown, isLoading } =
-    useCategories({ defCategoryTitle: "Chọn danh mục" });
-  const queryClient = useQueryClient();
+  const {
+    tempFilterCategory,
+    createCategoryListDropdown,
+    addCategory,
+    isProccessing,
+  } = useCategories({ defCategoryTitle: "Chọn danh mục" });
+
+  const [selectedImage, setSelectedImage] = React.useState(null);
 
   const {
     handleSubmit,
     control,
     setValue,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(addCategorySchema),
     defaultValues: {
@@ -34,32 +36,9 @@ const ShortCategoryForm = () => {
     mode: "onChange",
   });
 
-  const [isAddingCattegory, setIsAddingCattegory] = React.useState(false);
   async function onSubmit(data) {
-    setIsAddingCattegory(true);
     console.log("onSubmit", data);
-
-    try {
-      const resp = await categoryApi.postCategory(data);
-      console.log(
-        "🚀 ~ file: ShortCategoryForm.js:35 ~ onSubmit ~ resp:",
-        resp
-      );
-
-      if (resp.status === "success") {
-        console.log("Add category success");
-        queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
-      } else {
-        console.error("Xảy ra lỗi trong quá trình thêm danh mục");
-      }
-    } catch (error) {
-      console.error(
-        "🚀 ~ file: ShortCategoryForm.js:42 ~ onSubmit ~ error:",
-        error
-      );
-    } finally {
-      setIsAddingCattegory(false);
-    }
+    await addCategory(data, reset());
   }
 
   React.useEffect(() => {
@@ -74,7 +53,7 @@ const ShortCategoryForm = () => {
       className="w-[40%] bg-white p-3 rounded-md relative"
     >
       {/* Adding category */}
-      {isAddingCattegory ? (
+      {isProccessing ? (
         <div
           className="absolute w-full h-full z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black 
         bg-opacity-70 flex justify-center items-center rounded-md cursor-wait"
@@ -124,7 +103,7 @@ const ShortCategoryForm = () => {
             title={tempFilterCategory.title}
             noTooltip={true}
             items={createCategoryListDropdown()}
-            disabled={isLoading}
+            disabled={isProccessing}
             titleWrapperClass="!px-2"
           />
         </div>
@@ -142,6 +121,9 @@ const ShortCategoryForm = () => {
           btnTitle="Chọn ảnh"
           btnClassName={"!bg-blue-500"}
           btnIcon={<FaImage />}
+          haveLabel={true}
+          selectedImage={selectedImage}
+          setSelectedImage={setSelectedImage}
         />
       </div>
 

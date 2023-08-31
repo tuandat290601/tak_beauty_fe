@@ -6,7 +6,7 @@ import { loginSchema } from "../../helpers/form-schema";
 import { LOGIN_OBJ } from "../../helpers/schema-obj";
 import BasicButton from "../../components/Button/BasicButton";
 import { usersApi } from "../../api";
-import { RESP_MSG } from "../../configuration/respMsg";
+import { RESP_CODE } from "../../configuration/respCode";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATH } from "../../configuration/routeConfig";
 import Config from "../../configuration";
@@ -45,7 +45,7 @@ const Login = () => {
       }
     } catch (error) {
       switch (error.response?.status) {
-        case RESP_MSG.INVALID_PASSWORD:
+        case RESP_CODE.INVALID_PASSWORD:
           console.error(error.response?.data?.message);
           break;
 
