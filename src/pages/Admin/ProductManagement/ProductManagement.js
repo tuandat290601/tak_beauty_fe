@@ -78,7 +78,7 @@ export const ProductManagement = () => {
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: pageSize,
-    filters: "",
+    filters: "type==PRODUCT",
     sortField: null,
     sortOrder: null,
   });
@@ -245,14 +245,14 @@ export const ProductManagement = () => {
                 <th colSpan={9} className="!bg-white">
                   <div className="flex justify-between w-full">
                     <div className="flex gap-3">
-                      <div className="relative">
+                      {/* <div className="relative">
                         <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
                           {listProduct.length > 10 ? "10+" : listProduct.length}
                         </div>
                         <BasicIconButton className="!bg-blue-500 border-none">
                           <MdEdit color="white" size={20}></MdEdit>
                         </BasicIconButton>
-                      </div>
+                      </div> */}
                       {listProduct?.length > 0 &&
                         listProduct?.some((item) => item.checked === true) && (
                           <BasicButton
@@ -362,8 +362,9 @@ export const ProductManagement = () => {
                     <th>Tiêu đề</th>
                     <th>Chuyên mục</th>
                     <th>Phân loại</th>
-                    <th>Giá</th>
-                    <th>Nhóm</th>
+                    <th>Giá gốc</th>
+                    <th>Giá khuyến mãi</th>
+                    {/* <th>Nhóm</th> */}
                     <th>Thứ tự</th>
                     <th>Hành động</th>
                   </tr>

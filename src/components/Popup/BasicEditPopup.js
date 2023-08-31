@@ -1,7 +1,7 @@
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { MdEdit, MdCancel } from "react-icons/md";
 import useClickOutside from "../../hooks/useClickOutSide";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CurrencyInput, { formatValue } from "react-currency-input-field";
 import BasicIconButton from "../Button/BasicIconButton";
 import { toVNDCurrency } from "../../helpers/CurrencyUtil";
@@ -23,10 +23,13 @@ export const BasicEditablePopup = ({
   // const handleClearInput = () => {
   //   setEditValue(0);
   // };
+  useEffect(() => {
+    setEditValue(initValue);
+  }, [initValue]);
   return (
     <div ref={nodeRef} className="relative">
       <h4 className="editable-text text-center" onClick={handleShowEditPopup}>
-        {toVNDCurrency(editValue)}
+        {toVNDCurrency(initValue)}
       </h4>
       {show && (
         <div className="absolute -top-[75px] -left-[120px] flex gap-2 w-fit bg-white px-3 py-3 border border-gray-500 rounded-md ">
@@ -53,7 +56,9 @@ export const BasicEditablePopup = ({
             placeholder="Nhập số tiền"
             intlConfig={{ locale: "vi", currency: "VND" }}
             value={editValue}
-            onValueChange={(value) => setEditValue(value)}
+            onValueChange={(value) => {
+              setEditValue(value);
+            }}
             onKeyDown={(evt) =>
               ["e", "E", "+", "-", "."].includes(evt.key) &&
               evt.preventDefault()

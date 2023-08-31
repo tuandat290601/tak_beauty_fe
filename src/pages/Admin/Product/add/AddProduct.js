@@ -75,6 +75,7 @@ const AddProduct = () => {
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let createProductData = {
+      // type: "PRODUCT",
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],

@@ -89,11 +89,12 @@ export const TableItem = ({
     };
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
-      toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
+      console.log("success");
+      toast.success("Cập nhật giá gốc sản phẩm thành công");
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error(
-        "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
+        "Đã có lỗi xảy ra! Cập nhật giá gốc sản phẩm không thành công"
       );
     }
   };
@@ -148,32 +149,52 @@ export const TableItem = ({
         </div>
       </td>
       <td>
-        <h4 className="text-blue-500 text-sm cursor-pointer">
-          {product?.category?.title || ""}
-        </h4>
+        <div className="flex gap-1">
+          {product?.connects.length > 3 ? (
+            <>
+              {product?.connects.slice(0, 3).map((item) => (
+                <BasicTag
+                  label={item?.category?.title || ""}
+                  onClick={handleAddFavTag}
+                />
+              ))}
+              <BasicTag
+                label={`+${product?.connects.length - 3}`}
+                onClick={handleAddFavTag}
+              />
+            </>
+          ) : (
+            product?.connects.map((item) => (
+              <BasicTag
+                label={item?.category?.title || ""}
+                onClick={handleAddFavTag}
+              />
+            ))
+          )}
+        </div>
       </td>
       <td></td>
       <td>
-        <div className="flex gap-2">
-          {/*Origin price*/}
-          <BasicEditablePopup
-            handleSubmitEditPrice={handleUpdateOriginPrice}
-            initValue={product?.originPrice || 0}
-          ></BasicEditablePopup>
-          {/*Discount price*/}
-          <BasicEditablePopup
-            handleSubmitEditPrice={handleUpdateDiscountPrice}
-            initValue={product?.discountPrice || 0}
-          ></BasicEditablePopup>
-        </div>
+        {/*Origin price*/}
+        <BasicEditablePopup
+          handleSubmitEditPrice={handleUpdateOriginPrice}
+          initValue={product?.originPrice || 0}
+        ></BasicEditablePopup>
       </td>
       <td>
+        {/*Discount price*/}
+        <BasicEditablePopup
+          handleSubmitEditPrice={handleUpdateDiscountPrice}
+          initValue={product?.discountPrice || 0}
+        ></BasicEditablePopup>
+      </td>
+      {/* <td>
         <div className="flex gap-1">
           <BasicTag label={"Yêu thích"} onClick={handleAddFavTag} />
           <BasicTag label={"Bán chạy"} onClick={handleAddHotSellTag} />
           <BasicTag label={"Nổi bật"} onClick={handleAddOutStandingTag} />
         </div>
-      </td>
+      </td> */}
       <td>
         <BasicEditablePopup initValue={0}></BasicEditablePopup>
       </td>
