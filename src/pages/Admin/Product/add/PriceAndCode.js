@@ -50,6 +50,7 @@ const Code = ({
 }) => {
   const { show, setShow, nodeRef } = useClickOutside();
   const [search, setSearch] = useState("");
+  //multiple
   const handleCheckCategories = (category) => {
     const temp = [...checkedCategories];
     const newArr = temp.filter((item) => item.id !== category.id);
@@ -58,6 +59,14 @@ const Code = ({
       newArr.push(category);
     }
     setCheckedCategories(newArr);
+  };
+  //single
+  const handleCheckCategory = (category) => {
+    const temp = [...checkedCategories];
+    const newArr = temp.filter((item) => item.id === category.id);
+    if (newArr.length > 0) {
+      setCheckedCategories([]);
+    } else setCheckedCategories([category]);
   };
   const inCheckedList = (id) => {
     const filter = checkedCategories.filter((item) => item.id === id);
@@ -98,7 +107,7 @@ const Code = ({
           <DropdownCategories
             categories={categories}
             inCheckedList={inCheckedList}
-            handleCheckCategories={handleCheckCategories}
+            handleCheckCategories={handleCheckCategory}
             search={search}
           />
         )}

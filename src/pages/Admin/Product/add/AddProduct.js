@@ -15,7 +15,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
-import useCategories from "../../../../hooks/Categories/useCategories";
 import { fileApi } from "../../../../api";
 
 const AddProduct = () => {
@@ -24,10 +23,6 @@ const AddProduct = () => {
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  console.log(
-    "🚀 ~ file: AddProduct.js:26 ~ AddProduct ~ selectedImage:",
-    selectedImage
-  );
 
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -75,9 +70,7 @@ const AddProduct = () => {
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
-    console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ image:", image);
     const listCategoriesId = checkedCategories.map((item) => item.id);
-    console.log(listCategoriesId);
     const createProductData = {
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
@@ -91,7 +84,7 @@ const AddProduct = () => {
         size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
         weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
       },
-      // categoryId: listCategoriesId,
+      categoryId: listCategoriesId[0] || "", //single category
     };
     console.log(data);
     console.log(createProductData);
