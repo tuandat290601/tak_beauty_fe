@@ -18,6 +18,7 @@ const CategoryList = () => {
     createCategoryListDropdown,
     isLoading,
     delCategory,
+    checkCategoryLevel,
   } = useCategories({});
 
   function startFilter() {
@@ -64,6 +65,7 @@ const CategoryList = () => {
           isLoading={isLoading}
           categoryList={categoryList}
           delCategory={delCategory}
+          checkCategoryLevel={checkCategoryLevel}
         />
       </div>
     </div>

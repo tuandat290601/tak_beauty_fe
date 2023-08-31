@@ -19,6 +19,65 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
   const [isProccessing, setIsProccessing] = React.useState(false); // Deleting, updating,...
   const queryClient = useQueryClient();
 
+  // Util
+  function makeTree(data, root) {
+    var r = [],
+      o = {};
+    data.forEach(function (a) {
+      o[a.id] = { data: a, children: o[a.id] && o[a.id].children };
+      if (a.parentId === root) {
+        r.push(o[a.id]);
+      } else {
+        o[a.parentId] = o[a.parentId] || {};
+        o[a.parentId].children = o[a.parentId].children || [];
+        o[a.parentId].children.push(o[a.id]);
+      }
+    });
+    return r;
+  }
+
+  function sortCategory() {
+    if (isSuccess) {
+      const data = categoryList?.responseData?.rows;
+      // const newData = _(data).sortBy("title").value();
+      var tree = makeTree(data, null);
+      var sorted = tree.reduce(function traverse(r, a) {
+        return r.concat(a.data, (a.children || []).reduce(traverse, []));
+      }, []);
+
+      return sorted;
+    } else {
+      return [];
+    }
+  }
+
+  function checkCategoryLevel(category) {
+    if (!sortedCategoryList || category?.parentId === null) return 0;
+
+    let level = 0;
+    let curCategory = { ...category };
+    let curParent = sortedCategoryList.find(
+      (item) => item.id === curCategory.parentId
+    );
+
+    do {
+      if (curCategory?.parentId === null || !curCategory) {
+        break;
+      }
+      curCategory = curParent;
+
+      curParent = sortedCategoryList.find(
+        (item) => item.id === curCategory.parentId
+      );
+
+      // console.log("🚀 After while:", curParent, curCategory);
+
+      level++;
+    } while (true);
+
+    return level;
+  }
+
   // Fetch
   const {
     data: categoryList,
@@ -29,14 +88,21 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     queryFn: async () => await categoryApi.getCategories(),
   });
 
+  const sortedCategoryList = isSuccess ? sortCategory() : categoryList;
+
   function createCategoryListDropdown() {
-    const categoryListData = categoryList?.responseData?.rows?.map((item) => ({
-      id: item.id,
-      title: item.title,
-      onClick: () => {
-        setTempFilterCategory(item);
-      },
-    }));
+    const categoryListData = sortedCategoryList?.map((item) => {
+      const levelTitle =
+        Array(checkCategoryLevel(item)).fill("|---").join("") + item.title;
+
+      return {
+        id: item.id,
+        title: levelTitle,
+        onClick: () => {
+          setTempFilterCategory({ ...item, title: levelTitle });
+        },
+      };
+    });
     categoryListData?.unshift(defCategory);
 
     return categoryListData;
@@ -90,7 +156,15 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
   return {
     tempFilterCategory,
     createCategoryListDropdown,
-    categoryList,
+    categoryList: categoryList
+      ? {
+          ...categoryList,
+          responseData: {
+            ...categoryList?.responseData,
+            rows: sortedCategoryList,
+          },
+        }
+      : null,
     isSuccess,
     isLoading:
       isLoading ||
@@ -98,6 +172,7 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
       queryClient.isFetching({ queryKey: reactQueryKey.GET_CATEGORIES }),
     delCategory,
     addCategory,
+    checkCategoryLevel,
   };
 };
 

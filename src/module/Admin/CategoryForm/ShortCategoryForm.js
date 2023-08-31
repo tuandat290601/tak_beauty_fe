@@ -18,6 +18,8 @@ const ShortCategoryForm = () => {
     addCategory,
   } = useCategories({ defCategoryTitle: "Chọn danh mục" });
 
+  const [selectedImage, setSelectedImage] = React.useState(null);
+
   const {
     handleSubmit,
     control,
@@ -120,6 +122,8 @@ const ShortCategoryForm = () => {
           btnClassName={"!bg-blue-500"}
           btnIcon={<FaImage />}
           haveLabel={true}
+          selectedImage={selectedImage}
+          setSelectedImage={setSelectedImage}
         />
       </div>
 

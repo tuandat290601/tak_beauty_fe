@@ -13,6 +13,7 @@ const CategoryTable = ({
   isLoading = false,
   categoryList = [],
   delCategory = () => {},
+  checkCategoryLevel = () => {},
 }) => {
   const titleClass = "";
   const actionClass = "w-[130px]";
@@ -28,12 +29,6 @@ const CategoryTable = ({
       className: actionClass,
     },
   ];
-
-  function getCategoryName(categoryId) {
-    return categoryList?.responseData?.rows?.find(
-      (item) => item.id === categoryId
-    )?.title;
-  }
 
   const navigate = useNavigate();
 
@@ -99,10 +94,10 @@ const CategoryTable = ({
 
                         <div className="max-w-[90%]">
                           <p className="truncate">
-                            {item.parentId
-                              ? `${getCategoryName(item.parentId)} - 
-                                ${item.title}`
-                              : item.title}
+                            {[...Array(checkCategoryLevel(item))].map(
+                              () => "|---"
+                            )}
+                            {item.title}
                           </p>
                           <div className="text-sm flex items-center gap-x-2 invisible group-hover:!visible">
                             <span className="text-slate-400 border-r-2 border-gray-400 pr-2">
@@ -122,6 +117,12 @@ const CategoryTable = ({
                     <td className={`px-6 py-3 w-4 ${actionClass}`}>
                       <div className="flex gap-x-1">
                         <BasicButton
+                          icon={<FaTrash className="w-4 h-4" />}
+                          className="border !p-2 red-btn"
+                          // onClick={() => delCategory(item.id)}
+                          onClick={() => delBtnClick(item)}
+                        />
+                        <BasicButton
                           icon={<FaPencilAlt className="w-4 h-4" />}
                           className="border !p-2 blue-btn"
                           onClick={() =>
@@ -129,12 +130,6 @@ const CategoryTable = ({
                               `/admin/products/products-categories/${item.id}/edit`
                             )
                           }
-                        />
-                        <BasicButton
-                          icon={<FaTrash className="w-4 h-4" />}
-                          className="border !p-2 red-btn"
-                          // onClick={() => delCategory(item.id)}
-                          onClick={() => delBtnClick(item)}
                         />
                       </div>
                     </td>
