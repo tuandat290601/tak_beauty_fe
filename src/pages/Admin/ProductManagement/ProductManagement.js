@@ -20,10 +20,14 @@ import {
 import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
 import { useNavigate } from "react-router-dom";
 import productApi from "../../../api/productApi";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useCategories from "../../../hooks/Categories/useCategories";
 import useMenu from "../../../hooks/useMenu";
 import { TableItem, TableItemSkeleton } from "./TableItem";
+import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
+import usePopup from "../../../hooks/usePopup";
+import { toast } from "react-toastify";
+import { reactQueryKey } from "../../../configuration/reactQueryKey";
 
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
@@ -50,11 +54,18 @@ export const ProductManagement = () => {
   //   { value: "3", label: "Nổi bật" },
   // ];
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     anchorEl: anchorElActions,
     handleCloseMenu: handleClosePopupActionsMenu,
     handleOpenMenu: onShowActions,
   } = useMenu();
+  const { open: openConfirm, handleOpenPopup, handleClosePopup } = usePopup();
+  const {
+    open: openConfirmDeleteListProudct,
+    handleOpenPopup: handleOpenDeleteListProudctPopup,
+    handleClosePopup: handleCloseDeleteListProudctPopup,
+  } = usePopup();
   const [searchKey, setSearchKey] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("");
   // const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("");
@@ -63,6 +74,7 @@ export const ProductManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [listProduct, setListProduct] = useState([]);
   const [listCategories, setListCategories] = useState([]);
+  const [currentSelectedProduct, setCurrentSelectedProduct] = useState();
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: pageSize,
@@ -70,11 +82,10 @@ export const ProductManagement = () => {
     sortField: null,
     sortOrder: null,
   });
-  const [checked, setChecked] = React.useState([]);
   const onMenuActionSelect = (action) => {
     switch (action) {
       case ACTION.DELETE:
-        console.log("delete");
+        handleOpenDeleteListProudctPopup();
         break;
       default:
         break;
@@ -106,22 +117,61 @@ export const ProductManagement = () => {
   };
   const handleCheckAll = (event) => {
     console.log("handleCheckAll");
-    if (checked.every((item) => item === true)) {
-      setChecked(Array(listProduct.length).fill(false));
+    if (listProduct.every((item) => item.checked === true)) {
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: false };
+      });
+      setListProduct(newListProduct);
     } else if (
-      checked.some((item) => item === true) &&
-      !checked.every((item) => item === true)
+      listProduct.some((item) => item.checked === true) &&
+      !listProduct.every((item) => item.checked === true)
     ) {
-      setChecked(Array(listProduct.length).fill(false));
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: false };
+      });
+      setListProduct(newListProduct);
+      // setChecked(Array(listProduct.length).fill(false));
     } else {
-      setChecked(Array(listProduct.length).fill(true));
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: true };
+      });
+      setListProduct(newListProduct);
+      // setChecked(Array(listProduct.length).fill(true));
     }
   };
   const handleCheckItem = (event, index) => {
-    const newChecked = checked;
-    newChecked[index] = event.target.checked;
-    console.log(newChecked);
-    setChecked([...newChecked]);
+    const newListProduct = listProduct;
+    newListProduct[index].checked = event.target.checked;
+    setListProduct([...newListProduct]);
+  };
+  const handleDeleteProduct = (product) => {
+    setCurrentSelectedProduct(product);
+    handleOpenPopup();
+  };
+  const handleConfirmDeleteProduct = async () => {
+    const res = await productApi.deleteProduct(currentSelectedProduct.id);
+    if (res.status === "success") {
+      toast.success("Xoá sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
+    }
+  };
+  const handleConfirmDeleteListCheckedProduct = async () => {
+    const listChecked = listProduct.filter(
+      (item, index) => item.checked === true
+    );
+    const listId = listChecked.map((item) => item.id);
+    console.log(listId);
+    const queryListId = listId.join("|");
+    const res = await productApi.deleteProduct(queryListId);
+    // console.log(queryListId);
+    if (res.status === "success") {
+      toast.success("Xoá sản phẩm thành công");
+      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    } else {
+      toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
+    }
   };
   const handleSelectCategoryFilter = (e) => {
     setSelectedCategoryFilter(e.target.value);
@@ -159,8 +209,11 @@ export const ProductManagement = () => {
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);
         setCurrentPage(data.responseData.currentPage);
-        setListProduct(data.responseData.rows);
-        setChecked(Array(data.responseData.rows.length).fill(false));
+        const listProduct = data.responseData.rows.map((item) => {
+          return { ...item, checked: false };
+        });
+        setListProduct(listProduct);
+        // setChecked(Array(data.responseData.rows.length).fill(false));
       }
     };
     fetchData();
@@ -200,8 +253,8 @@ export const ProductManagement = () => {
                           <MdEdit color="white" size={20}></MdEdit>
                         </BasicIconButton>
                       </div>
-                      {checked?.length > 0 &&
-                        checked.some((item) => item === true) && (
+                      {listProduct?.length > 0 &&
+                        listProduct?.some((item) => item.checked === true) && (
                           <BasicButton
                             onClick={(e) => onShowActions(e)}
                             className="!bg-green-400 border-none text-white h-fit"
@@ -286,13 +339,19 @@ export const ProductManagement = () => {
                         control={
                           <Checkbox
                             checked={
-                              (checked?.length > 0 &&
-                                checked?.every((item) => item === true)) ||
+                              (listProduct?.length > 0 &&
+                                listProduct?.every(
+                                  (item) => item.checked === true
+                                )) ||
                               false
                             }
                             indeterminate={
-                              checked.some((item) => item === true) &&
-                              !checked.every((item) => item === true)
+                              listProduct.some(
+                                (item) => item.checked === true
+                              ) &&
+                              !listProduct.every(
+                                (item) => item.checked === true
+                              )
                             }
                             onChange={handleCheckAll}
                           />
@@ -312,12 +371,13 @@ export const ProductManagement = () => {
                     <TableItem
                       key={item.id}
                       product={item}
-                      checked={checked[index] || false}
+                      checked={item.checked || false}
                       handleCheck={handleCheckItem}
                       index={index}
                       className={`${
                         index % 2 === 0 ? "bg-gray-100" : ""
                       } hover:bg-gray-200`}
+                      handleDeleteProduct={handleDeleteProduct}
                     ></TableItem>
                   ))}
                 </>
@@ -350,6 +410,29 @@ export const ProductManagement = () => {
           </div>
         </div>
       </div>
+      <ConfirmPopup
+        isOpen={openConfirm}
+        handleClose={() => {
+          handleClosePopup();
+        }}
+        handleConfirm={handleConfirmDeleteProduct}
+      >
+        Bạn có chắc chắn muốn xoá sản phẩm{" "}
+        <span className="text-blue-500 font-bold">
+          {currentSelectedProduct?.title}
+        </span>
+        '
+      </ConfirmPopup>
+      <ConfirmPopup
+        isOpen={openConfirmDeleteListProudct}
+        handleClose={() => {
+          handleCloseDeleteListProudctPopup();
+        }}
+        handleConfirm={handleConfirmDeleteListCheckedProduct}
+      >
+        Bạn có chắc chắn muốn xoá{" "}
+        {listProduct.filter((item) => item.checked === true).length} sản phẩm '
+      </ConfirmPopup>
     </div>
   );
 };

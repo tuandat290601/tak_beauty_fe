@@ -14,6 +14,7 @@ export const ADD_PRODUCT_OBJ = {
   WEIGHT: "weight",
   CATEGORY_ID: "categoryId",
   RATING: "rating",
+  SKU: "sku",
 };
 
 // ====== Authen ======
