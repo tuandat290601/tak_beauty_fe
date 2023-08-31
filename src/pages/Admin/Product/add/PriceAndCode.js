@@ -68,8 +68,12 @@ const Code = ({
       <BasicTextBox
         wrapperClass="mb-2"
         control={control}
-        name={"sku"}
-        errMsg={errors["sku"] ? errors["sku"]?.message : null}
+        name={ADD_PRODUCT_OBJ.SKU}
+        errMsg={
+          errors[ADD_PRODUCT_OBJ.SKU]
+            ? errors[ADD_PRODUCT_OBJ.SKU]?.message
+            : null
+        }
         label={"Mã sản phẩm"}
         subtitle={"Nhập mã sản phẩm (SKU) nếu có."}
         hideSubtitle={false}

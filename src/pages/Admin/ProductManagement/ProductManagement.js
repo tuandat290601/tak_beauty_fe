@@ -82,7 +82,6 @@ export const ProductManagement = () => {
     sortField: null,
     sortOrder: null,
   });
-  const [checked, setChecked] = React.useState([]);
   const onMenuActionSelect = (action) => {
     switch (action) {
       case ACTION.DELETE:
@@ -118,21 +117,32 @@ export const ProductManagement = () => {
   };
   const handleCheckAll = (event) => {
     console.log("handleCheckAll");
-    if (checked.every((item) => item === true)) {
-      setChecked(Array(listProduct.length).fill(false));
+    if (listProduct.every((item) => item.checked === true)) {
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: false };
+      });
+      setListProduct(newListProduct);
     } else if (
-      checked.some((item) => item === true) &&
-      !checked.every((item) => item === true)
+      listProduct.some((item) => item.checked === true) &&
+      !listProduct.every((item) => item.checked === true)
     ) {
-      setChecked(Array(listProduct.length).fill(false));
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: false };
+      });
+      setListProduct(newListProduct);
+      // setChecked(Array(listProduct.length).fill(false));
     } else {
-      setChecked(Array(listProduct.length).fill(true));
+      const newListProduct = listProduct.map((item) => {
+        return { ...item, checked: true };
+      });
+      setListProduct(newListProduct);
+      // setChecked(Array(listProduct.length).fill(true));
     }
   };
   const handleCheckItem = (event, index) => {
-    const newChecked = checked;
-    newChecked[index] = event.target.checked;
-    setChecked([...newChecked]);
+    const newListProduct = listProduct;
+    newListProduct[index].checked = event.target.checked;
+    setListProduct([...newListProduct]);
   };
   const handleDeleteProduct = (product) => {
     setCurrentSelectedProduct(product);
@@ -148,8 +158,10 @@ export const ProductManagement = () => {
     }
   };
   const handleConfirmDeleteListCheckedProduct = async () => {
-    const finalChecked = checked.filter((item) => item === true);
-    const listId = finalChecked.map((item, index) => listProduct[index].id);
+    const listChecked = listProduct.filter(
+      (item, index) => item.checked === true
+    );
+    const listId = listChecked.map((item) => item.id);
     console.log(listId);
     const queryListId = listId.join("|");
     const res = await productApi.deleteProduct(queryListId);
@@ -197,8 +209,11 @@ export const ProductManagement = () => {
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);
         setCurrentPage(data.responseData.currentPage);
-        setListProduct(data.responseData.rows);
-        setChecked(Array(data.responseData.rows.length).fill(false));
+        const listProduct = data.responseData.rows.map((item) => {
+          return { ...item, checked: false };
+        });
+        setListProduct(listProduct);
+        // setChecked(Array(data.responseData.rows.length).fill(false));
       }
     };
     fetchData();
@@ -238,8 +253,8 @@ export const ProductManagement = () => {
                           <MdEdit color="white" size={20}></MdEdit>
                         </BasicIconButton>
                       </div>
-                      {checked?.length > 0 &&
-                        checked.some((item) => item === true) && (
+                      {listProduct?.length > 0 &&
+                        listProduct?.some((item) => item.checked === true) && (
                           <BasicButton
                             onClick={(e) => onShowActions(e)}
                             className="!bg-green-400 border-none text-white h-fit"
@@ -324,13 +339,19 @@ export const ProductManagement = () => {
                         control={
                           <Checkbox
                             checked={
-                              (checked?.length > 0 &&
-                                checked?.every((item) => item === true)) ||
+                              (listProduct?.length > 0 &&
+                                listProduct?.every(
+                                  (item) => item.checked === true
+                                )) ||
                               false
                             }
                             indeterminate={
-                              checked.some((item) => item === true) &&
-                              !checked.every((item) => item === true)
+                              listProduct.some(
+                                (item) => item.checked === true
+                              ) &&
+                              !listProduct.every(
+                                (item) => item.checked === true
+                              )
                             }
                             onChange={handleCheckAll}
                           />
@@ -350,7 +371,7 @@ export const ProductManagement = () => {
                     <TableItem
                       key={item.id}
                       product={item}
-                      checked={checked[index] || false}
+                      checked={item.checked || false}
                       handleCheck={handleCheckItem}
                       index={index}
                       className={`${
@@ -410,7 +431,7 @@ export const ProductManagement = () => {
         handleConfirm={handleConfirmDeleteListCheckedProduct}
       >
         Bạn có chắc chắn muốn xoá{" "}
-        {checked.filter((item) => item === true).length} sản phẩm '
+        {listProduct.filter((item) => item.checked === true).length} sản phẩm '
       </ConfirmPopup>
     </div>
   );

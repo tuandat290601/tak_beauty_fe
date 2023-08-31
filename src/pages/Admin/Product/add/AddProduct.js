@@ -58,36 +58,40 @@ const AddProduct = () => {
   const queryClient = useQueryClient();
 
   const onUploadImage = async () => {
-    const formData = new FormData();
-    formData.append("file", selectedImage);
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("file", selectedImage);
 
-    const res = await fileApi.uploadFile(formData);
-    if ((res.status = "success")) {
-      const { responseData } = res;
-      return responseData.path;
-      //save path
-    } else {
-      return "";
-    }
+      const res = await fileApi.uploadFile(formData);
+      if ((res.status = "success")) {
+        const { responseData } = res;
+        return responseData.path;
+        //save path
+      } else {
+        return "";
+      }
+    } else return "";
   };
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ image:", image);
+    const listCategoriesId = checkedCategories.map((item) => item.id);
+    console.log(listCategoriesId);
     const createProductData = {
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
-      // rating: data[ADD_PRODUCT_OBJ.RATING],
-      // image: "/images/hinh_anh_1.jpg",
+      rating: data[ADD_PRODUCT_OBJ.RATING],
+      image: image,
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-      // sku: "SKU1234",
+      sku: data[ADD_PRODUCT_OBJ.SKU],
       attributes: {
         size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
         weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
       },
-      categoryId: data[ADD_PRODUCT_OBJ.CATEGORY_ID],
+      // categoryId: listCategoriesId,
     };
     console.log(data);
     console.log(createProductData);
@@ -130,7 +134,11 @@ const AddProduct = () => {
                 wrapperClass="m-0"
                 control={control}
                 name={ADD_PRODUCT_OBJ.RATING}
-                errMsg={errors["rating"] ? errors["rating"]?.message : null}
+                errMsg={
+                  errors[ADD_PRODUCT_OBJ.RATING]
+                    ? errors[ADD_PRODUCT_OBJ.RATING]?.message
+                    : null
+                }
                 label={"Đánh giá"}
                 hideSubtitle
                 type="number"

@@ -179,13 +179,13 @@ export const TableItem = ({
       </td>
       <td>
         <div className="flex gap-1">
-          <Tooltip title="Ẩn sản phẩm" arrow placement="top">
+          {/* <Tooltip title="Ẩn sản phẩm" arrow placement="top">
             <div>
               <BasicIconButton className="!bg-green-400">
                 <AiOutlineEye color="white"></AiOutlineEye>
               </BasicIconButton>
             </div>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Cập nhật" arrow placement="top">
             <div>
               <BasicIconButton className="!bg-blue-500">
