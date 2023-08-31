@@ -49,6 +49,10 @@ const Admin = () => {
             element={<AddProduct />}
           />
           <Route
+            path="/course/course-management"
+            element={<ProductManagement />}
+          />
+          <Route
             path="/course/course-management/add"
             element={<AddProduct />}
           />
