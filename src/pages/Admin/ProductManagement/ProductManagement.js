@@ -28,7 +28,11 @@ import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
 import usePopup from "../../../hooks/usePopup";
 import { toast } from "react-toastify";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
+import { PRODUCT_TYPE } from "../../../common/constant";
 
+const page = window.location.href.includes("product")
+  ? PRODUCT_TYPE.PRODUCT
+  : PRODUCT_TYPE.COURSE;
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
   { size: 10 },
@@ -44,15 +48,14 @@ const actions = [
   {
     value: ACTION.DELETE,
     icon: <FaTrash></FaTrash>,
-    title: "Xóa sản phẩm",
+    title: `Xóa ${
+      page === PRODUCT_TYPE.PRODUCT_TYPE ? "sản phẩm" : "khóa học"
+    }`,
   },
 ];
 export const ProductManagement = () => {
-  // const listCriteria = [
-  //   { value: "1", label: "Yêu thích" },
-  //   { value: "2", label: "Bán chạy" },
-  //   { value: "3", label: "Nổi bật" },
-  // ];
+  const [page, setPage] = useState(PRODUCT_TYPE.PRODUCT);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const {
@@ -68,7 +71,6 @@ export const ProductManagement = () => {
   } = usePopup();
   const [searchKey, setSearchKey] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("");
-  // const [selectedCriteriaFilter, setSelectedCriteriaFilter] = useState("");
   const [pageCount, setPageCount] = useState(5);
   const [pageSize, setPageSize] = useState(pageSizeOption[0].size);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,10 +80,22 @@ export const ProductManagement = () => {
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: pageSize,
-    filters: "type==PRODUCT",
+    filters: `type==${page}`,
     sortField: null,
     sortOrder: null,
   });
+
+  useEffect(() => {
+    const page = window.location.href.includes("product")
+      ? PRODUCT_TYPE.PRODUCT
+      : PRODUCT_TYPE.COURSE;
+    setProductQueries({
+      ...productQueries,
+      filters: `type==${page}`,
+    });
+    setPage(page);
+  }, [window.location.href]);
+
   const onMenuActionSelect = (action) => {
     switch (action) {
       case ACTION.DELETE:
@@ -109,7 +123,7 @@ export const ProductManagement = () => {
     console.log(searchKey + ", " + selectedCategoryFilter);
     setProductQueries({
       ...productQueries,
-      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter}`,
+      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter},type==${page}`,
     });
   };
   const handleOnChangeSearchKey = (e) => {
@@ -151,7 +165,11 @@ export const ProductManagement = () => {
   const handleConfirmDeleteProduct = async () => {
     const res = await productApi.deleteProduct(currentSelectedProduct.id);
     if (res.status === "success") {
-      toast.success("Xoá sản phẩm thành công");
+      toast.success(
+        `Xoá ${
+          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+        } thành công`
+      );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
@@ -167,10 +185,18 @@ export const ProductManagement = () => {
     const res = await productApi.deleteProduct(queryListId);
     // console.log(queryListId);
     if (res.status === "success") {
-      toast.success("Xoá sản phẩm thành công");
+      toast.success(
+        `Xoá ${
+          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+        } thành công`
+      );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
-      toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
+      toast.error(
+        `Đã có lỗi xảy ra! Xoá ${
+          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+        } thất bại`
+      );
     }
   };
   const handleSelectCategoryFilter = (e) => {
@@ -227,7 +253,9 @@ export const ProductManagement = () => {
             title="Thêm mới"
             className="green-btn"
             onClick={() => {
-              navigate("/admin/product/product-management/add");
+              if (page === PRODUCT_TYPE.PRODUCT)
+                navigate("/admin/product/product-management/add");
+              else navigate("/admin/course/course-management/add");
             }}
           />
         </div>
@@ -235,7 +263,7 @@ export const ProductManagement = () => {
       <div className="ui-layout">
         <div className="py-[25px]">
           <h1 className="text-[28px] text-blue-950 font-semibold">
-            Danh sách sản phẩm
+            Danh sách {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}
           </h1>
         </div>
         <div>
@@ -245,14 +273,6 @@ export const ProductManagement = () => {
                 <th colSpan={9} className="!bg-white">
                   <div className="flex justify-between w-full">
                     <div className="flex gap-3">
-                      {/* <div className="relative">
-                        <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
-                          {listProduct.length > 10 ? "10+" : listProduct.length}
-                        </div>
-                        <BasicIconButton className="!bg-blue-500 border-none">
-                          <MdEdit color="white" size={20}></MdEdit>
-                        </BasicIconButton>
-                      </div> */}
                       {listProduct?.length > 0 &&
                         listProduct?.some((item) => item.checked === true) && (
                           <BasicButton
@@ -286,14 +306,6 @@ export const ProductManagement = () => {
                           </div>
                         ))}
                       </Menu>
-                      {/* <div className="relative">
-                        <div className="py-[2px] absolute flex justify-center text-sm -top-2 -right-2 text-center w-[25px] h-[25px] rounded-full bg-gray-200 font-bold">
-                          10
-                        </div>
-                        <BasicIconButton>
-                          <FaTrash size={20}></FaTrash>
-                        </BasicIconButton>
-                      </div> */}
                     </div>
                     <div className="flex gap-1">
                       <input
@@ -307,11 +319,7 @@ export const ProductManagement = () => {
                         onChange={handleSelectCategoryFilter}
                         dropdownItems={listCategories}
                       ></TableDropdown>
-                      {/* <TableDropdown
-                        value={selectedCriteriaFilter}
-                        onChange={(e) => handleSelectCriteriaFilter(e)}
-                        dropdownItems={listCriteria}
-                      ></TableDropdown> */}
+
                       <BasicIconButton
                         handleOnClick={() => {
                           handleSearchWithFilter();
@@ -418,7 +426,8 @@ export const ProductManagement = () => {
         }}
         handleConfirm={handleConfirmDeleteProduct}
       >
-        Bạn có chắc chắn muốn xoá sản phẩm{" "}
+        Bạn có chắc chắn muốn xoá{" "}
+        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}{" "}
         <span className="text-blue-500 font-bold">
           {currentSelectedProduct?.title}
         </span>
@@ -432,7 +441,8 @@ export const ProductManagement = () => {
         handleConfirm={handleConfirmDeleteListCheckedProduct}
       >
         Bạn có chắc chắn muốn xoá{" "}
-        {listProduct.filter((item) => item.checked === true).length} sản phẩm '
+        {listProduct.filter((item) => item.checked === true).length}{" "}
+        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"} '
       </ConfirmPopup>
     </div>
   );

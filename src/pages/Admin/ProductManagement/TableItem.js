@@ -13,7 +13,7 @@ import BasicIconButton from "../../../components/Button/BasicIconButton";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
-import { SUBMIT_STATUS } from "../../../common/constant";
+import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../common/constant";
 import { productApi } from "../../../api";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,6 +56,9 @@ export const TableItem = ({
   handleCheck,
   handleDeleteProduct,
 }) => {
+  const page = window.location.href.includes("product")
+    ? PRODUCT_TYPE.PRODUCT
+    : PRODUCT_TYPE.COURSE;
   const [hoverRef, isHovered] = useHover();
   const queryClient = useQueryClient();
   const handleAddFavTag = () => {};
@@ -133,7 +136,7 @@ export const TableItem = ({
         </div>
         <div
           className={`flex gap-2 justify-start items-center ${
-            isHovered ? "visible" : "invisible"
+            isHovered && page === PRODUCT_TYPE.PRODUCT ? "visible" : "invisible"
           }`}
         >
           <h5 className="text-xs text-gray-400">
