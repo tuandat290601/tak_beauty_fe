@@ -48,6 +48,10 @@ const Admin = () => {
             path="/product/product-management/add"
             element={<AddProduct />}
           />
+          <Route
+            path="/course/course-management/add"
+            element={<AddProduct />}
+          />
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
           <Route path="/theme" element={<Theme />} />
