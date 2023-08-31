@@ -222,15 +222,18 @@ export const ProductManagement = () => {
     const fetchData = async () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
-        console.log(categoryList?.responseData?.rows);
+        const resCategories = [...categoryList?.responseData.rows];
         if (
-          !categoryList?.responseData?.rows.some(
+          !resCategories?.some(
             (item) => item.title === "Tất cả" && item.id === ""
           )
         ) {
-          categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+          resCategories?.unshift({
+            id: "",
+            title: "Tất cả",
+          });
         }
-        setListCategories(categoryList?.responseData?.rows);
+        setListCategories(resCategories);
       }
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);

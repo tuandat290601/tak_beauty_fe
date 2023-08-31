@@ -3,7 +3,7 @@ import HeaderMainPage from "../../Header/HeaderMainPage";
 import BasicButton from "../../../../components/Button/BasicButton";
 import { FaReply } from "react-icons/fa";
 import { AiFillSave } from "react-icons/ai";
-import "../Product.scss";
+import "../../Product/Product.scss";
 import { useNavigate } from "react-router-dom";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 const Header = ({ submitStatus }) => {

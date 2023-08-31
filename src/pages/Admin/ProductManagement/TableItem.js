@@ -18,6 +18,8 @@ import { productApi } from "../../../api";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
+import { useNavigate } from "react-router-dom";
+import { PAGE_PATH } from "../../../configuration/routeConfig";
 
 export const TableItemSkeleton = () => {
   return (
@@ -61,6 +63,7 @@ export const TableItem = ({
     : PRODUCT_TYPE.COURSE;
   const [hoverRef, isHovered] = useHover();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const handleAddFavTag = () => {};
   const handleAddHotSellTag = () => {};
   const handleAddOutStandingTag = () => {};
@@ -212,7 +215,12 @@ export const TableItem = ({
           </Tooltip> */}
           <Tooltip title="Cập nhật" arrow placement="top">
             <div>
-              <BasicIconButton className="!bg-blue-500">
+              <BasicIconButton
+                className="!bg-blue-500"
+                handleOnClick={() =>
+                  navigate(PAGE_PATH.EDIT_PRODUCT(product.id))
+                }
+              >
                 <MdEdit color="white"></MdEdit>
               </BasicIconButton>
             </div>

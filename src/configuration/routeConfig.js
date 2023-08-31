@@ -14,6 +14,14 @@ const PAGE_PATH = {
     EDIT_CATEGORIES: (id) => (id ? `edit/${id}` : "edit/:id"),
   },
 
+  //Product management
+  PRODUCT_MANAGEMENT: "/product/product-management",
+  ADD_PRODUCT: "/product/product-management/add",
+  EDIT_PRODUCT: (id) =>
+    id === undefined
+      ? `/product/product-management/edit/:id`
+      : `/product/product-management/edit/${id}`,
+
   // Admin
   ADMIN: ADMIN_BASE,
   ADMIN_DASHBOARD: "/dashboard",
