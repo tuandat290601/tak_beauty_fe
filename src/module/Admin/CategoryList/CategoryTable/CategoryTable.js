@@ -14,6 +14,8 @@ const CategoryTable = ({
   categoryList = [],
   delCategory = () => {},
   checkCategoryLevel = () => {},
+  delItemsList = [],
+  setDelItemsList = () => {},
 }) => {
   const titleClass = "";
   const actionClass = "w-[130px]";
@@ -34,6 +36,36 @@ const CategoryTable = ({
 
   const [delItem, setDelItem] = React.useState({});
 
+  const [isCheckAll, setIsCheckAll] = React.useState(false);
+
+  function onChangeCheckAll(e) {
+    const { checked } = e.target;
+
+    if (checked) {
+      checkAll();
+    } else {
+      unCheckAll();
+    }
+
+    setIsCheckAll((prv) => !prv);
+  }
+  function checkAll() {
+    setDelItemsList(categoryList.map((item) => item.id));
+  }
+  function unCheckAll() {
+    setDelItemsList([]);
+  }
+
+  function onChangeCheckBox(e) {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setDelItemsList((prv) => [...prv, value]);
+    } else {
+      setDelItemsList((prv) => [...prv.filter((item) => item !== value)]);
+    }
+  }
+
   function delBtnClick(item) {
     setDelItem(item);
     openConfirmDelete();
@@ -50,6 +82,18 @@ const CategoryTable = ({
     handleOpenPopup: openConfirmDelete,
   } = usePopup();
 
+  React.useEffect(() => {
+    if (
+      categoryList.length > 0 &&
+      delItemsList.length === categoryList.length
+    ) {
+      setIsCheckAll(true);
+    } else {
+      setIsCheckAll(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [delItemsList.length]);
+
   return (
     <>
       <Table className="!rounded-t-none">
@@ -57,7 +101,7 @@ const CategoryTable = ({
         <thead className="text-xs text-gray-700 uppercase bg-gray-300">
           <tr>
             <th scope="col" className={checkboxClass}>
-              <BasicCheckbox />
+              <BasicCheckbox onChange={onChangeCheckAll} checked={isCheckAll} />
             </th>
             {headerList.map((item) => (
               <th
@@ -73,14 +117,18 @@ const CategoryTable = ({
 
         {isLoading ? null : (
           <tbody>
-            {categoryList?.responseData?.count > 0
-              ? categoryList?.responseData?.rows?.map((item) => (
+            {categoryList?.length > 0
+              ? categoryList?.map((item) => (
                   <tr
                     key={item.id}
                     className="hover:!bg-gray-200 odd:!bg-gray-100 group"
                   >
                     <td className={checkboxClass}>
-                      <BasicCheckbox />
+                      <BasicCheckbox
+                        onChange={onChangeCheckBox}
+                        value={item.id}
+                        checked={delItemsList.includes(item.id)}
+                      />
                     </td>
                     <td className={`px-6 py-3 text-gray-900 ${titleClass}`}>
                       <div className="flex gap-x-1">
@@ -135,11 +183,23 @@ const CategoryTable = ({
                     </td>
                   </tr>
                 ))
-              : "Empty"}
+              : null}
           </tbody>
         )}
         {/* </table> */}
       </Table>
+
+      {/* Empty */}
+      {!isLoading && categoryList?.length === 0 ? (
+        <div className="flex flex-col items-center justify-center my-10 gap-y-10">
+          <img
+            src="/images/empty/empty-box.png"
+            alt="Empty img"
+            className="w-40"
+          />
+          <h4 className="font-medium text-2xl">Không tìm thấy kết quả nào</h4>
+        </div>
+      ) : null}
 
       {/* Loading table */}
       {isLoading ? (

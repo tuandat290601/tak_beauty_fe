@@ -14,8 +14,8 @@ const ShortCategoryForm = () => {
   const {
     tempFilterCategory,
     createCategoryListDropdown,
-    isLoading,
     addCategory,
+    isProccessing,
   } = useCategories({ defCategoryTitle: "Chọn danh mục" });
 
   const [selectedImage, setSelectedImage] = React.useState(null);
@@ -53,7 +53,7 @@ const ShortCategoryForm = () => {
       className="w-[40%] bg-white p-3 rounded-md relative"
     >
       {/* Adding category */}
-      {isLoading ? (
+      {isProccessing ? (
         <div
           className="absolute w-full h-full z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black 
         bg-opacity-70 flex justify-center items-center rounded-md cursor-wait"
@@ -103,7 +103,7 @@ const ShortCategoryForm = () => {
             title={tempFilterCategory.title}
             noTooltip={true}
             items={createCategoryListDropdown()}
-            disabled={isLoading}
+            disabled={isProccessing}
             titleWrapperClass="!px-2"
           />
         </div>

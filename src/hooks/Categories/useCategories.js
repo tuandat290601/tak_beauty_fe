@@ -127,6 +127,30 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     }
   }
 
+  async function delMultiCategory(categoryIdList, onSuccess = () => {}) {
+    try {
+      setIsProccessing(true);
+      const categoryIds = categoryIdList.join("|");
+      const resp = await categoryApi.deleteCategoryById(categoryIds);
+      console.log(
+        "🚀 ~ file: useCategories.js:135 ~ delMultiCategory ~ resp:",
+        resp
+      );
+
+      if (resp.status === "success") {
+        queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
+        toast.success(CATEGORY_RESP_MSG.DELETE_SUCCESS);
+        onSuccess();
+      } else {
+        toast.error(CATEGORY_RESP_MSG.DELETE_FAILED);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsProccessing(false);
+    }
+  }
+
   async function addCategory({ title, parentId, image }, onSuccess = () => {}) {
     try {
       setIsProccessing(true);
@@ -168,11 +192,12 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     isSuccess,
     isLoading:
       isLoading ||
-      isProccessing ||
       queryClient.isFetching({ queryKey: reactQueryKey.GET_CATEGORIES }),
+    isProccessing,
     delCategory,
     addCategory,
     checkCategoryLevel,
+    delMultiCategory,
   };
 };
 
