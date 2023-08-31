@@ -78,7 +78,7 @@ export const ProductManagement = () => {
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: pageSize,
-    filters: "",
+    filters: "type==PRODUCT",
     sortField: null,
     sortOrder: null,
   });
@@ -242,7 +242,7 @@ export const ProductManagement = () => {
           <Table>
             <thead>
               <tr className=" sticky z-10">
-                <th colSpan={9} className="!bg-white">
+                <th colSpan={8} className="!bg-white">
                   <div className="flex justify-between w-full">
                     <div className="flex gap-3">
                       <div className="relative">
@@ -363,7 +363,7 @@ export const ProductManagement = () => {
                     <th>Chuyên mục</th>
                     <th>Phân loại</th>
                     <th>Giá</th>
-                    <th>Nhóm</th>
+                    {/* <th>Nhóm</th> */}
                     <th>Thứ tự</th>
                     <th>Hành động</th>
                   </tr>
