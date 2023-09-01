@@ -49,7 +49,7 @@ const ImageTextBox = ({
           <img
             alt="not found"
             className="object-contain max-w-36 max-h-36 rounded-md"
-            src={URL.createObjectURL(selectedImage)}
+            src={URL?.createObjectURL(selectedImage) || ""}
           />
         </div>
       ) : (

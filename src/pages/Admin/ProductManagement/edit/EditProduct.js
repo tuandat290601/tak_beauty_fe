@@ -77,14 +77,15 @@ const EditProduct = () => {
     defaultValues.image = product?.image;
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
-    defaultValues.size = product?.attributes.size;
-    defaultValues.weight = product?.attributes.weight;
-    defaultValues.sku = product?.sku;
+    if (page === PRODUCT_TYPE.PRODUCT) {
+      defaultValues.size = product?.attributes.size;
+      defaultValues.weight = product?.attributes.weight;
+      defaultValues.sku = product?.sku;
+    }
     const listCategories = product?.connects.map((item) => {
       return { ...item.category, id: item.id };
     });
     console.log(listCategories);
-    // defaultValues.categoryIds = listCategories.map((item) => item.id);
     setCheckedCategories(listCategories);
     reset({ ...defaultValues });
     // Kiểm tra người dùng có nhập trùng giá trị cũ hay không để disable nút cập nhật
@@ -127,7 +128,6 @@ const EditProduct = () => {
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let updateProductData = {
-      // type: "PRODUCT",
       id: product.id,
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
@@ -136,7 +136,6 @@ const EditProduct = () => {
       image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-
       categoryIds: listCategoriesId,
       type: page,
     };
@@ -164,7 +163,9 @@ const EditProduct = () => {
       );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      navigate("/admin/product/product-management");
+      if (page === PRODUCT_TYPE.PRODUCT)
+        navigate("/admin/product/product-management");
+      else navigate("/admin/course/course-management");
     } else {
       console.log("fail");
       toast.error(

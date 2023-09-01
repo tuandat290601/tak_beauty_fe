@@ -111,7 +111,9 @@ const AddProduct = () => {
       );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      navigate("/admin/product/product-management");
+      if (page === PRODUCT_TYPE.PRODUCT)
+        navigate("/admin/product/product-management");
+      else navigate("/admin/course/course-management");
     } else {
       console.log("fail");
       toast.error(

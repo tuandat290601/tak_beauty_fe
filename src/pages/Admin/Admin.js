@@ -52,13 +52,11 @@ const Admin = () => {
           <Route path={PAGE_PATH.ADD_PRODUCT} element={<AddProduct />} />
           <Route path={PAGE_PATH.EDIT_PRODUCT()} element={<EditProduct />} />
           <Route
-            path="/course/course-management"
+            path={PAGE_PATH.COURSE_MANAGEMENT}
             element={<ProductManagement />}
           />
-          <Route
-            path="/course/course-management/add"
-            element={<AddProduct />}
-          />
+          <Route path={PAGE_PATH.EDIT_COURSE()} element={<EditProduct />} />
+          <Route path={PAGE_PATH.ADD_COURSE} element={<AddProduct />} />
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
           <Route path="/theme" element={<Theme />} />

@@ -22,6 +22,14 @@ const PAGE_PATH = {
       ? `/product/product-management/edit/:id`
       : `/product/product-management/edit/${id}`,
 
+  //Course management
+  COURSE_MANAGEMENT: "/course/course-management",
+  ADD_COURSE: "/course/course-management/add",
+  EDIT_COURSE: (id) =>
+    id === undefined
+      ? `/course/course-management/edit/:id`
+      : `/course/course-management/edit/${id}`,
+
   // Admin
   ADMIN: ADMIN_BASE,
   ADMIN_DASHBOARD: "/dashboard",

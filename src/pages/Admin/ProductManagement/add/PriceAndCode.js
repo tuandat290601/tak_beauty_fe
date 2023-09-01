@@ -17,13 +17,12 @@ const PriceAndCode = ({
 }) => {
   const { categoryList: resCategories } = useCategories("Danh mục");
   const [categories, setCategories] = useState([]);
-
   useEffect(() => {
     if (resCategories?.status === "success") {
       const data = resCategories.responseData.rows;
       setCategories(data);
     }
-  }, [resCategories]);
+  }, []);
   return (
     <div className="w-1/3 flex flex-col gap-2">
       <Code
@@ -66,14 +65,7 @@ const Code = ({
     }
     setCheckedCategories(newArr);
   };
-  //single
-  // const handleCheckCategory = (category) => {
-  //   const temp = [...checkedCategories];
-  //   const newArr = temp.filter((item) => item.id === category.id);
-  //   if (newArr.length > 0) {
-  //     setCheckedCategories([]);
-  //   } else setCheckedCategories([category]);
-  // };
+
   const inCheckedList = (id) => {
     const filter = checkedCategories.filter((item) => item.id === id);
     return filter.length > 0;

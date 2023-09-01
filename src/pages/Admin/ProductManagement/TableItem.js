@@ -227,11 +227,17 @@ export const TableItem = ({
             <div>
               <BasicIconButton
                 className="!bg-blue-500"
-                handleOnClick={() =>
-                  navigate(
-                    `/admin/product/product-management/edit/${product.id}`
-                  )
-                }
+                handleOnClick={() => {
+                  if (page === PRODUCT_TYPE.PRODUCT) {
+                    navigate(
+                      `/admin/product/product-management/edit/${product.id}`
+                    );
+                  } else {
+                    navigate(
+                      `/admin/course/course-management/edit/${product.id}`
+                    );
+                  }
+                }}
               >
                 <MdEdit color="white"></MdEdit>
               </BasicIconButton>
