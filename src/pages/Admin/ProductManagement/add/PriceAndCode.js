@@ -6,6 +6,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import useClickOutside from "../../../../hooks/useClickOutSide";
 import CheckIcon from "@mui/icons-material/Check";
 import { PRODUCT_TYPE } from "../../../../common/constant";
+import { useQuery } from "@tanstack/react-query";
+import { reactQueryKey } from "../../../../configuration/reactQueryKey";
+import { categoryApi } from "../../../../api";
 const PriceAndCode = ({
   control,
   errors,
@@ -15,14 +18,18 @@ const PriceAndCode = ({
   selectedImage = [],
   initImage,
 }) => {
-  const { categoryList: resCategories } = useCategories("Danh mục");
+  const { data: categoryList } = useQuery({
+    queryKey: reactQueryKey.GET_CATEGORIES,
+    queryFn: async () => await categoryApi.getCategories(),
+  });
+
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    if (resCategories?.status === "success") {
-      const data = resCategories.responseData.rows;
+    if (categoryList?.status === "success") {
+      const data = categoryList.responseData.rows;
       setCategories(data);
     }
-  }, []);
+  }, [categoryList]);
   return (
     <div className="w-1/3 flex flex-col gap-2">
       <Code
