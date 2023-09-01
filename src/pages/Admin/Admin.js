@@ -17,6 +17,7 @@ import ServicePack from "./ServicePack/ServicePack";
 import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
+import ProductEdit from "./Categories/ProductEdit";
 import AddProduct from "./Product/add/AddProduct";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
 import { PAGE_PATH } from "../../configuration/routeConfig";
@@ -36,10 +37,13 @@ const Admin = () => {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/product" element={<Product />} />
 
-          <Route
-            path={PAGE_PATH.PRODUCTS_CATEGORIES}
-            element={<ProductsCategories />}
-          />
+          <Route path={PAGE_PATH.PRODUCTS_CATEGORIES.BASE}>
+            <Route index={true} element={<ProductsCategories />} />
+            <Route
+              path={PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES()}
+              element={<ProductEdit />}
+            />
+          </Route>
           <Route
             path="/product/product-management"
             element={<ProductManagement />}

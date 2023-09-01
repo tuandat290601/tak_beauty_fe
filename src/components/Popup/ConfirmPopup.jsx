@@ -1,4 +1,3 @@
-import HelpIcon from "@mui/icons-material/Help";
 import { Dialog, DialogActions, DialogContent, Stack } from "@mui/material";
 import React from "react";
 import Transition from "./Transition";

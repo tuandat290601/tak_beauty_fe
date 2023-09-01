@@ -7,7 +7,7 @@ import useCategories from "../../../hooks/Categories/useCategories";
 import { removeVietnameseTones } from "../../../helpers/StringUtil";
 import { FaTrash } from "react-icons/fa6";
 import usePopup from "../../../hooks/usePopup";
-import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
+import ConfirmPopup from "../../../components/Popup/ConfirmPopup.jsx";
 import { useSearchParams } from "react-router-dom";
 
 const CategoryList = () => {
