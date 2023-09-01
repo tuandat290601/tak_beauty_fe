@@ -123,7 +123,8 @@ export const ProductManagement = () => {
     console.log(searchKey + ", " + selectedCategoryFilter);
     setProductQueries({
       ...productQueries,
-      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter},type==${page}`,
+      filters: `title@=${searchKey},type==${page}`,
+      categoryListIds: `${selectedCategoryFilter}`,
     });
   };
   const handleOnChangeSearchKey = (e) => {
@@ -223,6 +224,7 @@ export const ProductManagement = () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
         const resCategories = [...categoryList?.responseData.rows];
+        console.log(resCategories);
         if (
           !resCategories?.some(
             (item) => item.title === "Tất cả" && item.id === ""

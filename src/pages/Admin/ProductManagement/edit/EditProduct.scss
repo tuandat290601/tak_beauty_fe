@@ -1,0 +1,27 @@
+.page-body {
+  min-height: 100vh;
+  padding-bottom: 50px;
+  background-color: var(--content-bg);
+  padding-top: calc(var(--header-height) + 10px);
+  overflow: hidden;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  transition: transform 0.2s ease;
+
+  .ui-layout {
+    box-sizing: border-box;
+    max-width: 1300px;
+    margin-right: auto;
+    margin-left: auto;
+    font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI,
+      Roboto, Helvetica Neue, sans-serif;
+    padding: 10px;
+  }
+  .editable-text {
+    cursor: pointer;
+    font-size: small;
+    text-decoration: none;
+    color: blue;
+    width: fit-content;
+    border-bottom: dashed 1px blue;
+  }
+}

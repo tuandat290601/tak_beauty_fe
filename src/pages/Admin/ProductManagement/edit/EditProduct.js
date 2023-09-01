@@ -16,19 +16,47 @@ import Header from "../add/Header";
 import Tab from "../add/Tab";
 import PriceAndCode from "../add/PriceAndCode";
 import Footer from "../add/Footer";
+import { useParams } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import "./EditProduct.scss";
 
 const EditProduct = () => {
+  const { id } = useParams();
+  const {
+    handleSubmit,
+    control,
+    getValues,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(addProductShcema),
+    defaultValues: {},
+    mode: "onChange",
+  });
   const contentRef = useRef(null);
   const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isReady, setIsReady] = useState(false);
   const page = window.location.href.includes("product")
     ? PRODUCT_TYPE.PRODUCT
     : PRODUCT_TYPE.COURSE;
-
+  const [product, setProduct] = useState();
   useEffect(() => {
-    setFooterWidth(contentRef.current.offsetWidth);
+    const fetchProduct = async () => {
+      setIsReady(false);
+      const res = await productApi.getProductDetails(id);
+      if (res.status === "success") {
+        setProduct(res.responseData.rows[0]);
+      }
+      setIsReady(true);
+    };
+    fetchProduct();
+  }, []);
+  useEffect(() => {
+    if (contentRef.current) setFooterWidth(contentRef.current.offsetWidth);
     function handleResize() {
       if (contentRef.current) {
         setFooterWidth(contentRef.current.offsetWidth);
@@ -40,18 +68,42 @@ const EditProduct = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
-  const {
-    handleSubmit,
-    control,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(addProductShcema),
-    defaultValues: {},
-    mode: "onChange",
-  });
+  }, [isReady]);
+  useEffect(() => {
+    let defaultValues = {};
+    defaultValues.title = product?.title;
+    defaultValues.description = product?.description;
+    defaultValues.detail = product?.detail;
+    defaultValues.image = product?.image;
+    defaultValues.originPrice = parseInt(product?.originPrice);
+    defaultValues.discountPrice = parseInt(product?.discountPrice);
+    defaultValues.size = product?.attributes.size;
+    defaultValues.weight = product?.attributes.weight;
+    defaultValues.sku = product?.sku;
+    const listCategories = product?.connects.map((item) => {
+      return { ...item.category, id: item.id };
+    });
+    console.log(listCategories);
+    // defaultValues.categoryIds = listCategories.map((item) => item.id);
+    setCheckedCategories(listCategories);
+    reset({ ...defaultValues });
+    // Kiểm tra người dùng có nhập trùng giá trị cũ hay không để disable nút cập nhật
+    // const subscription = watch((data) => {
+    //   if (
+    //     data.name === courseDetail?.name &&
+    //     data.description === courseDetail?.description &&
+    //     data.requirement === courseDetail?.requirement &&
+    //     !data.thumbnail &&
+    //     parseInt(data.pricePerMeeting) === courseDetail?.pricePerMeeting &&
+    //     checked === !courseDetail?.isVisible
+    //   ) {
+    //     reset({}, { keepValues: true });
+    //   }
+    // });
+    // return () => {
+    //   subscription.unsubscribe();
+    // };
+  }, [product, reset]);
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
 
@@ -74,13 +126,14 @@ const EditProduct = () => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
-    let createProductData = {
+    let updateProductData = {
       // type: "PRODUCT",
+      id: product.id,
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
       rating: data[ADD_PRODUCT_OBJ.RATING],
-      image: image,
+      image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
 
@@ -88,8 +141,8 @@ const EditProduct = () => {
       type: page,
     };
     if (page === PRODUCT_TYPE.PRODUCT) {
-      createProductData = {
-        ...createProductData,
+      updateProductData = {
+        ...updateProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
         attributes: {
           size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
@@ -98,14 +151,14 @@ const EditProduct = () => {
       };
     }
     console.log(data);
-    console.log(createProductData);
-    if (createProductData.categoryIds.length === 0) {
-      delete createProductData.categoryIds;
+    console.log(updateProductData);
+    if (updateProductData.categoryIds.length === 0) {
+      delete updateProductData.categoryIds;
     }
-    const res = await productApi.addNewProduct([createProductData]);
+    const res = await productApi.updateProduct(updateProductData);
     if (res.status === "success") {
       toast.success(
-        `Thêm ${
+        `Cập nhật ${
           page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
         } thành công`
       );
@@ -115,7 +168,7 @@ const EditProduct = () => {
     } else {
       console.log("fail");
       toast.error(
-        `Đã có lỗi xảy ra, thêm ${
+        `Đã có lỗi xảy ra, cập nhật ${
           page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
         } không thành công`
       );
@@ -123,7 +176,13 @@ const EditProduct = () => {
       setSubmitStatus(SUBMIT_STATUS.ERROR);
     }
   };
-  return (
+  return !isReady ? (
+    <div className="page-body">
+      <div className="w-full h-full flex items-center justify-center">
+        <CircularProgress></CircularProgress>
+      </div>
+    </div>
+  ) : (
     <div className="">
       <form onSubmit={handleSubmit(onSumbit)}>
         <Header submitStatus={submitStatus} />
@@ -160,6 +219,7 @@ const EditProduct = () => {
             checkedCategories={checkedCategories}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
+            initImage={product?.image}
           />
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />

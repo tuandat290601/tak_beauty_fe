@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaImage } from "react-icons/fa6";
 import fileApi from "../../api/file";
+import Config from "../../configuration";
 const ImageTextBox = ({
   name = "upload",
   setSelectedImage = () => {},
@@ -9,6 +10,7 @@ const ImageTextBox = ({
   label = null,
   haveLabel = false,
   btnTitle = "Chọn ảnh",
+  initImage,
   ...props
 }) => {
   return (
@@ -42,7 +44,7 @@ const ImageTextBox = ({
           setSelectedImage(event.target.files[0]);
         }}
       />
-      {selectedImage && (
+      {selectedImage ? (
         <div className="my-2">
           <img
             alt="not found"
@@ -50,6 +52,17 @@ const ImageTextBox = ({
             src={URL.createObjectURL(selectedImage)}
           />
         </div>
+      ) : (
+        initImage &&
+        initImage !== "" && (
+          <div className="my-2">
+            <img
+              alt="not found"
+              className="object-contain max-w-36 max-h-36 rounded-md"
+              src={Config.apiConfig.imageEndPoint + initImage}
+            />
+          </div>
+        )
       )}
       {/* <button onClick={onSubmit}>Test Upload Now</button> */}
     </div>

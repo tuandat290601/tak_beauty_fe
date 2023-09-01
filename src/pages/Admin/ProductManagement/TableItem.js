@@ -81,10 +81,12 @@ export const TableItem = ({
     if (res.status === "success") {
       toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setUpdateOriginPriceStatus(SUBMIT_STATUS.SUCCESS);
     } else {
       toast.error(
         "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
       );
+      setUpdateOriginPriceStatus(SUBMIT_STATUS.ERROR);
     }
   };
   const handleUpdateOriginPrice = async (editPrice) => {
@@ -98,10 +100,12 @@ export const TableItem = ({
       console.log("success");
       toast.success("Cập nhật giá gốc sản phẩm thành công");
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+      setUpdateOriginPriceStatus(SUBMIT_STATUS.SUCCESS);
     } else {
       toast.error(
         "Đã có lỗi xảy ra! Cập nhật giá gốc sản phẩm không thành công"
       );
+      setUpdateOriginPriceStatus(SUBMIT_STATUS.ERROR);
     }
   };
   return (
@@ -116,11 +120,15 @@ export const TableItem = ({
           }
         />
       </td>
-      <td className="!py-[10px]">
+      <td>
         <img
-          src={Config.apiConfig.imageEndPoint + product?.image}
+          src={
+            product?.image !== ""
+              ? Config.apiConfig.imageEndPoint + product?.image
+              : "/image/no_image.png"
+          }
           alt="thumb"
-          className="w-[50px] rounded-md"
+          className="w-[50px] h-full rounded-md"
         />
       </td>
       <td className="!py-[10px]">
@@ -183,6 +191,7 @@ export const TableItem = ({
       <td>
         {/*Origin price*/}
         <BasicEditablePopup
+          submitStatus={updateUpdateOriginPriceStatus}
           handleSubmitEditPrice={handleUpdateOriginPrice}
           initValue={product?.originPrice || 0}
         ></BasicEditablePopup>
@@ -190,6 +199,7 @@ export const TableItem = ({
       <td>
         {/*Discount price*/}
         <BasicEditablePopup
+          submitStatus={updateUpdateDiscountPriceStatus}
           handleSubmitEditPrice={handleUpdateDiscountPrice}
           initValue={product?.discountPrice || 0}
         ></BasicEditablePopup>
@@ -218,7 +228,9 @@ export const TableItem = ({
               <BasicIconButton
                 className="!bg-blue-500"
                 handleOnClick={() =>
-                  navigate(PAGE_PATH.EDIT_PRODUCT(product.id))
+                  navigate(
+                    `/admin/product/product-management/edit/${product.id}`
+                  )
                 }
               >
                 <MdEdit color="white"></MdEdit>
