@@ -83,7 +83,7 @@ const EditProduct = () => {
       defaultValues.sku = product?.sku;
     }
     const listCategories = product?.connects.map((item) => {
-      return { ...item.category, id: item.id };
+      return { ...item.category, id: item.categoryId };
     });
     console.log(listCategories);
     setCheckedCategories(listCategories);

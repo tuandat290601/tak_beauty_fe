@@ -223,18 +223,19 @@ export const ProductManagement = () => {
     const fetchData = async () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
-        const resCategories = [...categoryList?.responseData.rows];
-        console.log(resCategories);
-        if (
-          !resCategories?.some(
-            (item) => item.title === "Tất cả" && item.id === ""
-          )
-        ) {
-          resCategories?.unshift({
-            id: "",
-            title: "Tất cả",
-          });
-        }
+        const categoryListDropdown = createCategoryListDropdown();
+        const resCategories = [...categoryListDropdown];
+        // console.log(resCategories);
+        // if (
+        //   !resCategories?.some(
+        //     (item) => item.title === "Tất cả" && item.id === ""
+        //   )
+        // ) {
+        //   resCategories?.unshift({
+        //     id: "",
+        //     title: "Tất cả",
+        //   });
+        // }
         setListCategories(resCategories);
       }
       if (isSuccess) {
@@ -344,6 +345,17 @@ export const ProductManagement = () => {
                   .map((item, index) => (
                     <TableItemSkeleton key={index}></TableItemSkeleton>
                   ))
+              ) : listProduct.length === 0 ? (
+                <div className="flex flex-col items-center justify-center my-10 gap-y-10">
+                  <img
+                    src="/images/empty/empty-box.png"
+                    alt="Empty img"
+                    className="w-40"
+                  />
+                  <h4 className="font-medium text-2xl">
+                    Không tìm thấy kết quả nào
+                  </h4>
+                </div>
               ) : (
                 <>
                   <tr className="sticky z-9 shadow-md">
@@ -373,7 +385,7 @@ export const ProductManagement = () => {
                     </th>
                     <th>Hình</th>
                     <th>Tiêu đề</th>
-                    <th>Chuyên mục</th>
+                    <th>Danh mục</th>
                     <th>Phân loại</th>
                     <th>Giá gốc</th>
                     <th>Giá khuyến mãi</th>
