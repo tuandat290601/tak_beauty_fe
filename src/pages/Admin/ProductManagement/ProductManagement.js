@@ -123,7 +123,8 @@ export const ProductManagement = () => {
     console.log(searchKey + ", " + selectedCategoryFilter);
     setProductQueries({
       ...productQueries,
-      filters: `title@=${searchKey},categoryId==${selectedCategoryFilter},type==${page}`,
+      filters: `title@=${searchKey},type==${page}`,
+      categoryListIds: `${selectedCategoryFilter}`,
     });
   };
   const handleOnChangeSearchKey = (e) => {
@@ -222,15 +223,19 @@ export const ProductManagement = () => {
     const fetchData = async () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
-        console.log(categoryList?.responseData?.rows);
+        const resCategories = [...categoryList?.responseData.rows];
+        console.log(resCategories);
         if (
-          !categoryList?.responseData?.rows.some(
+          !resCategories?.some(
             (item) => item.title === "Tất cả" && item.id === ""
           )
         ) {
-          categoryList?.responseData?.rows.unshift({ id: "", title: "Tất cả" });
+          resCategories?.unshift({
+            id: "",
+            title: "Tất cả",
+          });
         }
-        setListCategories(categoryList?.responseData?.rows);
+        setListCategories(resCategories);
       }
       if (isSuccess) {
         setPageCount(data.responseData.totalPages);

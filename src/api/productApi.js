@@ -4,7 +4,9 @@ const productApi = {
   getProducts: ({ payload, signal }) => {
     const url = `/products?currentPage=${payload.currentPage ?? 1}&pageSize=${
       payload.pageSize ?? 10
-    }&filters=${encodeURIComponent(payload.filters ?? "")}`;
+    }&filters=${encodeURIComponent(payload.filters ?? "")}&categoryListIds=${
+      payload.categoryListIds ?? ""
+    }`;
     return axiosClient.get(url, { signal });
   },
 

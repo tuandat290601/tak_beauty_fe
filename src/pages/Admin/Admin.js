@@ -18,9 +18,10 @@ import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
 import ProductEdit from "./Categories/ProductEdit";
-import AddProduct from "./Product/add/AddProduct";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
 import { PAGE_PATH } from "../../configuration/routeConfig";
+import AddProduct from "./ProductManagement/add/AddProduct";
+import EditProduct from "./ProductManagement/edit/EditProduct";
 
 const Admin = () => {
   return (
@@ -45,13 +46,11 @@ const Admin = () => {
             />
           </Route>
           <Route
-            path="/product/product-management"
+            path={PAGE_PATH.PRODUCT_MANAGEMENT}
             element={<ProductManagement />}
           />
-          <Route
-            path="/product/product-management/add"
-            element={<AddProduct />}
-          />
+          <Route path={PAGE_PATH.ADD_PRODUCT} element={<AddProduct />} />
+          <Route path={PAGE_PATH.EDIT_PRODUCT()} element={<EditProduct />} />
           <Route
             path="/course/course-management"
             element={<ProductManagement />}

@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { BasicEditor } from "../../../../components/Editor/BasicEditor";
 import { ADD_PRODUCT_OBJ } from "../../../../helpers/schema-obj";
 
-const Tab = ({ control, errors, getValues, setValue }) => {
+const Tab = ({ product, control, errors, getValues, setValue }) => {
   const [index, setIndex] = useState(0);
   return (
     <div className="bg-white w-full  rounded-md">

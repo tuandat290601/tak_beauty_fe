@@ -15,6 +15,7 @@ export const ADD_PRODUCT_OBJ = {
   CATEGORY_ID: "categoryId",
   RATING: "rating",
   SKU: "sku",
+  IMAGE: "image",
 };
 
 // ====== Authen ======

@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import CurrencyInput, { formatValue } from "react-currency-input-field";
 import BasicIconButton from "../Button/BasicIconButton";
 import { toVNDCurrency } from "../../helpers/CurrencyUtil";
+import { SUBMIT_STATUS } from "../../common/constant";
 
 export const BasicEditablePopup = ({
   initValue = 0,
   handleSubmitEditPrice,
+  submitStatus,
 }) => {
   const { show, setShow, nodeRef } = useClickOutside();
   const [editValue, setEditValue] = useState(initValue);
@@ -66,6 +68,7 @@ export const BasicEditablePopup = ({
             className="px-2 rounded-md border border-gray-500"
           />
           <BasicIconButton
+            disabled={submitStatus === SUBMIT_STATUS.LOADING}
             className="!bg-blue-500 rounded-md border-2 !border-black"
             handleOnClick={() => {
               handleSubmitEditPrice(editValue);

@@ -13,6 +13,7 @@ const PriceAndCode = ({
   checkedCategories = [],
   setSelectedImage = () => {},
   selectedImage = [],
+  initImage,
 }) => {
   const { categoryList: resCategories } = useCategories("Danh mục");
   const [categories, setCategories] = useState([]);
@@ -38,6 +39,7 @@ const PriceAndCode = ({
         errors={errors}
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
+        initImage={initImage}
       />
     </div>
   );
@@ -242,6 +244,7 @@ const ImageProduct = ({
   errors,
   setSelectedImage = () => {},
   selectedImage = [],
+  initImage,
 }) => {
   return (
     <Wrapper>
@@ -252,6 +255,7 @@ const ImageProduct = ({
         wrapperClass="m-0"
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
+        initImage={initImage}
       ></ImageTextBox>
     </Wrapper>
   );
