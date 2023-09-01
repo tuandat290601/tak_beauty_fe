@@ -18,18 +18,22 @@ const PriceAndCode = ({
   selectedImage = [],
   initImage,
 }) => {
-  const { data: categoryList } = useQuery({
-    queryKey: reactQueryKey.GET_CATEGORIES,
-    queryFn: async () => await categoryApi.getCategories(),
-  });
+  // const { data: categoryList } = useQuery({
+  //   queryKey: reactQueryKey.GET_CATEGORIES,
+  //   queryFn: async () => await categoryApi.getCategories(),
+  // });
 
-  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    if (categoryList?.status === "success") {
-      const data = categoryList.responseData.rows;
-      setCategories(data);
-    }
-  }, [categoryList]);
+  // const [categories, setCategories] = useState([]);
+  // useEffect(() => {
+  //   if (categoryList?.status === "success") {
+  //     const data = categoryList.responseData.rows;
+  //     console.log("🚀 ~ file: PriceAndCode.js:30 ~ useEffect ~ data:", data);
+  //     setCategories(data);
+  //   }
+  // }, [categoryList]);
+  const { createCategoryListDropdown } = useCategories({});
+  const categories = createCategoryListDropdown()?.slice(1);
+
   return (
     <div className="w-1/3 flex flex-col gap-2">
       <Code
