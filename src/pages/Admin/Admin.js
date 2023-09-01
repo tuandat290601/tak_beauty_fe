@@ -17,7 +17,7 @@ import ServicePack from "./ServicePack/ServicePack";
 import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
-import ProductEdit from "./Categories/ProductEdit";
+import CategoryEdit from "./Categories/CategoryEdit";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
 import { PAGE_PATH } from "../../configuration/routeConfig";
 import AddProduct from "./ProductManagement/add/AddProduct";
@@ -42,7 +42,7 @@ const Admin = () => {
             <Route index={true} element={<ProductsCategories />} />
             <Route
               path={PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES()}
-              element={<ProductEdit />}
+              element={<CategoryEdit />}
             />
           </Route>
           <Route

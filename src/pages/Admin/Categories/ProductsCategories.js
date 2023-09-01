@@ -15,13 +15,13 @@ const ProductsCategories = () => {
           <BasicButton
             icon={<FaPlusCircle />}
             title="Thêm Mới (F3)"
-            className="green-btn"
+            className="btn green-btn !px-5 !py-[7px] text-xs text-white"
           />
           <BasicButton
             icon={<FaPlusCircle />}
             title="Thêm nhanh (CTRL + F3)"
             onClick={() => console.log("run")}
-            className="green-btn"
+            className="btn green-btn !px-5 !py-[7px] text-xs text-white"
           />
         </div>
       </HeaderMainPage>

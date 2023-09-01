@@ -33,7 +33,7 @@ const ShortCategoryForm = () => {
       [ADD_CATEGORY_OBJ.PARENT_ID]: "",
       [ADD_CATEGORY_OBJ.IMAGE]: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   async function onSubmit(data) {
@@ -131,7 +131,7 @@ const ShortCategoryForm = () => {
         title="Lưu"
         icon={<FaSave />}
         type="submit"
-        className="green-btn"
+        className="green-btn btn text-xs text-white"
       />
     </form>
   );
