@@ -442,13 +442,13 @@ export const ProductManagement = () => {
           handleClosePopup();
         }}
         handleConfirm={handleConfirmDeleteProduct}
+        positionTop={true}
       >
         Bạn có chắc chắn muốn xoá{" "}
         {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}{" "}
         <span className="text-blue-500 font-bold">
           {currentSelectedProduct?.title}
         </span>
-        '
       </ConfirmPopup>
       <ConfirmPopup
         isOpen={openConfirmDeleteListProudct}
@@ -456,10 +456,11 @@ export const ProductManagement = () => {
           handleCloseDeleteListProudctPopup();
         }}
         handleConfirm={handleConfirmDeleteListCheckedProduct}
+        positionTop={true}
       >
         Bạn có chắc chắn muốn xoá{" "}
         {listProduct.filter((item) => item.checked === true).length}{" "}
-        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"} '
+        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}
       </ConfirmPopup>
     </div>
   );

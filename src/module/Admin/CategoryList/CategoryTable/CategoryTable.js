@@ -6,7 +6,7 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import BasicButton from "../../../../components/Button/BasicButton";
 import Table from "../../../../components/Table/Table";
 import { FaEye } from "react-icons/fa6";
-import ConfirmPopup from "../../../../components/Popup/ConfirmPopup.jsx";
+import ConfirmPopup from "../../../../components/Popup/ConfirmPopup";
 import usePopup from "../../../../hooks/usePopup";
 import { PAGE_PATH } from "../../../../configuration/routeConfig";
 
