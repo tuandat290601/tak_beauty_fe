@@ -11,12 +11,8 @@ import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
 
 const ShortCategoryForm = () => {
   // Category list util
-  const {
-    tempFilterCategory,
-    createCategoryListDropdown,
-    addCategory,
-    isProccessing,
-  } = useCategories({ defCategoryTitle: "Chọn danh mục" });
+  const { selectedCategory, categoryDropdown, addCategory, isProccessing } =
+    useCategories({ placeholderCategoryTitle: "Chọn danh mục" });
 
   const [selectedImage, setSelectedImage] = React.useState(null);
 
@@ -42,10 +38,10 @@ const ShortCategoryForm = () => {
   }
 
   React.useEffect(() => {
-    setValue(ADD_CATEGORY_OBJ.PARENT_ID, tempFilterCategory.id);
+    setValue(ADD_CATEGORY_OBJ.PARENT_ID, selectedCategory.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tempFilterCategory]);
+  }, [selectedCategory]);
 
   return (
     <form
@@ -100,9 +96,9 @@ const ShortCategoryForm = () => {
             highlightClass="!bg-blue-500 rounded-md !text-white"
             itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
             dropdownClass=""
-            title={tempFilterCategory.title}
+            title={selectedCategory.title}
             noTooltip={true}
-            items={createCategoryListDropdown()}
+            items={categoryDropdown}
             disabled={isProccessing}
             titleWrapperClass="!px-2"
           />

@@ -20,8 +20,8 @@ const CategoryList = () => {
   // Category list util
   const {
     categoryList,
-    tempFilterCategory,
-    createCategoryListDropdown,
+    selectedCategory,
+    categoryDropdown,
     isLoading,
     delCategory,
     checkCategoryLevel,
@@ -46,7 +46,7 @@ const CategoryList = () => {
 
     setSearchParams({
       keyword: searchTextbox.current?.value,
-      category: tempFilterCategory?.id,
+      category: selectedCategory?.id,
     });
   }
 
@@ -96,9 +96,9 @@ const CategoryList = () => {
             highlightClass="!bg-blue-500 rounded-md !text-white"
             itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
             dropdownClass=""
-            title={tempFilterCategory.title}
+            title={selectedCategory.title}
             noTooltip={true}
-            items={createCategoryListDropdown()}
+            items={categoryDropdown}
             disabled={isLoading}
             titleWrapperClass="!px-2"
           />

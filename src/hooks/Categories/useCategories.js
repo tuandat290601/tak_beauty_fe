@@ -4,22 +4,39 @@ import { categoryApi } from "../../api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CATEGORY_RESP_MSG } from "../../configuration/respMsg";
+import { SUBMIT_STATUS } from "../../common/constant";
 
-const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
-  const defCategory = {
-    id: "",
-    title: defCategoryTitle,
-    onClick: () => {
-      setTempFilterCategory(defCategory);
-    },
-  };
-
-  const [tempFilterCategory, setTempFilterCategory] =
-    React.useState(defCategory);
+const useCategories = ({
+  placeholderCategoryTitle = "Tất cả danh mục",
+  defCategoryId = "",
+}) => {
+  // ======= Fetch =======
+  const {
+    data: categoryList,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: reactQueryKey.GET_CATEGORIES,
+    queryFn: async () => await categoryApi.getCategories(),
+  });
+  const [sortedCategoryList, setSortedCategoryList] = React.useState(null);
   const [isProccessing, setIsProccessing] = React.useState(false); // Deleting, updating,...
   const queryClient = useQueryClient();
 
-  // Util
+  // ======= Default values =======
+  const placeholderCategory = {
+    id: "",
+    title: placeholderCategoryTitle,
+    onClick: () => {
+      setSelectedCategory(placeholderCategory);
+    },
+  };
+
+  const [selectedCategory, setSelectedCategory] =
+    React.useState(placeholderCategory);
+  const [categoryDropdown, setCategoryDropdown] = React.useState([]);
+
+  // ======= Util =======
   function makeTree(data, root) {
     var r = [],
       o = {};
@@ -38,8 +55,9 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
 
   function sortCategory() {
     if (isSuccess) {
-      const data = categoryList?.responseData?.rows;
-      // const newData = _(data).sortBy("title").value();
+      const data = categoryList?.responseData?.rows?.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
       var tree = makeTree(data, null);
       var sorted = tree.reduce(function traverse(r, a) {
         return r.concat(a.data, (a.children || []).reduce(traverse, []));
@@ -78,19 +96,9 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     return level;
   }
 
-  // Fetch
-  const {
-    data: categoryList,
-    isLoading,
-    isSuccess,
-  } = useQuery({
-    queryKey: reactQueryKey.GET_CATEGORIES,
-    queryFn: async () => await categoryApi.getCategories(),
-  });
-
-  const sortedCategoryList = isSuccess ? sortCategory() : categoryList;
-
   function createCategoryListDropdown() {
+    if (!sortedCategoryList) return [];
+
     const categoryListData = sortedCategoryList?.map((item) => {
       const levelTitle =
         Array(checkCategoryLevel(item)).fill("|---").join("") + item.title;
@@ -99,15 +107,16 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
         id: item.id,
         title: levelTitle,
         onClick: () => {
-          setTempFilterCategory({ ...item, title: levelTitle });
+          setSelectedCategory({ ...item, title: levelTitle });
         },
       };
     });
-    categoryListData?.unshift(defCategory);
+    categoryListData?.unshift(placeholderCategory);
 
     return categoryListData;
   }
 
+  // ======= CRUD =======
   async function delCategory(categoryId) {
     try {
       setIsProccessing(true);
@@ -161,7 +170,7 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
       if (resp.status === "success") {
         toast.success(CATEGORY_RESP_MSG.ADD_SUCCESS);
         onSuccess();
-        setTempFilterCategory(defCategory);
+        setSelectedCategory(placeholderCategory);
         queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
       } else {
         toast.error(CATEGORY_RESP_MSG.ADD_FAILED);
@@ -177,27 +186,83 @@ const useCategories = ({ defCategoryTitle = "Tất cả danh mục" }) => {
     }
   }
 
+  async function updateCategory({ title, parentId, image }) {
+    try {
+      setIsProccessing(true);
+      const data = { title, parentId, image };
+      const resp = await categoryApi.updateCategoryById(data);
+      console.log(
+        "🚀 ~ file: useCategories.js:193 ~ updateCategory ~ resp:",
+        resp
+      );
+
+      if (resp.status === SUBMIT_STATUS.SUCCESS) {
+        toast.success(CATEGORY_RESP_MSG.UPDATE_SUCCESS);
+        queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
+      } else {
+        toast.error(CATEGORY_RESP_MSG.UPDATE_FAILED);
+      }
+    } catch (error) {
+      console.error("🚀 ~ file: useCategories.js:209 ~ error:", error);
+      toast.error(CATEGORY_RESP_MSG.UPDATE_FAILED);
+    } finally {
+      setIsProccessing(false);
+    }
+  }
+
+  // Store dropdown in state
+  React.useEffect(() => {
+    if (sortedCategoryList?.length > 0) {
+      const dropdown = createCategoryListDropdown();
+      setCategoryDropdown(dropdown);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortedCategoryList]);
+
+  // Store default selected dropdown
+  React.useEffect(() => {
+    if (categoryDropdown?.length > 0 && defCategoryId) {
+      setSelectedCategory(
+        categoryDropdown.find((item) => item.id === defCategoryId)
+      );
+    }
+  }, [categoryDropdown, defCategoryId]);
+
+  // Sort category by hierachy and store in state
+  React.useEffect(() => {
+    if (categoryList) {
+      setSortedCategoryList(sortCategory());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryList]);
+
   return {
-    tempFilterCategory,
+    tempFilterCategory: selectedCategory,
+    selectedCategory,
+    setSelectedCategory,
     createCategoryListDropdown,
-    categoryList: categoryList
-      ? {
-          ...categoryList,
-          responseData: {
-            ...categoryList?.responseData,
-            rows: sortedCategoryList,
-          },
-        }
-      : null,
+    categoryList:
+      categoryList && sortedCategoryList
+        ? {
+            ...categoryList,
+            responseData: {
+              ...categoryList?.responseData,
+              rows: sortedCategoryList,
+            },
+          }
+        : null,
     isSuccess,
     isLoading:
       isLoading ||
       queryClient.isFetching({ queryKey: reactQueryKey.GET_CATEGORIES }),
     isProccessing,
+    // Crud
     delCategory,
     addCategory,
-    checkCategoryLevel,
     delMultiCategory,
+    updateCategory,
+    checkCategoryLevel,
+    categoryDropdown,
   };
 };
 
