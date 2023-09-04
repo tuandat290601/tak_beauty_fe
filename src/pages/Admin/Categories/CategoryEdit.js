@@ -51,7 +51,7 @@ const CategoryEdit = () => {
   async function onSubmit(data) {
     try {
       console.log(data);
-      await updateCategory(data);
+      await updateCategory(id, data);
     } catch (error) {
       console.error("🚀 ~ file: CategoryEdit.js:60 ~ onSubmit ~ error:", error);
     }

@@ -186,11 +186,11 @@ const useCategories = ({
     }
   }
 
-  async function updateCategory({ title, parentId, image }) {
+  async function updateCategory(id, { title, parentId, image }) {
     try {
       setIsProccessing(true);
       const data = { title, parentId, image };
-      const resp = await categoryApi.updateCategoryById(data);
+      const resp = await categoryApi.updateCategoryById({ id, data });
       console.log(
         "🚀 ~ file: useCategories.js:193 ~ updateCategory ~ resp:",
         resp
