@@ -10,6 +10,7 @@ const BasicModal = ({
   handleClose = () => {},
   clickOutside = handleClose,
   fullWidth = false,
+  maxWidth = "600px",
   padding = "40px",
   haveCloseBtn = false,
   handleCloseBtnClick = handleClose,
@@ -39,6 +40,7 @@ const BasicModal = ({
           position: "relative",
           boxShadow: "none",
           padding: padding,
+          maxWidth: maxWidth,
           // overflowX: "hidden",
         },
       }}

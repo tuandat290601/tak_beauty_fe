@@ -116,6 +116,10 @@ const useCategories = ({
     return categoryListData;
   }
 
+  function resetCategoryDropdown() {
+    setSelectedCategory(placeholderCategory);
+  }
+
   // ======= CRUD =======
   async function delCategory(categoryId) {
     try {
@@ -287,8 +291,10 @@ const useCategories = ({
     addCategory,
     delMultiCategory,
     updateCategory,
+    addMultiCategory,
     checkCategoryLevel,
     categoryDropdown,
+    resetCategoryDropdown,
   };
 };
 

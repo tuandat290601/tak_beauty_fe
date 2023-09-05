@@ -111,7 +111,8 @@ const AddCategoryForm = () => {
             classNameTitle="select-none"
             highlightClass="!bg-blue-500 rounded-md !text-white"
             itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
-            dropdownClass=""
+            dropdownClass="max-h-[400px] overflow-y-scroll"
+            isSearch={true}
             title={selectedCategory.title}
             noTooltip={true}
             items={categoryDropdown}
