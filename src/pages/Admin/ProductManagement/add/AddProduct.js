@@ -15,9 +15,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
-import { fileApi } from "../../../../api";
 import Feedback from "./Feedback";
 import { feedbackApi } from "../../../../api/feedbackApi";
+import useUpload from "../../../../hooks/useUpload";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
@@ -57,24 +57,11 @@ const AddProduct = () => {
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
 
-  const onUploadImage = async () => {
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("file", selectedImage);
+  const { uploadImage } = useUpload();
 
-      const res = await fileApi.uploadFile(formData);
-      if ((res.status = SUBMIT_STATUS.SUCCESS)) {
-        const { responseData } = res;
-        return responseData.path;
-        //save path
-      } else {
-        return "";
-      }
-    } else return "";
-  };
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
-    const image = await onUploadImage();
+    const image = await uploadImage(selectedImage);
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let createProductData = {
       // type: "PRODUCT",

@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { addCategorySchema } from "../../../helpers/form-schema";
 import useCategories from "../../../hooks/Categories/useCategories";
 import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
+import useUpload from "../../../hooks/useUpload";
 
 const ShortCategoryForm = () => {
   // Category list util
@@ -32,9 +33,22 @@ const ShortCategoryForm = () => {
     mode: "onSubmit",
   });
 
+  const { uploadImage } = useUpload();
+
   async function onSubmit(data) {
-    console.log("onSubmit", data);
-    await addCategory(data, reset());
+    try {
+      const image = await uploadImage(selectedImage);
+      const submitData = { ...data, image };
+      console.log("onSubmit", submitData);
+      await addCategory(submitData, resetForm());
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function resetForm(params) {
+    reset();
+    setSelectedImage(null);
   }
 
   React.useEffect(() => {

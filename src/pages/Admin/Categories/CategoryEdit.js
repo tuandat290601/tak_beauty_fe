@@ -10,6 +10,7 @@ import { addCategorySchema } from "../../../helpers/form-schema";
 import { ADD_CATEGORY_OBJ } from "../../../helpers/schema-obj";
 import { BasicDropdown, BasicTextBox, ImageTextBox } from "../../../components";
 import useCategories from "../../../hooks/Categories/useCategories";
+import useUpload from "../../../hooks/useUpload";
 
 const CategoryEdit = () => {
   const { id } = useParams();
@@ -38,6 +39,7 @@ const CategoryEdit = () => {
     formState: { errors },
     reset,
     setValue,
+    watch,
   } = useForm({
     resolver: yupResolver(addCategorySchema),
     defaultValues: {
@@ -48,12 +50,16 @@ const CategoryEdit = () => {
     mode: "onSubmit",
   });
 
+  const { uploadImage } = useUpload();
+
   async function onSubmit(data) {
     try {
-      console.log(data);
-      await updateCategory(id, data);
+      const image = await uploadImage(selectedImage);
+      const submitData = { ...data, image };
+      console.log("onSubmit", submitData);
+      await updateCategory(id, submitData);
     } catch (error) {
-      console.error("🚀 ~ file: CategoryEdit.js:60 ~ onSubmit ~ error:", error);
+      console.error("error");
     }
   }
 
@@ -75,6 +81,7 @@ const CategoryEdit = () => {
       reset({
         [ADD_CATEGORY_OBJ.TITLE]: defaultValues.title,
         [ADD_CATEGORY_OBJ.PARENT_ID]: defaultValues.parentId || "",
+        [ADD_CATEGORY_OBJ.IMAGE]: defaultValues.image || "",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,6 +181,7 @@ const CategoryEdit = () => {
                 haveLabel={true}
                 selectedImage={selectedImage}
                 setSelectedImage={setSelectedImage}
+                initImage={watch(ADD_CATEGORY_OBJ.IMAGE)}
               />
             </div>
           </div>

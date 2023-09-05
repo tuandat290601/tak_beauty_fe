@@ -29,6 +29,7 @@ import usePopup from "../../../hooks/usePopup";
 import { toast } from "react-toastify";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE } from "../../../common/constant";
+import { IMG_PATH } from "../../../configuration/imagePath";
 
 const page = window.location.href.includes("product")
   ? PRODUCT_TYPE.PRODUCT
@@ -348,7 +349,7 @@ export const ProductManagement = () => {
               ) : listProduct.length === 0 ? (
                 <div className="flex flex-col items-center justify-center my-10 gap-y-10">
                   <img
-                    src="/images/empty/empty-box.png"
+                    src={IMG_PATH.EMPTY_BOX}
                     alt="Empty img"
                     className="w-40"
                   />
