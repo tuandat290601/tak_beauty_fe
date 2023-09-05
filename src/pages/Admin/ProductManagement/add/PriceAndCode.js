@@ -35,7 +35,7 @@ const PriceAndCode = ({
   const categories = createCategoryListDropdown()?.slice(1);
 
   return (
-    <div className="w-1/3 flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-2">
       <Code
         control={control}
         errors={errors}

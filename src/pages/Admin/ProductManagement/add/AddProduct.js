@@ -16,6 +16,8 @@ import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
 import { fileApi } from "../../../../api";
+import Feedback from "./Feedback";
+import { feedbackApi } from "../../../../api/feedbackApi";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
@@ -83,7 +85,6 @@ const AddProduct = () => {
       image: image,
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-
       categoryIds: listCategoriesId,
       type: page,
     };
@@ -104,11 +105,31 @@ const AddProduct = () => {
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
+      console.log("🚀 ~ file: AddProduct.js:108 ~ onSumbit ~ res:", res);
       toast.success(
         `Thêm ${
           page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
         } thành công`
       );
+
+      //add feedback
+      const productId = res.responseData[0].id;
+
+      const { feedback } = data;
+      if (feedback.length > 0) {
+        const formatFeedback = feedback.map((item) => ({
+          ...item,
+          productId,
+          courseId: productId,
+        }));
+
+        const resAddFeedback = feedbackApi.addFeedback(formatFeedback);
+        console.log(
+          "🚀 ~ file: AddProduct.js:133 ~ onSumbit ~ resAddFeedback:",
+          resAddFeedback
+        );
+      }
+
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
       if (page === PRODUCT_TYPE.PRODUCT)
@@ -155,14 +176,22 @@ const AddProduct = () => {
               />
             </div>
           </div>
-          <PriceAndCode
-            control={control}
-            errors={errors}
-            setCheckedCategories={setCheckedCategories}
-            checkedCategories={checkedCategories}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
+          <div className="w-1/3">
+            <PriceAndCode
+              control={control}
+              errors={errors}
+              setCheckedCategories={setCheckedCategories}
+              checkedCategories={checkedCategories}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+            />
+            <Feedback
+              control={control}
+              getValues={getValues}
+              errors={errors}
+              setValue={setValue}
+            />
+          </div>
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />
       </form>

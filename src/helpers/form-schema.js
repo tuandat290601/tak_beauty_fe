@@ -23,6 +23,26 @@ export const addProductShcema = yup.object({
   [ADD_PRODUCT_OBJ.DISCOUNT_PRICE]: yup.number("Vui lòng nhập số"),
   [ADD_PRODUCT_OBJ.SIZE]: yup.number("Vui lòng nhập số"),
   [ADD_PRODUCT_OBJ.WEIGHT]: yup.number("Vui lòng nhập số"),
+  [ADD_PRODUCT_OBJ.FEEDBACK]: yup.array().of(
+    yup.object().shape({
+      content: yup
+        .mixed()
+        .test(
+          "content-validation",
+          "Comment phải là chuỗi, rating là số từ 1 đến 5",
+          function (value) {
+            const type = this.parent.type; // Lấy giá trị của "type" từ parent object
+            if (type === "RATING") {
+              return !isNaN(value) && Number(value) >= 1 && Number(value) <= 5;
+            } else if (type === "COMMENT") {
+              return yup.string().isType(value) && value !== "";
+            }
+            return true;
+          }
+        ),
+    })
+  ),
+
   // [ADD_PRODUCT_OBJ.DESCRIPTION]: yup
   //   .string()
   //   .required("Vui lòng nhập tóm tắt sản phẩm"),
