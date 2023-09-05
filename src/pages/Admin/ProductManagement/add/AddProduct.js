@@ -16,6 +16,7 @@ import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
 import { fileApi } from "../../../../api";
+import Feedback from "./Feedback";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
@@ -71,6 +72,7 @@ const AddProduct = () => {
     } else return "";
   };
   const onSumbit = async (data) => {
+    console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ data:", data);
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
@@ -83,7 +85,6 @@ const AddProduct = () => {
       image: image,
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-
       categoryIds: listCategoriesId,
       type: page,
     };
@@ -155,14 +156,22 @@ const AddProduct = () => {
               />
             </div>
           </div>
-          <PriceAndCode
-            control={control}
-            errors={errors}
-            setCheckedCategories={setCheckedCategories}
-            checkedCategories={checkedCategories}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
+          <div className="w-1/3">
+            <PriceAndCode
+              control={control}
+              errors={errors}
+              setCheckedCategories={setCheckedCategories}
+              checkedCategories={checkedCategories}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+            />
+            <Feedback
+              control={control}
+              getValues={getValues}
+              errors={errors}
+              setValue={setValue}
+            />
+          </div>
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />
       </form>
