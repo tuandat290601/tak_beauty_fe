@@ -78,8 +78,8 @@ const EditProduct = () => {
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
     if (page === PRODUCT_TYPE.PRODUCT) {
-      defaultValues.size = product?.attributes.size;
-      defaultValues.weight = product?.attributes.weight;
+      defaultValues.size = product?.attributes?.size || 0;
+      defaultValues.weight = product?.attributes?.weight || 0;
       defaultValues.sku = product?.sku;
     }
     const listCategories = product?.connects.map((item) => {
