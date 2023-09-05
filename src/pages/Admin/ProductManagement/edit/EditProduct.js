@@ -213,15 +213,17 @@ const EditProduct = () => {
               />
             </div>
           </div>
-          <PriceAndCode
-            control={control}
-            errors={errors}
-            setCheckedCategories={setCheckedCategories}
-            checkedCategories={checkedCategories}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            initImage={product?.image}
-          />
+          <div className="w-1/3">
+            <PriceAndCode
+              control={control}
+              errors={errors}
+              setCheckedCategories={setCheckedCategories}
+              checkedCategories={checkedCategories}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+              initImage={product?.image}
+            />
+          </div>
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />
       </form>
