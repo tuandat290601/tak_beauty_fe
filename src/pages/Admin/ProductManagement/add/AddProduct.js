@@ -17,6 +17,7 @@ import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
 import { fileApi } from "../../../../api";
 import Feedback from "./Feedback";
+import { feedbackApi } from "../../../../api/feedbackApi";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
@@ -72,7 +73,6 @@ const AddProduct = () => {
     } else return "";
   };
   const onSumbit = async (data) => {
-    console.log("🚀 ~ file: AddProduct.js:75 ~ onSumbit ~ data:", data);
     setSubmitStatus(SUBMIT_STATUS.LOADING);
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
@@ -105,11 +105,31 @@ const AddProduct = () => {
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
+      console.log("🚀 ~ file: AddProduct.js:108 ~ onSumbit ~ res:", res);
       toast.success(
         `Thêm ${
           page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
         } thành công`
       );
+
+      //add feedback
+      const productId = res.responseData[0].id;
+
+      const { feedback } = data;
+      if (feedback.length > 0) {
+        const formatFeedback = feedback.map((item) => ({
+          ...item,
+          productId,
+          courseId: productId,
+        }));
+
+        const resAddFeedback = feedbackApi.addFeedback(formatFeedback);
+        console.log(
+          "🚀 ~ file: AddProduct.js:133 ~ onSumbit ~ resAddFeedback:",
+          resAddFeedback
+        );
+      }
+
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
       if (page === PRODUCT_TYPE.PRODUCT)

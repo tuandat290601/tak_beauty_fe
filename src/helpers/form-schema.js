@@ -31,7 +31,6 @@ export const addProductShcema = yup.object({
           "content-validation",
           "Comment phải là chuỗi, rating là số từ 1 đến 5",
           function (value) {
-            console.log("🚀 ~ file: form-schema.js:31 ~ value:", !isNaN(value));
             const type = this.parent.type; // Lấy giá trị của "type" từ parent object
             if (type === "RATING") {
               return !isNaN(value) && Number(value) >= 1 && Number(value) <= 5;
