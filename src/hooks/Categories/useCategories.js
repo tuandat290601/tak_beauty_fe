@@ -186,6 +186,32 @@ const useCategories = ({
     }
   }
 
+  async function addMultiCategory(
+    { title = [], parentId },
+    onSuccess = () => {}
+  ) {
+    try {
+      setIsProccessing(true);
+      const data = title.map((item) => ({ title: item, parentId }));
+      const resp = await categoryApi.postCategory(data);
+      console.log("🚀 ~ file: useCategories.js:197 ~ resp:", resp);
+
+      if (resp.status === SUBMIT_STATUS.SUCCESS) {
+        toast.success(CATEGORY_RESP_MSG.ADD_SUCCESS);
+        onSuccess();
+        setSelectedCategory(placeholderCategory);
+        queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
+      } else {
+        toast.error(CATEGORY_RESP_MSG.ADD_FAILED);
+      }
+    } catch (error) {
+      console.error("🚀 ~ file: useCategories.js:208 ~ error:", error);
+      toast.error(CATEGORY_RESP_MSG.ADD_FAILED);
+    } finally {
+      setIsProccessing(false);
+    }
+  }
+
   async function updateCategory(id, { title, parentId, image }) {
     try {
       setIsProccessing(true);

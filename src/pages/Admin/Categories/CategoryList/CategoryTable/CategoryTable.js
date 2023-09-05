@@ -1,16 +1,16 @@
 import React from "react";
-import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
-import BasicCheckbox from "../../../../components/Checkbox/BasicCheckbox";
 import { useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import BasicButton from "../../../../components/Button/BasicButton";
-import Table from "../../../../components/Table/Table";
 import { FaEye } from "react-icons/fa6";
-import ConfirmPopup from "../../../../components/Popup/ConfirmPopup";
-import usePopup from "../../../../hooks/usePopup";
-import { PAGE_PATH } from "../../../../configuration/routeConfig";
-import Config from "../../../../configuration";
-import { IMG_PATH } from "../../../../configuration/imagePath";
+import usePopup from "../../../../../hooks/usePopup";
+import Table from "../../../../../components/Table/Table";
+import BasicCheckbox from "../../../../../components/Checkbox/BasicCheckbox";
+import Config from "../../../../../configuration";
+import { IMG_PATH } from "../../../../../configuration/imagePath";
+import BasicButton from "../../../../../components/Button/BasicButton";
+import { PAGE_PATH } from "../../../../../configuration/routeConfig";
+import CircleSpinLoading from "../../../../../components/Loading/CircleSpinLoading";
+import ConfirmPopup from "../../../../../components/Popup/ConfirmPopup";
 
 const CategoryTable = ({
   isLoading = false,

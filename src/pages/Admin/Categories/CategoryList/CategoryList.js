@@ -1,14 +1,14 @@
 import React from "react";
-import { BasicDropdown } from "../../../components";
-import BasicButton from "../../../components/Button/BasicButton";
 import { BsSearch } from "react-icons/bs";
 import CategoryTable from "./CategoryTable/CategoryTable";
-import useCategories from "../../../hooks/Categories/useCategories";
-import { removeVietnameseTones } from "../../../helpers/StringUtil";
 import { FaTrash } from "react-icons/fa6";
-import usePopup from "../../../hooks/usePopup";
-import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
 import { useSearchParams } from "react-router-dom";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import usePopup from "../../../../hooks/usePopup";
+import { removeVietnameseTones } from "../../../../helpers/StringUtil";
+import BasicButton from "../../../../components/Button/BasicButton";
+import { BasicDropdown } from "../../../../components";
+import ConfirmPopup from "../../../../components/Popup/ConfirmPopup";
 
 const CategoryList = () => {
   const searchTextbox = React.useRef("");

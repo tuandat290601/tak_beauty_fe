@@ -1,16 +1,20 @@
 import React from "react";
-import HeaderMainPage from "../Header/HeaderMainPage";
-import BasicButton from "../../../components/Button/BasicButton";
 import { AiFillSave } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaPlusCircle, FaReply } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addCategorySchema } from "../../../helpers/form-schema";
-import { ADD_CATEGORY_OBJ } from "../../../helpers/schema-obj";
-import { BasicDropdown, BasicTextBox, ImageTextBox } from "../../../components";
-import useCategories from "../../../hooks/Categories/useCategories";
-import useUpload from "../../../hooks/useUpload";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import { addCategorySchema } from "../../../../helpers/form-schema";
+import { ADD_CATEGORY_OBJ } from "../../../../helpers/schema-obj";
+import useUpload from "../../../../hooks/useUpload";
+import HeaderMainPage from "../../Header/HeaderMainPage";
+import BasicButton from "../../../../components/Button/BasicButton";
+import {
+  BasicDropdown,
+  BasicTextBox,
+  ImageTextBox,
+} from "../../../../components";
 
 const CategoryEdit = () => {
   const { id } = useParams();

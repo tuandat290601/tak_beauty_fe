@@ -1,16 +1,18 @@
 import React from "react";
-import { BasicDropdown, BasicTextBox, ImageTextBox } from "../../../components";
-import { ADD_CATEGORY_OBJ } from "../../../helpers/schema-obj";
-import BasicButton from "../../../components/Button/BasicButton";
 import { FaImage, FaSave } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addCategorySchema } from "../../../helpers/form-schema";
-import useCategories from "../../../hooks/Categories/useCategories";
-import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
-import useUpload from "../../../hooks/useUpload";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import { addCategorySchema } from "../../../../helpers/form-schema";
+import { ADD_CATEGORY_OBJ } from "../../../../helpers/schema-obj";
+import useUpload from "../../../../hooks/useUpload";
+import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
+import BasicTextBox from "../../../../components/Input/BasicTextBox";
+import BasicDropdown from "../../../../components/Dropdown/BasicDropdown";
+import { ImageTextBox } from "../../../../components";
+import BasicButton from "../../../../components/Button/BasicButton";
 
-const ShortCategoryForm = () => {
+const AddCategoryForm = () => {
   // Category list util
   const { selectedCategory, categoryDropdown, addCategory, isProccessing } =
     useCategories({ placeholderCategoryTitle: "Chọn danh mục" });
@@ -147,4 +149,4 @@ const ShortCategoryForm = () => {
   );
 };
 
-export default ShortCategoryForm;
+export default AddCategoryForm;

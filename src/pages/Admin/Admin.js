@@ -17,7 +17,7 @@ import ServicePack from "./ServicePack/ServicePack";
 import Member from "./Member/Member";
 import System from "./System/System";
 import ProductsCategories from "./Categories/ProductsCategories";
-import CategoryEdit from "./Categories/CategoryEdit";
+import CategoryEdit from "./Categories/Edit/CategoryEdit";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
 import { PAGE_PATH } from "../../configuration/routeConfig";
 import AddProduct from "./ProductManagement/add/AddProduct";
