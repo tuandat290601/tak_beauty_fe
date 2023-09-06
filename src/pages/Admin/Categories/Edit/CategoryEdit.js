@@ -15,6 +15,7 @@ import {
   BasicTextBox,
   ImageTextBox,
 } from "../../../../components";
+import { toast } from "react-toastify";
 
 const CategoryEdit = () => {
   const { id } = useParams();
@@ -58,6 +59,13 @@ const CategoryEdit = () => {
 
   async function onSubmit(data) {
     try {
+      if (data.parentId === id) {
+        toast.error(
+          "Không thể cập nhật đối tượng này thành cha của đối tượng này"
+        );
+        return;
+      }
+
       const image = await uploadImage(selectedImage);
       const submitData = { ...data, image };
       console.log("onSubmit", submitData);
