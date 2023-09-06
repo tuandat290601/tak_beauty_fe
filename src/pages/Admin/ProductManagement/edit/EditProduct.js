@@ -154,8 +154,8 @@ const EditProduct = () => {
     //get deleted feedbacks
     const deleted = getDeletedFeedbacks(feedback, oldFeedbacks);
     if (deleted.length) {
-      const deletedId = deleted.map((feedback) => feedback.id);
-      const res = await feedbackApi.deleteFeedback({ id: deletedId });
+      const deletedId = deleted.map((feedback) => feedback.id).join(",");
+      const res = await feedbackApi.deleteFeedback(deletedId);
       if (res.status === "fail") toast.error("Xóa feedback không thành công");
     }
 
