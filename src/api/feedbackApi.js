@@ -4,9 +4,10 @@ export const feedbackApi = {
     const url = "/feedback";
     return axiosClient.post(url, data);
   },
-  deleteFeedback: (id) => {
+  deleteFeedback: (data) => {
+    console.log(data);
     const url = "/feedback";
-    return axiosClient.delete(`${url}?filters=id==${id}`);
+    return axiosClient.delete(url, data);
   },
   updateFeedback: (data) => {
     const { id } = data;

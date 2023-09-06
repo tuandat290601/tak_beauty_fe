@@ -154,8 +154,8 @@ const EditProduct = () => {
     //get deleted feedbacks
     const deleted = getDeletedFeedbacks(feedback, oldFeedbacks);
     if (deleted.length) {
-      const deletedId = deleted.map((feedback) => feedback.id).join("|");
-      const res = await feedbackApi.deleteFeedback(deletedId);
+      const deletedId = deleted.map((feedback) => feedback.id);
+      const res = await feedbackApi.deleteFeedback({ id: deletedId });
       if (res.status === "fail") toast.error("Xóa feedback không thành công");
     }
 
@@ -178,56 +178,56 @@ const EditProduct = () => {
       if (res.status === "fail") toast.error("Thêm feedback không thành công");
     }
 
-    const image = await onUploadImage();
-    const listCategoriesId = checkedCategories.map((item) => item.id);
-    let updateProductData = {
-      id: product.id,
-      title: data[ADD_PRODUCT_OBJ.TITLE],
-      originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
-      discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
-      rating: data[ADD_PRODUCT_OBJ.RATING],
-      image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
-      description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
-      detail: data[ADD_PRODUCT_OBJ.DETAIL],
-      categoryIds: listCategoriesId,
-      type: page,
-    };
-    if (page === PRODUCT_TYPE.PRODUCT) {
-      updateProductData = {
-        ...updateProductData,
-        sku: data[ADD_PRODUCT_OBJ.SKU],
-        attributes: {
-          size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-          weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
-        },
-      };
-    }
+    // const image = await onUploadImage();
+    // const listCategoriesId = checkedCategories.map((item) => item.id);
+    // let updateProductData = {
+    //   id: product.id,
+    //   title: data[ADD_PRODUCT_OBJ.TITLE],
+    //   originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
+    //   discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
+    //   rating: data[ADD_PRODUCT_OBJ.RATING],
+    //   image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
+    //   description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
+    //   detail: data[ADD_PRODUCT_OBJ.DETAIL],
+    //   categoryIds: listCategoriesId,
+    //   type: page,
+    // };
+    // if (page === PRODUCT_TYPE.PRODUCT) {
+    //   updateProductData = {
+    //     ...updateProductData,
+    //     sku: data[ADD_PRODUCT_OBJ.SKU],
+    //     attributes: {
+    //       size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
+    //       weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+    //     },
+    //   };
+    // }
 
-    if (updateProductData.categoryIds.length === 0) {
-      delete updateProductData.categoryIds;
-    }
-    const res = await productApi.updateProduct(updateProductData);
-    if (res.status === "success") {
-      toast.success(
-        `Cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
-      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      if (page === PRODUCT_TYPE.PRODUCT)
-        navigate("/admin/product/product-management");
-      else navigate("/admin/course/course-management");
-    } else {
-      console.log("fail");
-      toast.error(
-        `Đã có lỗi xảy ra, cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } không thành công`
-      );
-      // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.ERROR);
-    }
+    // if (updateProductData.categoryIds.length === 0) {
+    //   delete updateProductData.categoryIds;
+    // }
+    // const res = await productApi.updateProduct(updateProductData);
+    // if (res.status === "success") {
+    //   toast.success(
+    //     `Cập nhật ${
+    //       page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+    //     } thành công`
+    //   );
+    //   queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    //   setSubmitStatus(SUBMIT_STATUS.SUCCESS);
+    //   if (page === PRODUCT_TYPE.PRODUCT)
+    //     navigate("/admin/product/product-management");
+    //   else navigate("/admin/course/course-management");
+    // } else {
+    //   console.log("fail");
+    //   toast.error(
+    //     `Đã có lỗi xảy ra, cập nhật ${
+    //       page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+    //     } không thành công`
+    //   );
+    //   // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    //   setSubmitStatus(SUBMIT_STATUS.ERROR);
+    // }
   };
   return !isReady ? (
     <div className="page-body">
