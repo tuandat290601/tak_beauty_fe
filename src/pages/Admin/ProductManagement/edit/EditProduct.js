@@ -20,7 +20,38 @@ import { useParams } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import "./EditProduct.scss";
 import Feedback from "../add/Feedback";
+import { feedbackApi } from "../../../../api/feedbackApi";
 
+const getFeedbacks = (product) => {
+  const listFeedBack = product?.connects
+    .map((item) => {
+      return { ...item.feedback, id: item.feedbackId };
+    })
+    ?.filter((item) => item.id !== null);
+  return listFeedBack;
+};
+const getDeletedFeedbacks = (newFeedback = [], oldFeedback = []) => {
+  const oldIdFeedbackInNewFeedback = newFeedback
+    .filter((feedback) => !!feedback?.id)
+    .map((feedback) => feedback.id);
+  const deleted = oldFeedback.filter(
+    (feedback) => !oldIdFeedbackInNewFeedback.includes(feedback.id)
+  );
+  return deleted;
+};
+const getUpdatedFeedbacks = (newFeedback = [], oldFeedback = []) => {
+  const oldFeedbacksInNewList = newFeedback?.filter((item) => !!item?.id);
+  const updated = oldFeedbacksInNewList.filter((feedback) => {
+    const getInOld = oldFeedback.filter((item) => item.id === feedback.id)[0];
+    return (
+      getInOld.type !== feedback.type || getInOld.content !== feedback.content
+    );
+  });
+  return updated;
+};
+const getNewFeedbacks = (newFeedback = []) => {
+  return newFeedback.filter((item) => !item.id);
+};
 const EditProduct = () => {
   const { id } = useParams();
   const {
@@ -79,8 +110,8 @@ const EditProduct = () => {
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
     if (page === PRODUCT_TYPE.PRODUCT) {
-      defaultValues.size = product?.attributes.size;
-      defaultValues.weight = product?.attributes.weight;
+      defaultValues.size = product?.attributes?.size || 0;
+      defaultValues.weight = product?.attributes?.weight || 0;
       defaultValues.sku = product?.sku;
     }
     const listCategories = product?.connects
@@ -88,32 +119,11 @@ const EditProduct = () => {
         return { ...item.category, id: item.categoryId };
       })
       ?.filter((item) => item.id !== null);
-    const listFeedBack = product?.connects
-      .map((item) => {
-        return { ...item.feedback, id: item.feedbackId };
-      })
-      ?.filter((item) => item.id !== null);
-    // console.log(listCategories);
-    // console.log(listFeedBack);
+    const listFeedBack = getFeedbacks(product);
+
     setCheckedCategories(listCategories);
     defaultValues.feedback = listFeedBack;
     reset({ ...defaultValues });
-    // Kiểm tra người dùng có nhập trùng giá trị cũ hay không để disable nút cập nhật
-    // const subscription = watch((data) => {
-    //   if (
-    //     data.name === courseDetail?.name &&
-    //     data.description === courseDetail?.description &&
-    //     data.requirement === courseDetail?.requirement &&
-    //     !data.thumbnail &&
-    //     parseInt(data.pricePerMeeting) === courseDetail?.pricePerMeeting &&
-    //     checked === !courseDetail?.isVisible
-    //   ) {
-    //     reset({}, { keepValues: true });
-    //   }
-    // });
-    // return () => {
-    //   subscription.unsubscribe();
-    // };
   }, [product, reset]);
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
@@ -135,6 +145,39 @@ const EditProduct = () => {
   };
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
+
+    //feedback
+    const { feedback } = data;
+
+    const oldFeedbacks = getFeedbacks(product);
+
+    //get deleted feedbacks
+    const deleted = getDeletedFeedbacks(feedback, oldFeedbacks);
+    if (deleted.length) {
+      const deletedId = deleted.map((feedback) => feedback.id);
+      const res = await feedbackApi.deleteFeedback({ id: deletedId });
+      if (res.status === "fail") toast.error("Xóa feedback không thành công");
+    }
+
+    //get updated feedbacks
+    const updated = getUpdatedFeedbacks(feedback, oldFeedbacks);
+    if (updated.length) {
+      updated.forEach((item) => {
+        feedbackApi.updateFeedback(item);
+      });
+    }
+
+    const added = getNewFeedbacks(feedback);
+    if (added.length) {
+      const formatFeedback = added.map((item) => ({
+        ...item,
+        productId: product.id,
+        courseId: product.id,
+      }));
+      const res = await feedbackApi.addFeedback(formatFeedback);
+      if (res.status === "fail") toast.error("Thêm feedback không thành công");
+    }
+
     const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let updateProductData = {
@@ -159,8 +202,7 @@ const EditProduct = () => {
         },
       };
     }
-    console.log(data);
-    console.log(updateProductData);
+
     if (updateProductData.categoryIds.length === 0) {
       delete updateProductData.categoryIds;
     }

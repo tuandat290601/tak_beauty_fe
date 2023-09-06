@@ -31,7 +31,12 @@ const Feedback = ({
         return (
           <div key={item.id}>
             <div className="flex gap-x-2 items-center justify-center relative mb-1">
-              <SelectType setValue={setValue} index={index} control={control} />
+              <SelectType
+                setValue={setValue}
+                index={index}
+                control={control}
+                defaultLabel={getValues(`feedback[${index}].type`) || "RATING"}
+              />
               <BasicTextBox
                 control={control}
                 name={`feedback[${index}].content`}
@@ -42,7 +47,7 @@ const Feedback = ({
                     : null
                 }
                 defaultValue={getValues(`feedback[${index}].content`)}
-                className="w-full px-10 py-2 outline-none border rounded-md border-slate-400
+                className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
               />
@@ -76,15 +81,21 @@ const Feedback = ({
     </div>
   );
 };
-const SelectType = ({ index = 0, control, setValue = () => {} }) => {
-  const [type, setType] = useState("RATING");
+const SelectType = ({
+  index = 0,
+  control,
+  setValue = () => {},
+  defaultLabel = "RATING",
+}) => {
+  const [type, setType] = useState(defaultLabel || "RATING");
   return (
     <Select
       labelId="demo-select-small-label"
       id="demo-select-small"
       value={type}
       label="Loại"
-      className="h-10 bg-white "
+      className="h-10 bg-white"
+      style={{ minWidth: 120 }}
       control={control}
       onChange={(e) => {
         setValue(`feedback[${index}].type`, e.target.value);
