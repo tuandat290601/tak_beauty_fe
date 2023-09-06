@@ -1,9 +1,10 @@
 import { Dialog } from "@mui/material";
 import React from "react";
 import Transition from "./Transition";
-import CloseIcon from "@mui/icons-material/Close";
 import ConfirmPopup from "./ConfirmPopup";
 import usePopup from "../../hooks/usePopup";
+import BasicButton from "../Button/BasicButton";
+import { FaWindowClose } from "react-icons/fa";
 
 const BasicModal = ({
   open,
@@ -16,8 +17,7 @@ const BasicModal = ({
   handleCloseBtnClick = handleClose,
   haveCloseConfirm = false,
   closeConfirmMsg = "Bạn có chắc muốn đóng",
-  wrapperClassName,
-  closeBtnClass = "",
+  wrapperClassName = "",
   children,
 }) => {
   const {
@@ -47,25 +47,16 @@ const BasicModal = ({
     >
       <div className="relative bg-inherit">
         {haveCloseBtn ? (
-          // <IconButton
-          //   type="button"
-          //   className="bg-green-500 absolute -right-2 -top-2 !rounded-full hover:!bg-gray-100 hover:!text-white"
-          //   handleOnClick={
-          //     haveCloseConfirm ? openConfirmClose : handleCloseBtnClick
-          //   }
-          // >
-          //   <CloseIcon />
-          // </IconButton>
-          <div
-            className={`p-2 rounded-full absolute -top-2 -right-2 cursor-pointer hover:bg-gray-100 ${closeBtnClass}`}
+          <BasicButton
+            type="button"
+            icon={<FaWindowClose className="text-xl" />}
+            className="!p-0 absolute -top-0 -right-0 text-gray-400 hover:opacity-50"
             onClick={haveCloseConfirm ? openConfirmClose : handleCloseBtnClick}
-          >
-            <CloseIcon />
-          </div>
+          />
         ) : null}
 
         {haveCloseBtn ? (
-          <div className={`mt-6 ${wrapperClassName}`}>{children}</div>
+          <div className={`mt-4 ${wrapperClassName}`}>{children}</div>
         ) : (
           children
         )}

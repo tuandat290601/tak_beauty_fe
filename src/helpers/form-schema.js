@@ -1,5 +1,10 @@
 import * as yup from "yup";
-import { ADD_CATEGORY_OBJ, ADD_PRODUCT_OBJ, LOGIN_OBJ } from "./schema-obj";
+import {
+  ADD_CATEGORY_OBJ,
+  ADD_MULTI_CATEGORY_OBJ,
+  ADD_PRODUCT_OBJ,
+  LOGIN_OBJ,
+} from "./schema-obj";
 
 export const addCategorySchema = yup.object({
   [ADD_CATEGORY_OBJ.TITLE]: yup
@@ -8,6 +13,20 @@ export const addCategorySchema = yup.object({
     .required("Vui lòng nhập tiêu đề"),
   [ADD_CATEGORY_OBJ.PARENT_ID]: yup.string().trim(),
   [ADD_CATEGORY_OBJ.IMAGE]: yup.string().trim(),
+});
+
+const MAX_CATEGORY_PER_ADD = 50;
+export const addMultiCategorySchema = yup.object({
+  [ADD_MULTI_CATEGORY_OBJ.PARENT_ID]: yup.string().trim(),
+  [ADD_MULTI_CATEGORY_OBJ.TITLE_LIST]: yup
+    .string()
+    .trim()
+    .required("Vui lòng nhập các danh mục")
+    .test(
+      "more-than-50",
+      "Không thể thêm nhiều hơn 50 danh mục",
+      (val) => val.split("\n").length <= MAX_CATEGORY_PER_ADD
+    ),
 });
 
 export const addProductShcema = yup.object({

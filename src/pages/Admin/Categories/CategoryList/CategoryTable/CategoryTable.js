@@ -20,7 +20,7 @@ const CategoryTable = ({
   delItemsList = [],
   setDelItemsList = () => {},
 }) => {
-  // console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
+  console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
   const titleClass = "";
   const actionClass = "w-[130px]";
   const checkboxClass = "p-3 w-12 z-[1]";
@@ -172,13 +172,13 @@ const CategoryTable = ({
                       <div className="flex gap-x-1">
                         <BasicButton
                           icon={<FaTrash className="w-4 h-4" />}
-                          className="border !p-2 red-btn"
+                          className="btn text-white !p-2 red-btn"
                           // onClick={() => delCategory(item.id)}
                           onClick={() => delBtnClick(item)}
                         />
                         <BasicButton
                           icon={<FaPencilAlt className="w-4 h-4" />}
-                          className="border !p-2 blue-btn"
+                          className="btn text-white !p-2 blue-btn"
                           onClick={() => {
                             navigate(
                               `${PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES(

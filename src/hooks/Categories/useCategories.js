@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CATEGORY_RESP_MSG } from "../../configuration/respMsg";
 import { SUBMIT_STATUS } from "../../common/constant";
+import { removeEmptyValue } from "../../helpers/ObjectUtil";
 
 const useCategories = ({
   placeholderCategoryTitle = "Tất cả danh mục",
@@ -56,7 +57,7 @@ const useCategories = ({
   function sortCategory() {
     if (isSuccess) {
       const data = categoryList?.responseData?.rows?.sort((a, b) =>
-        a.title.localeCompare(b.title)
+        a?.title?.localeCompare(b?.title)
       );
       var tree = makeTree(data, null);
       var sorted = tree.reduce(function traverse(r, a) {
@@ -167,7 +168,8 @@ const useCategories = ({
   async function addCategory({ title, parentId, image }, onSuccess = () => {}) {
     try {
       setIsProccessing(true);
-      const data = { title, parentId, image };
+      // const data = { title, parentId, image };
+      const data = [removeEmptyValue({ title, parentId, image })];
       const resp = await categoryApi.postCategory(data);
       console.log("🚀 ~ file: useCategories.js:65 ~ addCategory ~ resp:", resp);
 
@@ -196,7 +198,9 @@ const useCategories = ({
   ) {
     try {
       setIsProccessing(true);
-      const data = title.map((item) => ({ title: item, parentId }));
+      const data = title.map((item) =>
+        removeEmptyValue({ title: item, parentId })
+      );
       const resp = await categoryApi.postCategory(data);
       console.log("🚀 ~ file: useCategories.js:197 ~ resp:", resp);
 

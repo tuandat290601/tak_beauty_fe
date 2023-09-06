@@ -8,6 +8,7 @@ import useCategories from "../../../../hooks/Categories/useCategories";
 import BasicDropdown from "../../../../components/Dropdown/BasicDropdown";
 import BasicButton from "../../../../components/Button/BasicButton";
 import { FaSave } from "react-icons/fa";
+import { addMultiCategorySchema } from "../../../../helpers/form-schema";
 
 const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
   const {
@@ -17,7 +18,7 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(ADD_MULTI_CATEGORY_OBJ),
+    resolver: yupResolver(addMultiCategorySchema),
     defaultValues: {
       [ADD_MULTI_CATEGORY_OBJ.TITLE_LIST]: "",
       [ADD_MULTI_CATEGORY_OBJ.PARENT_ID]: "",
@@ -35,9 +36,12 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
 
   async function onSubmit(data) {
     try {
-      const submitData = data;
+      const submitData = {
+        title: data[ADD_MULTI_CATEGORY_OBJ.TITLE_LIST].split("\n"),
+        parentId: data.parentId,
+      };
       console.log("onSubmit", submitData);
-      await addMultiCategory(submitData, reset());
+      await addMultiCategory(submitData, onCloseForm());
     } catch (error) {
       console.error(error);
     }
@@ -49,12 +53,18 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
     closeQuickAdd();
   }
 
+  React.useEffect(() => {
+    setValue(ADD_MULTI_CATEGORY_OBJ.PARENT_ID, selectedCategory.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
+
   return (
     <BasicModal
       open={isOpen}
-      handleClose={closeQuickAdd}
+      handleClose={onCloseForm}
       fullWidth={true}
       clickOutside={() => {}}
+      haveCloseBtn={true}
     >
       <h4 className="text-2xl font-medium">Thêm danh mục</h4>
       <hr className="my-3" />
@@ -68,7 +78,7 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
           classNameTitle="select-none"
           highlightClass="!bg-blue-500 rounded-md !text-white"
           itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
-          dropdownClass="max-h-[200px] overflow-y-scroll"
+          dropdownClass="max-h-[300px] overflow-y-scroll"
           isSearch={true}
           title={selectedCategory.title}
           noTooltip={true}
