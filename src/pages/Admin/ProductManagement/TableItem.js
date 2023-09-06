@@ -20,6 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATH } from "../../../configuration/routeConfig";
+import { IMG_PATH } from "../../../configuration/imagePath";
 
 export const TableItemSkeleton = () => {
   return (
@@ -125,7 +126,7 @@ export const TableItem = ({
           src={
             product?.image !== ""
               ? Config.apiConfig.imageEndPoint + product?.image
-              : "/image/no_image.png"
+              : IMG_PATH.NO_IMG
           }
           alt="thumb"
           className="w-[50px] h-full rounded-md"

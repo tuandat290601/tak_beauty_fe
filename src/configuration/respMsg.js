@@ -6,4 +6,8 @@ export const CATEGORY_RESP_MSG = {
   // Delete
   DELETE_SUCCESS: "Xóa danh mục thành công",
   DELETE_FAILED: "Xảy ra lỗi trong quá trình xóa danh mục",
+
+  // Update
+  UPDATE_SUCCESS: "Cập nhật danh mục thành công",
+  UPDATE_FAILED: "Xảy ra lỗi trong quá trình cập nhật danh mục",
 };

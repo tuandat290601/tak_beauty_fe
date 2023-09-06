@@ -34,7 +34,7 @@ const BasicTextBox = ({
       </label>
       {type === "textArea" ? (
         <textarea
-          className={`focus:ring-0
+          className={`focus:ring-0 border rounded-md p-2 text-black
           ${className}
           ${errMsg ? errBorderClass : "border-slate-400"}`}
           {...props}
