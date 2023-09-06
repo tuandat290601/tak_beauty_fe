@@ -21,6 +21,36 @@ import { CircularProgress } from "@mui/material";
 import "./EditProduct.scss";
 import Feedback from "../add/Feedback";
 
+const getFeedbacks = (product) => {
+  const listFeedBack = product?.connects
+    .map((item) => {
+      return { ...item.feedback, id: item.feedbackId };
+    })
+    ?.filter((item) => item.id !== null);
+  return listFeedBack;
+};
+const getDeletedFeedbacks = (newFeedback = [], oldFeedback = []) => {
+  const oldIdFeedbackInNewFeedback = newFeedback
+    .filter((feedback) => !!feedback?.id)
+    .map((feedback) => feedback.id);
+  const deleted = oldFeedback.filter(
+    (feedback) => !oldIdFeedbackInNewFeedback.includes(feedback.id)
+  );
+  return deleted;
+};
+const getUpdatedFeedbacks = (newFeedback = [], oldFeedback = []) => {
+  const oldFeedbacksInNewList = newFeedback?.filter((item) => !!item?.id);
+  const updated = oldFeedbacksInNewList.filter((feedback) => {
+    const getInOld = oldFeedback.filter((item) => item.id === feedback.id)[0];
+    return (
+      getInOld.type !== feedback.type || getInOld.content !== feedback.content
+    );
+  });
+  return updated;
+};
+const getNewFeedbacks = (newFeedback = []) => {
+  return newFeedback.filter((item) => !item.id);
+};
 const EditProduct = () => {
   const { id } = useParams();
   const {
@@ -79,8 +109,8 @@ const EditProduct = () => {
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
     if (page === PRODUCT_TYPE.PRODUCT) {
-      defaultValues.size = product?.attributes.size;
-      defaultValues.weight = product?.attributes.weight;
+      defaultValues.size = product?.attributes?.size || 0;
+      defaultValues.weight = product?.attributes?.weight || 0;
       defaultValues.sku = product?.sku;
     }
     const listCategories = product?.connects
@@ -88,32 +118,11 @@ const EditProduct = () => {
         return { ...item.category, id: item.categoryId };
       })
       ?.filter((item) => item.id !== null);
-    const listFeedBack = product?.connects
-      .map((item) => {
-        return { ...item.feedback, id: item.feedbackId };
-      })
-      ?.filter((item) => item.id !== null);
-    // console.log(listCategories);
-    // console.log(listFeedBack);
+    const listFeedBack = getFeedbacks(product);
+
     setCheckedCategories(listCategories);
     defaultValues.feedback = listFeedBack;
     reset({ ...defaultValues });
-    // Kiểm tra người dùng có nhập trùng giá trị cũ hay không để disable nút cập nhật
-    // const subscription = watch((data) => {
-    //   if (
-    //     data.name === courseDetail?.name &&
-    //     data.description === courseDetail?.description &&
-    //     data.requirement === courseDetail?.requirement &&
-    //     !data.thumbnail &&
-    //     parseInt(data.pricePerMeeting) === courseDetail?.pricePerMeeting &&
-    //     checked === !courseDetail?.isVisible
-    //   ) {
-    //     reset({}, { keepValues: true });
-    //   }
-    // });
-    // return () => {
-    //   subscription.unsubscribe();
-    // };
   }, [product, reset]);
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
@@ -134,58 +143,69 @@ const EditProduct = () => {
     } else return "";
   };
   const onSumbit = async (data) => {
-    setSubmitStatus(SUBMIT_STATUS.LOADING);
-    const image = await onUploadImage();
-    const listCategoriesId = checkedCategories.map((item) => item.id);
-    let updateProductData = {
-      id: product.id,
-      title: data[ADD_PRODUCT_OBJ.TITLE],
-      originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
-      discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
-      rating: data[ADD_PRODUCT_OBJ.RATING],
-      image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
-      description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
-      detail: data[ADD_PRODUCT_OBJ.DETAIL],
-      categoryIds: listCategoriesId,
-      type: page,
-    };
-    if (page === PRODUCT_TYPE.PRODUCT) {
-      updateProductData = {
-        ...updateProductData,
-        sku: data[ADD_PRODUCT_OBJ.SKU],
-        attributes: {
-          size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-          weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
-        },
-      };
-    }
-    console.log(data);
-    console.log(updateProductData);
-    if (updateProductData.categoryIds.length === 0) {
-      delete updateProductData.categoryIds;
-    }
-    const res = await productApi.updateProduct(updateProductData);
-    if (res.status === "success") {
-      toast.success(
-        `Cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
-      queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      if (page === PRODUCT_TYPE.PRODUCT)
-        navigate("/admin/product/product-management");
-      else navigate("/admin/course/course-management");
-    } else {
-      console.log("fail");
-      toast.error(
-        `Đã có lỗi xảy ra, cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } không thành công`
-      );
-      // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.ERROR);
-    }
+    const { feedback } = data;
+
+    const oldFeedbacks = getFeedbacks(product);
+
+    //get deleted feedbacks
+    const deleted = getDeletedFeedbacks(feedback, oldFeedbacks);
+
+    //get updated feedbacks
+    const updated = getUpdatedFeedbacks(feedback, oldFeedbacks);
+
+    const added = getNewFeedbacks(feedback);
+
+    // setSubmitStatus(SUBMIT_STATUS.LOADING);
+    // const image = await onUploadImage();
+    // const listCategoriesId = checkedCategories.map((item) => item.id);
+    // let updateProductData = {
+    //   id: product.id,
+    //   title: data[ADD_PRODUCT_OBJ.TITLE],
+    //   originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
+    //   discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
+    //   rating: data[ADD_PRODUCT_OBJ.RATING],
+    //   image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
+    //   description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
+    //   detail: data[ADD_PRODUCT_OBJ.DETAIL],
+    //   categoryIds: listCategoriesId,
+    //   type: page,
+    // };
+    // if (page === PRODUCT_TYPE.PRODUCT) {
+    //   updateProductData = {
+    //     ...updateProductData,
+    //     sku: data[ADD_PRODUCT_OBJ.SKU],
+    //     attributes: {
+    //       size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
+    //       weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+    //     },
+    //   };
+    // }
+
+    // if (updateProductData.categoryIds.length === 0) {
+    //   delete updateProductData.categoryIds;
+    // }
+    // const res = await productApi.updateProduct(updateProductData);
+    // if (res.status === "success") {
+    //   toast.success(
+    //     `Cập nhật ${
+    //       page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+    //     } thành công`
+    //   );
+    //   queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    //   setSubmitStatus(SUBMIT_STATUS.SUCCESS);
+    //   if (page === PRODUCT_TYPE.PRODUCT)
+    //     navigate("/admin/product/product-management");
+    //   else navigate("/admin/course/course-management");
+    // } else {
+    //   console.log("fail");
+    //   toast.error(
+    //     `Đã có lỗi xảy ra, cập nhật ${
+    //       page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
+    //     } không thành công`
+    //   );
+    //   // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
+    //   setSubmitStatus(SUBMIT_STATUS.ERROR);
+    // }
   };
   return !isReady ? (
     <div className="page-body">
