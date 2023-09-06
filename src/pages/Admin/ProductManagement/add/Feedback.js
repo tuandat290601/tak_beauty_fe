@@ -47,7 +47,7 @@ const Feedback = ({
                     : null
                 }
                 defaultValue={getValues(`feedback[${index}].content`)}
-                className="w-full px-10 py-2 outline-none border rounded-md border-slate-400
+                className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
               />
@@ -94,7 +94,8 @@ const SelectType = ({
       id="demo-select-small"
       value={type}
       label="Loại"
-      className="h-10 bg-white "
+      className="h-10 bg-white"
+      style={{ minWidth: 120 }}
       control={control}
       onChange={(e) => {
         setValue(`feedback[${index}].type`, e.target.value);

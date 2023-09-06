@@ -110,11 +110,7 @@ const AddProduct = () => {
           courseId: productId,
         }));
 
-        const resAddFeedback = feedbackApi.addFeedback(formatFeedback);
-        console.log(
-          "🚀 ~ file: AddProduct.js:133 ~ onSumbit ~ resAddFeedback:",
-          resAddFeedback
-        );
+        feedbackApi.addFeedback(formatFeedback);
       }
 
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
