@@ -166,24 +166,29 @@ export const TableItem = ({
         <div className="flex gap-1">
           {product?.connects.length > 3 ? (
             <>
-              {product?.connects.slice(0, 3).map((item) => (
-                <BasicTag
-                  label={item?.category?.title || ""}
-                  onClick={handleAddFavTag}
-                />
-              ))}
+              {product?.connects
+                ?.filter((item) => item.categoryId !== null)
+                .slice(0, 3)
+                .map((item) => (
+                  <BasicTag
+                    label={item?.category?.title || ""}
+                    onClick={handleAddFavTag}
+                  />
+                ))}
               <BasicTag
                 label={`+${product?.connects.length - 3}`}
                 onClick={handleAddFavTag}
               />
             </>
           ) : (
-            product?.connects.map((item) => (
-              <BasicTag
-                label={item?.category?.title || ""}
-                onClick={handleAddFavTag}
-              />
-            ))
+            product?.connects
+              ?.filter((item) => item.categoryId !== null)
+              ?.map((item) => (
+                <BasicTag
+                  label={item?.category?.title || ""}
+                  onClick={handleAddFavTag}
+                />
+              ))
           )}
         </div>
       </td>

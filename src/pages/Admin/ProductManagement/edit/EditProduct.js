@@ -19,6 +19,7 @@ import Footer from "../add/Footer";
 import { useParams } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import "./EditProduct.scss";
+import Feedback from "../add/Feedback";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -78,15 +79,24 @@ const EditProduct = () => {
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
     if (page === PRODUCT_TYPE.PRODUCT) {
-      defaultValues.size = product?.attributes?.size || 0;
-      defaultValues.weight = product?.attributes?.weight || 0;
+      defaultValues.size = product?.attributes.size;
+      defaultValues.weight = product?.attributes.weight;
       defaultValues.sku = product?.sku;
     }
-    const listCategories = product?.connects.map((item) => {
-      return { ...item.category, id: item.categoryId };
-    });
-    console.log(listCategories);
+    const listCategories = product?.connects
+      .map((item) => {
+        return { ...item.category, id: item.categoryId };
+      })
+      ?.filter((item) => item.id !== null);
+    const listFeedBack = product?.connects
+      .map((item) => {
+        return { ...item.feedback, id: item.feedbackId };
+      })
+      ?.filter((item) => item.id !== null);
+    // console.log(listCategories);
+    // console.log(listFeedBack);
     setCheckedCategories(listCategories);
+    defaultValues.feedback = listFeedBack;
     reset({ ...defaultValues });
     // Kiểm tra người dùng có nhập trùng giá trị cũ hay không để disable nút cập nhật
     // const subscription = watch((data) => {
@@ -222,6 +232,12 @@ const EditProduct = () => {
               selectedImage={selectedImage}
               setSelectedImage={setSelectedImage}
               initImage={product?.image}
+            />
+            <Feedback
+              control={control}
+              getValues={getValues}
+              errors={errors}
+              setValue={setValue}
             />
           </div>
         </div>

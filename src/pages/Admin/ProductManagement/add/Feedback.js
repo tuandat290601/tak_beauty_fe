@@ -17,9 +17,7 @@ const Feedback = ({
   });
 
   function handleRemoveSet(index) {
-    if (fields.length > 1) {
-      remove(index);
-    }
+    remove(index);
   }
   function handleAddSet() {
     append({ content: "", type: "RATING" });
@@ -31,11 +29,8 @@ const Feedback = ({
 
       {fields.map((item, index) => {
         return (
-          <>
-            <div
-              key={item.id}
-              className="flex gap-x-2 items-center justify-center relative mb-1"
-            >
+          <div key={item.id}>
+            <div className="flex gap-x-2 items-center justify-center relative mb-1">
               <SelectType setValue={setValue} index={index} control={control} />
               <BasicTextBox
                 control={control}
@@ -55,9 +50,7 @@ const Feedback = ({
               <button
                 type="button"
                 onClick={() => handleRemoveSet(index)}
-                className={`absolute top-2 right-2 ${
-                  fields.length === 1 ? "hidden" : ""
-                }`}
+                className={`absolute top-2 right-2 `}
               >
                 <Close />
               </button>
@@ -67,7 +60,7 @@ const Feedback = ({
                 {errors?.feedback[index].content.message}
               </p>
             )}
-          </>
+          </div>
         );
       })}
 
