@@ -76,25 +76,25 @@ export const TableItem = ({
     setUpdateDiscountPriceStatus(SUBMIT_STATUS.LOADING);
     const data = {
       id: product.id,
-      discountPrice: parseInt(editPrice),
+      discountPrice: parseInt(editPrice) || 0,
     };
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
       toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setUpdateOriginPriceStatus(SUBMIT_STATUS.SUCCESS);
+      setUpdateDiscountPriceStatus(SUBMIT_STATUS.SUCCESS);
     } else {
       toast.error(
         "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
       );
-      setUpdateOriginPriceStatus(SUBMIT_STATUS.ERROR);
+      setUpdateDiscountPriceStatus(SUBMIT_STATUS.ERROR);
     }
   };
   const handleUpdateOriginPrice = async (editPrice) => {
     setUpdateOriginPriceStatus(SUBMIT_STATUS.LOADING);
     const data = {
       id: product.id,
-      originPrice: parseInt(editPrice),
+      originPrice: parseInt(editPrice) || 0,
     };
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
@@ -165,7 +165,8 @@ export const TableItem = ({
       </td>
       <td>
         <div className="flex gap-1">
-          {product?.connects.length > 3 ? (
+          {product?.connects?.filter((item) => item.categoryId !== null)
+            .length > 3 ? (
             <>
               {product?.connects
                 ?.filter((item) => item.categoryId !== null)
@@ -177,7 +178,10 @@ export const TableItem = ({
                   />
                 ))}
               <BasicTag
-                label={`+${product?.connects.length - 3}`}
+                label={`+${
+                  product?.connects?.filter((item) => item.categoryId !== null)
+                    .length - 3
+                }`}
                 onClick={handleAddFavTag}
               />
             </>
