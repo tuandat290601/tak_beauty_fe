@@ -143,7 +143,10 @@ export const TableItem = ({
             <Rating value={product?.rating || 0} size="small" readOnly></Rating>
           </a>
           <span className="text-blue-500 text-xs">
-            ({product?.rating || 0} đánh giá)
+            (
+            {product?.connects?.filter((item) => item.feedbackId !== null)
+              .length || 0}{" "}
+            phản hồi)
           </span>
         </div>
         <div

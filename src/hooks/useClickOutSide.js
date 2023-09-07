@@ -14,8 +14,8 @@ export default function useClickOutside(dom = "button", useDom = true) {
         setShow(false);
       }
     };
-    document.addEventListener("click", handleClickOut);
-    return () => document.removeEventListener("click", handleClickOut);
+    document.addEventListener("mousedown", handleClickOut);
+    return () => document.removeEventListener("mousedown", handleClickOut);
   }, []);
   return {
     show,
