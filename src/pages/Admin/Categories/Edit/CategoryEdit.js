@@ -68,8 +68,15 @@ const CategoryEdit = () => {
         return;
       }
 
-      const image = await uploadImage(selectedImage);
-      const submitData = { ...data, image };
+      let image = "";
+      let submitData = { ...data };
+
+      // Update image when needed
+      if (selectedImage?.name) {
+        image = await uploadImage(selectedImage);
+        submitData = { ...data, image };
+      }
+
       console.log("onSubmit", submitData);
       await updateCategory(id, submitData);
       navigate("../");

@@ -20,7 +20,7 @@ const CategoryTable = ({
   delItemsList = [],
   setDelItemsList = () => {},
 }) => {
-  console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
+  // console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
   const titleClass = "";
   const actionClass = "w-[130px]";
   const checkboxClass = "p-3 w-12 z-[1]";

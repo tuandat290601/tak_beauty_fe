@@ -105,7 +105,7 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
         <div className="flex justify-end gap-x-2 mt-3">
           <BasicButton
             onClick={onCloseForm}
-            loading={isProccessing}
+            disabled={isProccessing}
             className="!px-8 !py-1 !rounded-lg !font-bold border !border-gray-400 hover:bg-black 
             hover:text-white btn"
             type="button"
@@ -113,7 +113,7 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
           />
           <BasicButton
             type="submit"
-            loading={isProccessing}
+            disabled={isProccessing}
             icon={<FaSave />}
             className={` !text-white !px-8 !py-1 !rounded-lg btn blue-btn`}
             title={"Lưu"}

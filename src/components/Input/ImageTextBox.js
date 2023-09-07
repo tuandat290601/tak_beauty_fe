@@ -5,7 +5,7 @@ import Config from "../../configuration";
 const ImageTextBox = ({
   name = "upload",
   setSelectedImage = () => {},
-  selectedImage = [],
+  selectedImage = {},
   setPathName = () => {},
   label = null,
   haveLabel = false,
@@ -44,7 +44,7 @@ const ImageTextBox = ({
           setSelectedImage(event.target.files[0]);
         }}
       />
-      {selectedImage ? (
+      {selectedImage?.name ? (
         <div className="my-2">
           <img
             alt="not found"
