@@ -1,7 +1,7 @@
 import React from "react";
 import { AiFillSave } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaPlusCircle, FaReply } from "react-icons/fa";
+import { FaReply } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useCategories from "../../../../hooks/Categories/useCategories";
@@ -16,6 +16,7 @@ import {
   ImageTextBox,
 } from "../../../../components";
 import { toast } from "react-toastify";
+import LoadingOverlay from "../../../../components/Loading/LoadingOverlay/LoadingOverlay";
 
 const CategoryEdit = () => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ const CategoryEdit = () => {
     selectedCategory,
     setSelectedCategory,
     isProccessing,
+    isLoading,
     categoryDropdown,
     updateCategory,
     isSuccess,
@@ -70,6 +72,7 @@ const CategoryEdit = () => {
       const submitData = { ...data, image };
       console.log("onSubmit", submitData);
       await updateCategory(id, submitData);
+      navigate("../");
     } catch (error) {
       console.error("error");
     }
@@ -120,6 +123,8 @@ const CategoryEdit = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="page-body">
+      <LoadingOverlay show={isProccessing || isLoading} />
+
       <HeaderMainPage>
         <div className="flex gap-x-2 justify-end ui-layout">
           <BasicButton
@@ -129,11 +134,11 @@ const CategoryEdit = () => {
             title="Lưu"
             type="submit"
           />
-          <BasicButton
+          {/* <BasicButton
             icon={<FaPlusCircle />}
             title="Thêm mới"
             className="btn blue-btn !px-5 !py-[7px] text-xs text-white"
-          />
+          /> */}
           <BasicButton
             icon={<FaReply />}
             className="btn blue-btn text-white rounded-md text-xs !px-5 !py-[7px]"

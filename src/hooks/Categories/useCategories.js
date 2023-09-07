@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CATEGORY_RESP_MSG } from "../../configuration/respMsg";
 import { SUBMIT_STATUS } from "../../common/constant";
-import { removeEmptyValue } from "../../helpers/ObjectUtil";
+import { emptyStringToNull } from "../../helpers/ObjectUtil";
 
 const useCategories = ({
   placeholderCategoryTitle = "Tất cả danh mục",
@@ -168,8 +168,7 @@ const useCategories = ({
   async function addCategory({ title, parentId, image }, onSuccess = () => {}) {
     try {
       setIsProccessing(true);
-      // const data = { title, parentId, image };
-      const data = [removeEmptyValue({ title, parentId, image })];
+      const data = [emptyStringToNull({ title, parentId, image })];
       const resp = await categoryApi.postCategory(data);
       console.log("🚀 ~ file: useCategories.js:65 ~ addCategory ~ resp:", resp);
 
@@ -199,7 +198,7 @@ const useCategories = ({
     try {
       setIsProccessing(true);
       const data = title.map((item) =>
-        removeEmptyValue({ title: item, parentId })
+        emptyStringToNull({ title: item, parentId })
       );
       const resp = await categoryApi.postCategory(data);
       console.log("🚀 ~ file: useCategories.js:197 ~ resp:", resp);
@@ -223,7 +222,11 @@ const useCategories = ({
   async function updateCategory(id, { title, parentId, image }) {
     try {
       setIsProccessing(true);
-      const data = { title, parentId, image };
+      const data = {
+        title,
+        parentId: parentId || null,
+        image: image || null,
+      };
       const resp = await categoryApi.updateCategoryById({ id, data });
       console.log(
         "🚀 ~ file: useCategories.js:193 ~ updateCategory ~ resp:",

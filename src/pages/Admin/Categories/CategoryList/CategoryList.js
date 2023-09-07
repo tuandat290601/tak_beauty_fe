@@ -69,6 +69,12 @@ const CategoryList = () => {
     return filterData;
   }
 
+  function onEnterTextbox(e) {
+    if (e.key === "Enter") {
+      startFilter();
+    }
+  }
+
   return (
     <div className="w-[60%] bg-white rounded-md">
       {/* Filter bar */}
@@ -88,6 +94,7 @@ const CategoryList = () => {
             type="text"
             className="border border-slate-400 rounded-md p-2 bg-white disabled:cursor-not-allowed"
             placeholder="Từ khóa..."
+            onKeyDown={onEnterTextbox}
             disabled={isLoading}
           />
           <BasicDropdown

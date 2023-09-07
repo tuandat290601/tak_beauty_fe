@@ -8,3 +8,7 @@ export const PRODUCT_TYPE = {
   PRODUCT: "PRODUCT",
   COURSE: "COURSE",
 };
+
+export const KEYBOARD_KEY_CODE = {
+  F3: 114,
+};

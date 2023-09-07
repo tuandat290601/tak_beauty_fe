@@ -4,6 +4,8 @@ import BasicButton from "../../../../components/Button/BasicButton";
 import { FaPlusCircle } from "react-icons/fa";
 import usePopup from "../../../../hooks/usePopup";
 import QuickAddCategories from "../Modal/QuickAddCategories";
+import { KEYBOARD_KEY_CODE } from "../../../../common/constant";
+import useKeyboardShortcut from "../../../../hooks/KeyboardShortcut/useKeyboardShortcut";
 
 const CategoryHeader = () => {
   const {
@@ -12,15 +14,20 @@ const CategoryHeader = () => {
     handleOpenPopup: openQuickAdd,
   } = usePopup();
 
+  useKeyboardShortcut({
+    keyCode: KEYBOARD_KEY_CODE.F3,
+    callbackWithCtrl: openQuickAdd,
+  });
+
   return (
     <>
       <HeaderMainPage>
         <div className="flex justify-end ui-layout gap-x-2">
-          <BasicButton
+          {/* <BasicButton
             icon={<FaPlusCircle />}
             title="Thêm Mới (F3)"
             className="btn green-btn !px-5 !py-[7px] text-xs text-white"
-          />
+          /> */}
           <BasicButton
             icon={<FaPlusCircle />}
             title="Thêm nhanh (CTRL + F3)"
