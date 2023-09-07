@@ -38,8 +38,28 @@ export const addProductShcema = yup.object({
     .number("Vui lòng nhập số")
     .min(1, "Đánh giá nhỏ nhất là 1 sao")
     .max(5, "Đánh giá lớn nhất là 5 sao"),
-  [ADD_PRODUCT_OBJ.ORIGIN_PRICE]: yup.number("Vui lòng nhập số"),
-  [ADD_PRODUCT_OBJ.DISCOUNT_PRICE]: yup.number("Vui lòng nhập số"),
+  [ADD_PRODUCT_OBJ.ORIGIN_PRICE]: yup
+    .number("Vui lòng nhập số")
+    .max(9999999, "Gía tối đa 9999999")
+    .test(
+      "is-less-than-origin-price",
+      "Giá gốc phải lớn hơn bằng giá khuyến mãi",
+      function (original) {
+        const discount = this.parent[ADD_PRODUCT_OBJ.DISCOUNT_PRICE];
+        return original >= discount;
+      }
+    ),
+  [ADD_PRODUCT_OBJ.DISCOUNT_PRICE]: yup
+    .number("Vui lòng nhập số")
+    .max(9999999, "Gía tối đa 9999999")
+    .test(
+      "is-less-than-origin-price",
+      "Giá giảm giá phải nhỏ hơn bằng giá gốc",
+      function (discountPrice) {
+        const originPrice = this.parent[ADD_PRODUCT_OBJ.ORIGIN_PRICE];
+        return discountPrice <= originPrice;
+      }
+    ),
   [ADD_PRODUCT_OBJ.SIZE]: yup.number("Vui lòng nhập số"),
   [ADD_PRODUCT_OBJ.WEIGHT]: yup.number("Vui lòng nhập số"),
   [ADD_PRODUCT_OBJ.FEEDBACK]: yup.array().of(
