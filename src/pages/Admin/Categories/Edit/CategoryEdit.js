@@ -39,6 +39,7 @@ const CategoryEdit = () => {
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = React.useState(null);
+  const [footerWidth, setFooterWidth] = React.useState(0);
 
   const {
     handleSubmit,
@@ -86,6 +87,7 @@ const CategoryEdit = () => {
   }
 
   const cardClass = "rounded-md shadow-sm p-3";
+  const pagePadding = "px-[10px]";
 
   // Get default value from category list
   React.useEffect(() => {
@@ -128,14 +130,32 @@ const CategoryEdit = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryDropdown, defaultValues]);
 
+  const contentRef = React.useRef(null);
+
+  // Get edit width
+  React.useEffect(() => {
+    if (contentRef.current) setFooterWidth(contentRef.current.offsetWidth);
+    function handleResize() {
+      if (contentRef.current) {
+        setFooterWidth(contentRef.current.offsetWidth);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="page-body">
       <LoadingOverlay show={isProccessing || isLoading} />
 
       <HeaderMainPage>
-        <div className="flex gap-x-2 justify-end ui-layout">
+        <div className={`flex gap-x-2 justify-end ui-layout ${pagePadding}`}>
           <BasicButton
-            disabled={false}
+            disabled={isProccessing || isLoading}
             icon={<AiFillSave />}
             className="btn text-white green-btn rounded-md text-xs !px-5 !py-[7px]"
             title="Lưu"
@@ -157,13 +177,13 @@ const CategoryEdit = () => {
         </div>
       </HeaderMainPage>
 
-      <div className="ui-layout ui-title-bar">
+      <div className={`ui-title-bar ${pagePadding}`}>
         <h2 className="text-2xl font-medium py-[25px]">
           {defaultValues?.title}
         </h2>
 
-        <div className="w-full flex gap-x-10 items-start">
-          <div className={`bg-white w-2/3 ${cardClass}`}>
+        <div className={`w-full flex gap-x-10 items-start`}>
+          <div ref={contentRef} className={`w-2/3 bg-white ${cardClass}`}>
             <BasicTextBox
               control={control}
               name={ADD_CATEGORY_OBJ.TITLE}
@@ -212,8 +232,37 @@ const CategoryEdit = () => {
           </div>
         </div>
       </div>
+      <CategoryEditFooter width={footerWidth} isProccessing={isProccessing} />
     </form>
   );
 };
 
+const CategoryEditFooter = ({ width = 0, isProccessing = false }) => {
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (ref?.current) {
+      ref.current.style.width = `${width}px`;
+    }
+  }, [width]);
+
+  return (
+    <>
+      <HeaderMainPage
+        isBottom
+        className={`bottom-0 border rounded-md w-fit mx-[10px]`}
+      >
+        <div className="px-3 py-2" ref={ref}>
+          <BasicButton
+            disabled={isProccessing}
+            icon={<AiFillSave />}
+            className="btn ml-auto text-white green-btn rounded-md text-xs"
+            title="Lưu"
+            type="submit"
+          />
+        </div>
+      </HeaderMainPage>
+    </>
+  );
+};
 export default CategoryEdit;
