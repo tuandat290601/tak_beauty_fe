@@ -21,6 +21,8 @@ import { CircularProgress } from "@mui/material";
 import "./EditProduct.scss";
 import Feedback from "../add/Feedback";
 import { feedbackApi } from "../../../../api/feedbackApi";
+import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
+import useUpload from "../../../../hooks/useUpload";
 
 const getFeedbacks = (product) => {
   const listFeedBack = product?.connects
@@ -52,6 +54,17 @@ const getUpdatedFeedbacks = (newFeedback = [], oldFeedback = []) => {
 const getNewFeedbacks = (newFeedback = []) => {
   return newFeedback.filter((item) => !item.id);
 };
+const getDefaultAndNewImage = (images = []) => {
+  const filterDefault = images.filter((item) => {
+    const isFile = File.prototype.isPrototypeOf(item);
+    return !isFile;
+  });
+  const filterNew = images.filter((item) => {
+    const isFile = File.prototype.isPrototypeOf(item);
+    return isFile;
+  });
+  return { defaultImages: filterDefault, newImages: filterNew };
+};
 const EditProduct = () => {
   const { id } = useParams();
   const {
@@ -70,18 +83,23 @@ const EditProduct = () => {
   const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const page = window.location.href.includes("product")
     ? PRODUCT_TYPE.PRODUCT
     : PRODUCT_TYPE.COURSE;
   const [product, setProduct] = useState();
+  console.log("🚀 ~ file: EditProduct.js:79 ~ EditProduct ~ product:", product);
   useEffect(() => {
     const fetchProduct = async () => {
       setIsReady(false);
       const res = await productApi.getProductDetails(id);
       if (res.status === "success") {
-        setProduct(res.responseData.rows[0]);
+        console.log(res.responseData.rows[0]);
+        const { image = [] } = res.responseData.rows[0];
+        const formatImange = image?.map((item) => ({ name: item }));
+        setSelectedImage(formatImange);
+        setProduct({ ...res.responseData.rows[0], image: formatImange });
       }
       setIsReady(true);
     };
@@ -127,22 +145,8 @@ const EditProduct = () => {
   }, [product, reset]);
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
+  const { uploadMultipleImage } = useUpload();
 
-  const onUploadImage = async () => {
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("file", selectedImage);
-
-      const res = await fileApi.uploadFile(formData);
-      if ((res.status = SUBMIT_STATUS.SUCCESS)) {
-        const { responseData } = res;
-        return responseData.path;
-        //save path
-      } else {
-        return "";
-      }
-    } else return "";
-  };
   const onSumbit = async (data) => {
     setSubmitStatus(SUBMIT_STATUS.LOADING);
 
@@ -177,8 +181,10 @@ const EditProduct = () => {
       const res = await feedbackApi.addFeedback(formatFeedback);
       if (res.status === "fail") toast.error("Thêm feedback không thành công");
     }
+    const { defaultImages, newImages } = getDefaultAndNewImage(selectedImage);
+    const newImageNames = await uploadMultipleImage(newImages);
+    const image = [...defaultImages.map((item) => item.name), ...newImageNames];
 
-    const image = await onUploadImage();
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let updateProductData = {
       id: product.id,
@@ -263,6 +269,14 @@ const EditProduct = () => {
                 type="number"
                 defaultValue="5"
               />
+            </div>
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <MultipleImageTextBox
+                haveLabel
+                label="Chọn ảnh"
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+              ></MultipleImageTextBox>
             </div>
           </div>
           <div className="w-1/3">

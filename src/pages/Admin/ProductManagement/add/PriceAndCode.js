@@ -9,6 +9,7 @@ import { PRODUCT_TYPE } from "../../../../common/constant";
 import { useQuery } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { categoryApi } from "../../../../api";
+import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
 const PriceAndCode = ({
   control,
   errors,
@@ -44,13 +45,13 @@ const PriceAndCode = ({
         categories={categories}
       />
       <Price control={control} errors={errors} />
-      <ImageProduct
+      {/* <ImageProduct
         control={control}
         errors={errors}
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
         initImage={initImage}
-      />
+      /> */}
     </div>
   );
 };
@@ -251,7 +252,7 @@ const ImageProduct = ({
 }) => {
   return (
     <Wrapper>
-      <ImageTextBox
+      {/* <ImageTextBox
         label={"Hình ảnh"}
         control={control}
         errors={errors}
@@ -259,7 +260,16 @@ const ImageProduct = ({
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
         initImage={initImage}
-      ></ImageTextBox>
+      ></ImageTextBox> */}
+      <MultipleImageTextBox
+        label={"Hình ảnh"}
+        control={control}
+        errors={errors}
+        wrapperClass="m-0"
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+        initImage={initImage}
+      ></MultipleImageTextBox>
     </Wrapper>
   );
 };
