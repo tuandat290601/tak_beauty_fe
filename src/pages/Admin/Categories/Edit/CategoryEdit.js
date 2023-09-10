@@ -39,7 +39,7 @@ const CategoryEdit = () => {
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = React.useState(null);
-  const [footerWidth, setFooterWidth] = React.useState(0);
+  // const [footerWidth, setFooterWidth] = React.useState(0);
 
   const {
     handleSubmit,
@@ -133,27 +133,29 @@ const CategoryEdit = () => {
   const contentRef = React.useRef(null);
 
   // Get edit width
-  React.useEffect(() => {
-    if (contentRef.current) setFooterWidth(contentRef.current.offsetWidth);
-    function handleResize() {
-      if (contentRef.current) {
-        setFooterWidth(contentRef.current.offsetWidth);
-      }
-    }
+  // React.useEffect(() => {
+  //   if (contentRef.current) setFooterWidth(contentRef.current.offsetWidth);
+  //   function handleResize() {
+  //     if (contentRef.current) {
+  //       setFooterWidth(contentRef.current.offsetWidth);
+  //     }
+  //   }
 
-    window.addEventListener("resize", handleResize);
+  //   window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="page-body">
       <LoadingOverlay show={isProccessing || isLoading} />
 
       <HeaderMainPage>
-        <div className={`flex gap-x-2 justify-end ui-layout ${pagePadding}`}>
+        <div
+          className={`flex gap-[10px] mr-[10px] justify-end py-2 bg-white ${pagePadding}`}
+        >
           <BasicButton
             disabled={isProccessing || isLoading}
             icon={<AiFillSave />}
@@ -182,7 +184,7 @@ const CategoryEdit = () => {
           {defaultValues?.title}
         </h2>
 
-        <div className={`w-full flex gap-x-10 items-start`}>
+        <div className={`w-full flex gap-x-[20px] items-start`}>
           <div ref={contentRef} className={`w-2/3 bg-white ${cardClass}`}>
             <BasicTextBox
               control={control}
@@ -232,37 +234,38 @@ const CategoryEdit = () => {
           </div>
         </div>
       </div>
-      <CategoryEditFooter width={footerWidth} isProccessing={isProccessing} />
+      {/* <CategoryEditFooter width={footerWidth} isProccessing={isProccessing} /> */}
     </form>
   );
 };
 
-const CategoryEditFooter = ({ width = 0, isProccessing = false }) => {
-  const ref = React.useRef(null);
+// const CategoryEditFooter = ({ width = 0, isProccessing = false }) => {
+//   const ref = React.useRef(null);
 
-  React.useEffect(() => {
-    if (ref?.current) {
-      ref.current.style.width = `${width}px`;
-    }
-  }, [width]);
+//   React.useEffect(() => {
+//     if (ref?.current) {
+//       ref.current.style.width = `${width}px`;
+//     }
+//   }, [width]);
 
-  return (
-    <>
-      <HeaderMainPage
-        isBottom
-        className={`bottom-0 border rounded-md w-fit mx-[10px]`}
-      >
-        <div className="px-3 py-2" ref={ref}>
-          <BasicButton
-            disabled={isProccessing}
-            icon={<AiFillSave />}
-            className="btn ml-auto text-white green-btn rounded-md text-xs"
-            title="Lưu"
-            type="submit"
-          />
-        </div>
-      </HeaderMainPage>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <HeaderMainPage
+//         isBottom
+//         className={`bottom-0 border rounded-md w-fit mx-[10px]`}
+//       >
+//         <div className="px-3 py-2" ref={ref}>
+//           <BasicButton
+//             disabled={isProccessing}
+//             icon={<AiFillSave />}
+//             className="btn ml-auto text-white green-btn rounded-md text-xs"
+//             title="Lưu"
+//             type="submit"
+//           />
+//         </div>
+//       </HeaderMainPage>
+//     </>
+//   );
+// };
+
 export default CategoryEdit;

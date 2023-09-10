@@ -1,11 +1,11 @@
 import React from "react";
 import HeaderMainPage from "../../Header/HeaderMainPage";
 import BasicButton from "../../../../components/Button/BasicButton";
-import { FaPlusCircle } from "react-icons/fa";
 import usePopup from "../../../../hooks/usePopup";
 import QuickAddCategories from "../Modal/QuickAddCategories";
 import { KEYBOARD_KEY_CODE } from "../../../../common/constant";
 import useKeyboardShortcut from "../../../../hooks/KeyboardShortcut/useKeyboardShortcut";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 const CategoryHeader = () => {
   const {
@@ -29,10 +29,10 @@ const CategoryHeader = () => {
             className="btn green-btn !px-5 !py-[7px] text-xs text-white"
           /> */}
           <BasicButton
-            icon={<FaPlusCircle />}
+            icon={<AiOutlinePlusCircle />}
             title="Thêm nhanh (CTRL + F3)"
             onClick={openQuickAdd}
-            className="btn green-btn !px-5 !py-[7px] text-xs text-white"
+            className="btn green-btn !px-5 !py-[7px] text-white"
           />
         </div>
       </HeaderMainPage>
