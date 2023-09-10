@@ -35,9 +35,16 @@ import {
   productTypeToString,
 } from "../../../helpers/util";
 
-const page = window.location.href.includes("product")
-  ? PRODUCT_TYPE.PRODUCT
-  : PRODUCT_TYPE.COURSE;
+let page;
+if (window.location.href.includes("product")) {
+  page = PRODUCT_TYPE.PRODUCT;
+}
+if (window.location.href.includes("course")) {
+  page = PRODUCT_TYPE.COURSE;
+}
+if (window.location.href.includes("service")) {
+  page = PRODUCT_TYPE.SERVICE;
+}
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
   { size: 10 },
