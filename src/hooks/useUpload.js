@@ -17,8 +17,27 @@ const useUpload = () => {
       }
     } else return "";
   };
+  const uploadMultipleImage = async (selectedImage) => {
+    if (selectedImage.length > 0) {
+      const promises = Array.from(selectedImage).map(async (item) => {
+        const formData = new FormData();
+        formData.append("file", item);
 
-  return { uploadImage };
+        const res = await fileApi.uploadFile(formData);
+        if ((res.status = SUBMIT_STATUS.SUCCESS)) {
+          const { responseData } = res;
+          return responseData.path;
+          //save path
+        } else {
+          return "";
+        }
+      });
+      const info = await Promise.all(promises);
+      return info;
+    } else return [];
+  };
+
+  return { uploadImage, uploadMultipleImage };
 };
 
 export default useUpload;

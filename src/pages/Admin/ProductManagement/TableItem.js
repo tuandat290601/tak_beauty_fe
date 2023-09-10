@@ -124,8 +124,8 @@ export const TableItem = ({
       <td>
         <img
           src={
-            product?.image !== ""
-              ? Config.apiConfig.imageEndPoint + product?.image
+            product?.image[0] !== ""
+              ? Config.apiConfig.imageEndPoint + product?.image[0]
               : IMG_PATH.NO_IMG
           }
           alt="thumb"

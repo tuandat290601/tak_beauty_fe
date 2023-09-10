@@ -5,7 +5,6 @@ import { BasicTextBox } from "../../../../components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PriceAndCode from "./PriceAndCode";
-import { BasicEditor } from "../../../../components/Editor/BasicEditor";
 import Footer from "./Footer";
 import { addProductShcema } from "../../../../helpers/form-schema";
 import productApi from "../../../../api/productApi";
@@ -18,13 +17,14 @@ import { useNavigate } from "react-router-dom";
 import Feedback from "./Feedback";
 import { feedbackApi } from "../../../../api/feedbackApi";
 import useUpload from "../../../../hooks/useUpload";
+import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
   const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState([]);
   const page = window.location.href.includes("product")
     ? PRODUCT_TYPE.PRODUCT
     : PRODUCT_TYPE.COURSE;
@@ -57,11 +57,11 @@ const AddProduct = () => {
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
 
-  const { uploadImage } = useUpload();
+  const { uploadMultipleImage } = useUpload();
 
   const onSumbit = async (data) => {
-    setSubmitStatus(SUBMIT_STATUS.LOADING);
-    const image = await uploadImage(selectedImage);
+    // setSubmitStatus(SUBMIT_STATUS.LOADING);
+    const image = await uploadMultipleImage(selectedImage);
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let createProductData = {
       // type: "PRODUCT",
@@ -85,10 +85,11 @@ const AddProduct = () => {
         },
       };
     }
-    console.log(data);
-    console.log(createProductData);
     if (createProductData.categoryIds.length === 0) {
       delete createProductData.categoryIds;
+    }
+    if (image.length === 0) {
+      delete createProductData.image;
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
@@ -158,6 +159,14 @@ const AddProduct = () => {
                 defaultValue="5"
               />
             </div>
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <MultipleImageTextBox
+                haveLabel
+                label="Chọn ảnh"
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+              ></MultipleImageTextBox>
+            </div>
           </div>
           <div className="w-1/3">
             <PriceAndCode
@@ -165,8 +174,6 @@ const AddProduct = () => {
               errors={errors}
               setCheckedCategories={setCheckedCategories}
               checkedCategories={checkedCategories}
-              selectedImage={selectedImage}
-              setSelectedImage={setSelectedImage}
             />
             <Feedback
               control={control}
