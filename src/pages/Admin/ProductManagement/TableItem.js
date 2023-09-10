@@ -21,6 +21,10 @@ import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import { useNavigate } from "react-router-dom";
 import { PAGE_PATH } from "../../../configuration/routeConfig";
 import { IMG_PATH } from "../../../configuration/imagePath";
+import {
+  navigateToEditBaseOnProductType,
+  productTypeToString,
+} from "../../../helpers/util";
 
 export const TableItemSkeleton = () => {
   return (
@@ -52,6 +56,7 @@ export const TableItemSkeleton = () => {
 };
 
 export const TableItem = ({
+  page,
   product,
   index,
   className,
@@ -59,9 +64,6 @@ export const TableItem = ({
   handleCheck,
   handleDeleteProduct,
 }) => {
-  const page = window.location.href.includes("product")
-    ? PRODUCT_TYPE.PRODUCT
-    : PRODUCT_TYPE.COURSE;
   const [hoverRef, isHovered] = useHover();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -74,24 +76,38 @@ export const TableItem = ({
     useState();
   const handleUpdateDiscountPrice = async (editPrice) => {
     setUpdateDiscountPriceStatus(SUBMIT_STATUS.LOADING);
+    if (editPrice > parseInt(product.originPrice)) {
+      toast.error("Giá khuyến mãi phải nhỏ hơn hoặc bằng giá gốc");
+      setUpdateDiscountPriceStatus(SUBMIT_STATUS.ERROR);
+      return;
+    }
     const data = {
       id: product.id,
       discountPrice: parseInt(editPrice) || 0,
     };
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
-      toast.success("Cập nhật giá khuyến mãi sản phẩm thành công");
+      toast.success(
+        `Cập nhật giá khuyến mãi ${productTypeToString(page)} thành công`
+      );
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setUpdateDiscountPriceStatus(SUBMIT_STATUS.SUCCESS);
     } else {
       toast.error(
-        "Đã có lỗi xảy ra! Cập nhật giá khuyến mãi sản phẩm không thành công"
+        `Đã có lỗi xảy ra! Cập nhật giá khuyến mãi ${productTypeToString(
+          page
+        )} không thành công`
       );
       setUpdateDiscountPriceStatus(SUBMIT_STATUS.ERROR);
     }
   };
   const handleUpdateOriginPrice = async (editPrice) => {
     setUpdateOriginPriceStatus(SUBMIT_STATUS.LOADING);
+    if (editPrice < parseInt(product.discountPrice)) {
+      toast.error("Giá gốc phải lớn hơn hoặc bằng giá khuyến mãi");
+      setUpdateOriginPriceStatus(SUBMIT_STATUS.ERROR);
+      return;
+    }
     const data = {
       id: product.id,
       originPrice: parseInt(editPrice) || 0,
@@ -99,12 +115,14 @@ export const TableItem = ({
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
       console.log("success");
-      toast.success("Cập nhật giá gốc sản phẩm thành công");
+      toast.success(`Cập nhật giá gốc ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setUpdateOriginPriceStatus(SUBMIT_STATUS.SUCCESS);
     } else {
       toast.error(
-        "Đã có lỗi xảy ra! Cập nhật giá gốc sản phẩm không thành công"
+        `Đã có lỗi xảy ra! Cập nhật giá gốc ${productTypeToString(
+          page
+        )} không thành công`
       );
       setUpdateOriginPriceStatus(SUBMIT_STATUS.ERROR);
     }
@@ -124,7 +142,7 @@ export const TableItem = ({
       <td>
         <img
           src={
-            product?.image[0] !== ""
+            product?.image?.length > 0 && product?.image[0] !== ""
               ? Config.apiConfig.imageEndPoint + product?.image[0]
               : IMG_PATH.NO_IMG
           }
@@ -134,7 +152,7 @@ export const TableItem = ({
       </td>
       <td className="!py-[10px]">
         <div className="w-fit">
-          <Tooltip title="Sản phẩm test" arrow placement="top" color="error">
+          <Tooltip title={product?.title} arrow placement="top" color="error">
             <h4 className="font-semibold text-sm">{product?.title}</h4>
           </Tooltip>
         </div>
@@ -151,12 +169,14 @@ export const TableItem = ({
         </div>
         <div
           className={`flex gap-2 justify-start items-center ${
-            isHovered && page === PRODUCT_TYPE.PRODUCT ? "visible" : "invisible"
+            isHovered ? "visible" : "invisible"
           }`}
         >
-          <h5 className="text-xs text-gray-400">
-            Mã sản phẩm: {product?.sku || ""} |
-          </h5>
+          {page === PRODUCT_TYPE.PRODUCT && (
+            <h5 className="text-xs text-gray-400">
+              Mã {productTypeToString(page)}: {product?.sku || ""} |
+            </h5>
+          )}
           <a href="#" target="_blank">
             <AiFillEye
               size={18}
@@ -175,28 +195,19 @@ export const TableItem = ({
                 ?.filter((item) => item.categoryId !== null)
                 .slice(0, 3)
                 .map((item) => (
-                  <BasicTag
-                    label={item?.category?.title || ""}
-                    onClick={handleAddFavTag}
-                  />
+                  <BasicTag label={item?.category?.title || ""} />
                 ))}
               <BasicTag
                 label={`+${
                   product?.connects?.filter((item) => item.categoryId !== null)
                     .length - 3
                 }`}
-                onClick={handleAddFavTag}
               />
             </>
           ) : (
             product?.connects
               ?.filter((item) => item.categoryId !== null)
-              ?.map((item) => (
-                <BasicTag
-                  label={item?.category?.title || ""}
-                  onClick={handleAddFavTag}
-                />
-              ))
+              ?.map((item) => <BasicTag label={item?.category?.title || ""} />)
           )}
         </div>
       </td>
@@ -241,15 +252,7 @@ export const TableItem = ({
               <BasicIconButton
                 className="!bg-blue-500"
                 handleOnClick={() => {
-                  if (page === PRODUCT_TYPE.PRODUCT) {
-                    navigate(
-                      `/admin/product/product-management/edit/${product.id}`
-                    );
-                  } else {
-                    navigate(
-                      `/admin/course/course-management/edit/${product.id}`
-                    );
-                  }
+                  navigate(navigateToEditBaseOnProductType(page, product.id));
                 }}
               >
                 <MdEdit color="white"></MdEdit>

@@ -23,6 +23,10 @@ import Feedback from "../add/Feedback";
 import { feedbackApi } from "../../../../api/feedbackApi";
 import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
 import useUpload from "../../../../hooks/useUpload";
+import {
+  navigateToBoardBaseOnProductType,
+  productTypeToString,
+} from "../../../../helpers/util";
 
 const getFeedbacks = (product) => {
   const listFeedBack = product?.connects
@@ -85,9 +89,16 @@ const EditProduct = () => {
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState([]);
   const [isReady, setIsReady] = useState(false);
-  const page = window.location.href.includes("product")
-    ? PRODUCT_TYPE.PRODUCT
-    : PRODUCT_TYPE.COURSE;
+  let page;
+  if (window.location.href.includes("product")) {
+    page = PRODUCT_TYPE.PRODUCT;
+  }
+  if (window.location.href.includes("course")) {
+    page = PRODUCT_TYPE.COURSE;
+  }
+  if (window.location.href.includes("service")) {
+    page = PRODUCT_TYPE.SERVICE;
+  }
   const [product, setProduct] = useState();
   console.log("🚀 ~ file: EditProduct.js:79 ~ EditProduct ~ product:", product);
   useEffect(() => {
@@ -214,22 +225,16 @@ const EditProduct = () => {
     }
     const res = await productApi.updateProduct(updateProductData);
     if (res.status === "success") {
-      toast.success(
-        `Cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Cập nhật ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      if (page === PRODUCT_TYPE.PRODUCT)
-        navigate("/admin/product/product-management");
-      else navigate("/admin/course/course-management");
+      navigate(navigateToBoardBaseOnProductType(page));
     } else {
       console.log("fail");
       toast.error(
-        `Đã có lỗi xảy ra, cập nhật ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } không thành công`
+        `Đã có lỗi xảy ra, cập nhật ${productTypeToString(
+          page
+        )} không thành công`
       );
       // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.ERROR);

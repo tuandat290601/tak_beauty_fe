@@ -30,34 +30,14 @@ import { toast } from "react-toastify";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE } from "../../../common/constant";
 import { IMG_PATH } from "../../../configuration/imagePath";
+import {
+  navigateToAddBaseOnProductType,
+  productTypeToString,
+} from "../../../helpers/util";
 
 const page = window.location.href.includes("product")
   ? PRODUCT_TYPE.PRODUCT
   : PRODUCT_TYPE.COURSE;
-const productTypeToString = (type) => {
-  switch (type) {
-    case PRODUCT_TYPE.PRODUCT:
-      return "sản phẩm";
-    case PRODUCT_TYPE.COURSE:
-      return "khoá học";
-    case PRODUCT_TYPE.SERVICE:
-      return "dịch vụ";
-    default:
-      return "";
-  }
-};
-const navigateBaseOnProductType = (type) => {
-  switch (type) {
-    case PRODUCT_TYPE.PRODUCT:
-      return "/admin/product/product-management/add";
-    case PRODUCT_TYPE.COURSE:
-      return "/admin/course/course-management/add";
-    case PRODUCT_TYPE.SERVICE:
-      return "/admin/service/service-management/add";
-    default:
-      return "";
-  }
-};
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
   { size: 10 },
@@ -279,7 +259,7 @@ export const ProductManagement = () => {
             title="Thêm mới"
             className="green-btn"
             onClick={() => {
-              navigate(navigateBaseOnProductType(page));
+              navigate(navigateToAddBaseOnProductType(page));
             }}
           />
         </div>
@@ -418,6 +398,7 @@ export const ProductManagement = () => {
                       checked={item.checked || false}
                       handleCheck={handleCheckItem}
                       index={index}
+                      page={page}
                       className={`${
                         index % 2 === 0 ? "bg-gray-100" : ""
                       } hover:bg-gray-200`}

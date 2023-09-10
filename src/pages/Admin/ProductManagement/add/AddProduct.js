@@ -18,6 +18,10 @@ import Feedback from "./Feedback";
 import { feedbackApi } from "../../../../api/feedbackApi";
 import useUpload from "../../../../hooks/useUpload";
 import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
+import {
+  navigateToBoardBaseOnProductType,
+  productTypeToString,
+} from "../../../../helpers/util";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
@@ -25,9 +29,16 @@ const AddProduct = () => {
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState([]);
-  const page = window.location.href.includes("product")
-    ? PRODUCT_TYPE.PRODUCT
-    : PRODUCT_TYPE.COURSE;
+  let page;
+  if (window.location.href.includes("product")) {
+    page = PRODUCT_TYPE.PRODUCT;
+  }
+  if (window.location.href.includes("course")) {
+    page = PRODUCT_TYPE.COURSE;
+  }
+  if (window.location.href.includes("service")) {
+    page = PRODUCT_TYPE.SERVICE;
+  }
 
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -64,7 +75,6 @@ const AddProduct = () => {
     const image = await uploadMultipleImage(selectedImage);
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let createProductData = {
-      // type: "PRODUCT",
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
@@ -94,11 +104,7 @@ const AddProduct = () => {
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
       console.log("🚀 ~ file: AddProduct.js:108 ~ onSumbit ~ res:", res);
-      toast.success(
-        `Thêm ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Thêm ${productTypeToString(page)} thành công`);
 
       //add feedback
       const productId = res.responseData[0].id;
@@ -115,16 +121,11 @@ const AddProduct = () => {
       }
 
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      if (page === PRODUCT_TYPE.PRODUCT)
-        navigate("/admin/product/product-management");
-      else navigate("/admin/course/course-management");
+      navigate(navigateToBoardBaseOnProductType(page));
     } else {
       console.log("fail");
       toast.error(
-        `Đã có lỗi xảy ra, thêm ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } không thành công`
+        `Đã có lỗi xảy ra, thêm ${productTypeToString(page)} không thành công`
       );
       // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.ERROR);
