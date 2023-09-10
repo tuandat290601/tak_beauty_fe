@@ -7,6 +7,7 @@ export const SUBMIT_STATUS = {
 export const PRODUCT_TYPE = {
   PRODUCT: "PRODUCT",
   COURSE: "COURSE",
+  SERVICE: "SERVICE",
 };
 
 export const KEYBOARD_KEY_CODE = {
