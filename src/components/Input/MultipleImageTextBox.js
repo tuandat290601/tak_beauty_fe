@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Checkbox } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import Config from "../../configuration";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const MultipleImageTextBox = ({
   name = "upload",
@@ -89,6 +90,7 @@ const MultipleImageTextBox = ({
 };
 
 const ImageItem = ({ item, checked = [], setChecked = () => {} }) => {
+  const isFile = File.prototype.isPrototypeOf(item);
   const isChecked = checked.includes(item.name);
   const handleChange = (e) => {
     if (isChecked) {
@@ -99,6 +101,10 @@ const ImageItem = ({ item, checked = [], setChecked = () => {} }) => {
       setChecked(newArr);
     }
   };
+  const src =
+    (isFile
+      ? URL?.createObjectURL(item)
+      : `${Config.apiConfig.imageEndPoint}${item.name}`) || "";
   return (
     <div className="relative w-28 h-28 bg-white rounded-lg border border-dashed order-neutral-400 p-1">
       <Checkbox
@@ -110,7 +116,7 @@ const ImageItem = ({ item, checked = [], setChecked = () => {} }) => {
       <img
         alt="not found"
         className="object-contain w-full h-full rounded-lg"
-        src={URL?.createObjectURL(item) || ""}
+        src={src}
       />
     </div>
   );
