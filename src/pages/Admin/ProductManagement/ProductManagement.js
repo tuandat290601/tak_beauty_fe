@@ -34,6 +34,30 @@ import { IMG_PATH } from "../../../configuration/imagePath";
 const page = window.location.href.includes("product")
   ? PRODUCT_TYPE.PRODUCT
   : PRODUCT_TYPE.COURSE;
+const productTypeToString = (type) => {
+  switch (type) {
+    case PRODUCT_TYPE.PRODUCT:
+      return "sản phẩm";
+    case PRODUCT_TYPE.COURSE:
+      return "khoá học";
+    case PRODUCT_TYPE.SERVICE:
+      return "dịch vụ";
+    default:
+      return "";
+  }
+};
+const navigateBaseOnProductType = (type) => {
+  switch (type) {
+    case PRODUCT_TYPE.PRODUCT:
+      return "/admin/product/product-management/add";
+    case PRODUCT_TYPE.COURSE:
+      return "/admin/course/course-management/add";
+    case PRODUCT_TYPE.SERVICE:
+      return "/admin/service/service-management/add";
+    default:
+      return "";
+  }
+};
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
   { size: 10 },
@@ -49,9 +73,7 @@ const actions = [
   {
     value: ACTION.DELETE,
     icon: <FaTrash></FaTrash>,
-    title: `Xóa ${
-      page === PRODUCT_TYPE.PRODUCT_TYPE ? "sản phẩm" : "khóa học"
-    }`,
+    title: `Xóa ${productTypeToString(page)}`,
   },
 ];
 export const ProductManagement = () => {
@@ -87,9 +109,16 @@ export const ProductManagement = () => {
   });
 
   useEffect(() => {
-    const page = window.location.href.includes("product")
-      ? PRODUCT_TYPE.PRODUCT
-      : PRODUCT_TYPE.COURSE;
+    let page;
+    if (window.location.href.includes("product")) {
+      page = PRODUCT_TYPE.PRODUCT;
+    }
+    if (window.location.href.includes("course")) {
+      page = PRODUCT_TYPE.COURSE;
+    }
+    if (window.location.href.includes("service")) {
+      page = PRODUCT_TYPE.SERVICE;
+    }
     setProductQueries({
       ...productQueries,
       filters: `type==${page}`,
@@ -167,11 +196,7 @@ export const ProductManagement = () => {
   const handleConfirmDeleteProduct = async () => {
     const res = await productApi.deleteProduct(currentSelectedProduct.id);
     if (res.status === "success") {
-      toast.success(
-        `Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Xoá ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
@@ -187,17 +212,11 @@ export const ProductManagement = () => {
     const res = await productApi.deleteProduct(queryListId);
     // console.log(queryListId);
     if (res.status === "success") {
-      toast.success(
-        `Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Xoá ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error(
-        `Đã có lỗi xảy ra! Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thất bại`
+        `Đã có lỗi xảy ra! Xoá ${productTypeToString(page)} thất bại`
       );
     }
   };
@@ -260,9 +279,7 @@ export const ProductManagement = () => {
             title="Thêm mới"
             className="green-btn"
             onClick={() => {
-              if (page === PRODUCT_TYPE.PRODUCT)
-                navigate("/admin/product/product-management/add");
-              else navigate("/admin/course/course-management/add");
+              navigate(navigateBaseOnProductType(page));
             }}
           />
         </div>
@@ -270,7 +287,7 @@ export const ProductManagement = () => {
       <div className="ui-layout">
         <div className="py-[25px]">
           <h1 className="text-[28px] text-blue-950 font-semibold">
-            Danh sách {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}
+            Danh sách {productTypeToString(page)}
           </h1>
         </div>
         <div>
@@ -445,8 +462,7 @@ export const ProductManagement = () => {
         handleConfirm={handleConfirmDeleteProduct}
         positionTop={true}
       >
-        Bạn có chắc chắn muốn xoá{" "}
-        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}{" "}
+        Bạn có chắc chắn muốn xoá {productTypeToString(page)}{" "}
         <span className="text-blue-500 font-bold">
           {currentSelectedProduct?.title}
         </span>
@@ -461,7 +477,7 @@ export const ProductManagement = () => {
       >
         Bạn có chắc chắn muốn xoá{" "}
         {listProduct.filter((item) => item.checked === true).length}{" "}
-        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}
+        {productTypeToString(page)}
       </ConfirmPopup>
     </div>
   );

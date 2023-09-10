@@ -54,6 +54,7 @@ export const adminNavbar = [
     subMenu: [
       { name: "Sản phẩm", path: "/admin/product/product-management" },
       { name: "Khóa học", path: "/admin/course/course-management" },
+      { name: "Dịch vụ", path: "/admin/service/service-management" },
       { name: "danh mục", path: "products/products-categories" },
       { name: "thuộc tính", path: "#" },
       { name: "cài đặt", path: "#" },

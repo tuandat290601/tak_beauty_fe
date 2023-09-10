@@ -29,7 +29,13 @@ const PAGE_PATH = {
     id === undefined
       ? `/course/course-management/edit/:id`
       : `/course/course-management/edit/${id}`,
-
+  // Service management
+  SERVICE_MANAGEMENT: "/service/service-management",
+  ADD_SERVICE: "/service/service-management/add",
+  EDIT_SERVICE: (id) =>
+    id === undefined
+      ? `/service/service-management/edit/:id`
+      : `/service/service-management/edit/${id}`,
   // Admin
   ADMIN: ADMIN_BASE,
   ADMIN_DASHBOARD: "/dashboard",
