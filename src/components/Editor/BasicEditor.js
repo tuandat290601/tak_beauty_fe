@@ -4,6 +4,12 @@ import "react-quill/dist/quill.snow.css";
 import hljs from "highlight.js";
 import "highlight.js/styles/monokai-sublime.css";
 import "./BasicEditor.scss";
+import { fileApi } from "../../api";
+import { SUBMIT_STATUS } from "../../common/constant";
+import ImageUploader from "quill-image-uploader";
+import { Quill } from "react-quill";
+import Config from "../../configuration";
+Quill.register("modules/imageUploader", ImageUploader);
 export const BasicEditor = ({
   theme = "snow",
   handleChange = (html) => {},
@@ -88,6 +94,21 @@ BasicEditor.modules = {
     ["clean"],
     ["code-block"],
   ],
+  imageUploader: {
+    // imgbbAPI
+    upload: async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fileApi.uploadFile(formData);
+      if ((res.status = SUBMIT_STATUS.SUCCESS)) {
+        const { responseData } = res;
+        console.log(Config.apiConfig.imageEndPoint + responseData.path);
+        return Config.apiConfig.imageEndPoint + responseData.path;
+      } else {
+        return "";
+      }
+    },
+  },
   clipboard: {
     // toggle to add extra line breaks when pasting HTML:
     matchVisual: false,
