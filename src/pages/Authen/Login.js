@@ -72,6 +72,7 @@ const Login = () => {
           wrapperClass="mb-3"
         />
         <BasicTextBox
+          type="password"
           control={control}
           name={LOGIN_OBJ.PASSWORD}
           errMsg={
