@@ -29,10 +29,22 @@ import usePopup from "../../../hooks/usePopup";
 import { toast } from "react-toastify";
 import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE } from "../../../common/constant";
+import { IMG_PATH } from "../../../configuration/imagePath";
+import {
+  navigateToAddBaseOnProductType,
+  productTypeToString,
+} from "../../../helpers/util";
 
-const page = window.location.href.includes("product")
-  ? PRODUCT_TYPE.PRODUCT
-  : PRODUCT_TYPE.COURSE;
+let page;
+if (window.location.href.includes("product")) {
+  page = PRODUCT_TYPE.PRODUCT;
+}
+if (window.location.href.includes("course")) {
+  page = PRODUCT_TYPE.COURSE;
+}
+if (window.location.href.includes("service")) {
+  page = PRODUCT_TYPE.SERVICE;
+}
 const ITEMS_PER_PAGE = 10;
 const pageSizeOption = [
   { size: 10 },
@@ -48,9 +60,7 @@ const actions = [
   {
     value: ACTION.DELETE,
     icon: <FaTrash></FaTrash>,
-    title: `Xóa ${
-      page === PRODUCT_TYPE.PRODUCT_TYPE ? "sản phẩm" : "khóa học"
-    }`,
+    title: `Xóa ${productTypeToString(page)}`,
   },
 ];
 export const ProductManagement = () => {
@@ -86,9 +96,16 @@ export const ProductManagement = () => {
   });
 
   useEffect(() => {
-    const page = window.location.href.includes("product")
-      ? PRODUCT_TYPE.PRODUCT
-      : PRODUCT_TYPE.COURSE;
+    let page;
+    if (window.location.href.includes("product")) {
+      page = PRODUCT_TYPE.PRODUCT;
+    }
+    if (window.location.href.includes("course")) {
+      page = PRODUCT_TYPE.COURSE;
+    }
+    if (window.location.href.includes("service")) {
+      page = PRODUCT_TYPE.SERVICE;
+    }
     setProductQueries({
       ...productQueries,
       filters: `type==${page}`,
@@ -166,11 +183,7 @@ export const ProductManagement = () => {
   const handleConfirmDeleteProduct = async () => {
     const res = await productApi.deleteProduct(currentSelectedProduct.id);
     if (res.status === "success") {
-      toast.success(
-        `Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Xoá ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error("Đã có lỗi xảy ra! Xoá sản phẩm thất bại");
@@ -186,17 +199,11 @@ export const ProductManagement = () => {
     const res = await productApi.deleteProduct(queryListId);
     // console.log(queryListId);
     if (res.status === "success") {
-      toast.success(
-        `Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      toast.success(`Xoá ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
     } else {
       toast.error(
-        `Đã có lỗi xảy ra! Xoá ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thất bại`
+        `Đã có lỗi xảy ra! Xoá ${productTypeToString(page)} thất bại`
       );
     }
   };
@@ -223,18 +230,19 @@ export const ProductManagement = () => {
     const fetchData = async () => {
       // const res = await categoryApi.getCategories();
       if (categoriesIsSuccess) {
-        const resCategories = [...categoryList?.responseData.rows];
-        console.log(resCategories);
-        if (
-          !resCategories?.some(
-            (item) => item.title === "Tất cả" && item.id === ""
-          )
-        ) {
-          resCategories?.unshift({
-            id: "",
-            title: "Tất cả",
-          });
-        }
+        const categoryListDropdown = createCategoryListDropdown();
+        const resCategories = [...categoryListDropdown];
+        // console.log(resCategories);
+        // if (
+        //   !resCategories?.some(
+        //     (item) => item.title === "Tất cả" && item.id === ""
+        //   )
+        // ) {
+        //   resCategories?.unshift({
+        //     id: "",
+        //     title: "Tất cả",
+        //   });
+        // }
         setListCategories(resCategories);
       }
       if (isSuccess) {
@@ -258,9 +266,7 @@ export const ProductManagement = () => {
             title="Thêm mới"
             className="green-btn"
             onClick={() => {
-              if (page === PRODUCT_TYPE.PRODUCT)
-                navigate("/admin/product/product-management/add");
-              else navigate("/admin/course/course-management/add");
+              navigate(navigateToAddBaseOnProductType(page));
             }}
           />
         </div>
@@ -268,7 +274,7 @@ export const ProductManagement = () => {
       <div className="ui-layout">
         <div className="py-[25px]">
           <h1 className="text-[28px] text-blue-950 font-semibold">
-            Danh sách {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}
+            Danh sách {productTypeToString(page)}
           </h1>
         </div>
         <div>
@@ -344,6 +350,17 @@ export const ProductManagement = () => {
                   .map((item, index) => (
                     <TableItemSkeleton key={index}></TableItemSkeleton>
                   ))
+              ) : listProduct.length === 0 ? (
+                <div className="flex flex-col items-center justify-center my-10 gap-y-10">
+                  <img
+                    src={IMG_PATH.EMPTY_BOX}
+                    alt="Empty img"
+                    className="w-40"
+                  />
+                  <h4 className="font-medium text-2xl">
+                    Không tìm thấy kết quả nào
+                  </h4>
+                </div>
               ) : (
                 <>
                   <tr className="sticky z-9 shadow-md">
@@ -373,7 +390,7 @@ export const ProductManagement = () => {
                     </th>
                     <th>Hình</th>
                     <th>Tiêu đề</th>
-                    <th>Chuyên mục</th>
+                    <th>Danh mục</th>
                     <th>Phân loại</th>
                     <th>Giá gốc</th>
                     <th>Giá khuyến mãi</th>
@@ -388,6 +405,7 @@ export const ProductManagement = () => {
                       checked={item.checked || false}
                       handleCheck={handleCheckItem}
                       index={index}
+                      page={page}
                       className={`${
                         index % 2 === 0 ? "bg-gray-100" : ""
                       } hover:bg-gray-200`}
@@ -430,13 +448,12 @@ export const ProductManagement = () => {
           handleClosePopup();
         }}
         handleConfirm={handleConfirmDeleteProduct}
+        positionTop={true}
       >
-        Bạn có chắc chắn muốn xoá{" "}
-        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"}{" "}
+        Bạn có chắc chắn muốn xoá {productTypeToString(page)}{" "}
         <span className="text-blue-500 font-bold">
           {currentSelectedProduct?.title}
         </span>
-        '
       </ConfirmPopup>
       <ConfirmPopup
         isOpen={openConfirmDeleteListProudct}
@@ -444,10 +461,11 @@ export const ProductManagement = () => {
           handleCloseDeleteListProudctPopup();
         }}
         handleConfirm={handleConfirmDeleteListCheckedProduct}
+        positionTop={true}
       >
         Bạn có chắc chắn muốn xoá{" "}
         {listProduct.filter((item) => item.checked === true).length}{" "}
-        {page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"} '
+        {productTypeToString(page)}
       </ConfirmPopup>
     </div>
   );

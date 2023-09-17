@@ -7,11 +7,11 @@ const categoryApi = {
     return axiosClient.get(url);
   },
 
-  postCategory: ({ title, parentId, image }) => {
-    const data = removeEmptyValue({ title, parentId, image });
+  postCategory: (payload = [{}]) => {
+    // const data = removeEmptyValue({ title, parentId, image });
 
     const url = "/categories";
-    return axiosClient.post(url, [data]);
+    return axiosClient.post(url, payload);
   },
 
   updateCategoryById: (payload) => {

@@ -1,14 +1,14 @@
 import React from "react";
-import { BasicDropdown } from "../../../components";
-import BasicButton from "../../../components/Button/BasicButton";
 import { BsSearch } from "react-icons/bs";
 import CategoryTable from "./CategoryTable/CategoryTable";
-import useCategories from "../../../hooks/Categories/useCategories";
-import { removeVietnameseTones } from "../../../helpers/StringUtil";
 import { FaTrash } from "react-icons/fa6";
-import usePopup from "../../../hooks/usePopup";
-import ConfirmPopup from "../../../components/Popup/ConfirmPopup.jsx";
 import { useSearchParams } from "react-router-dom";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import usePopup from "../../../../hooks/usePopup";
+import { removeVietnameseTones } from "../../../../helpers/StringUtil";
+import BasicButton from "../../../../components/Button/BasicButton";
+import { BasicDropdown } from "../../../../components";
+import ConfirmPopup from "../../../../components/Popup/ConfirmPopup";
 
 const CategoryList = () => {
   const searchTextbox = React.useRef("");
@@ -20,8 +20,8 @@ const CategoryList = () => {
   // Category list util
   const {
     categoryList,
-    tempFilterCategory,
-    createCategoryListDropdown,
+    selectedCategory,
+    categoryDropdown,
     isLoading,
     delCategory,
     checkCategoryLevel,
@@ -46,7 +46,7 @@ const CategoryList = () => {
 
     setSearchParams({
       keyword: searchTextbox.current?.value,
-      category: tempFilterCategory?.id,
+      category: selectedCategory?.id,
     });
   }
 
@@ -69,6 +69,12 @@ const CategoryList = () => {
     return filterData;
   }
 
+  function onEnterTextbox(e) {
+    if (e.key === "Enter") {
+      startFilter();
+    }
+  }
+
   return (
     <div className="w-[60%] bg-white rounded-md">
       {/* Filter bar */}
@@ -88,6 +94,7 @@ const CategoryList = () => {
             type="text"
             className="border border-slate-400 rounded-md p-2 bg-white disabled:cursor-not-allowed"
             placeholder="Từ khóa..."
+            onKeyDown={onEnterTextbox}
             disabled={isLoading}
           />
           <BasicDropdown
@@ -95,10 +102,11 @@ const CategoryList = () => {
             classNameTitle="select-none"
             highlightClass="!bg-blue-500 rounded-md !text-white"
             itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
-            dropdownClass=""
-            title={tempFilterCategory.title}
+            dropdownClass="max-h-[400px] overflow-y-scroll"
+            isSearch={true}
+            title={selectedCategory.title}
             noTooltip={true}
-            items={createCategoryListDropdown()}
+            items={categoryDropdown}
             disabled={isLoading}
             titleWrapperClass="!px-2"
           />

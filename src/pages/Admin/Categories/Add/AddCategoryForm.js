@@ -1,22 +1,21 @@
 import React from "react";
-import { BasicDropdown, BasicTextBox, ImageTextBox } from "../../../components";
-import { ADD_CATEGORY_OBJ } from "../../../helpers/schema-obj";
-import BasicButton from "../../../components/Button/BasicButton";
 import { FaImage, FaSave } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addCategorySchema } from "../../../helpers/form-schema";
-import useCategories from "../../../hooks/Categories/useCategories";
-import CircleSpinLoading from "../../../components/Loading/CircleSpinLoading";
+import useCategories from "../../../../hooks/Categories/useCategories";
+import { addCategorySchema } from "../../../../helpers/form-schema";
+import { ADD_CATEGORY_OBJ } from "../../../../helpers/schema-obj";
+import useUpload from "../../../../hooks/useUpload";
+import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
+import BasicTextBox from "../../../../components/Input/BasicTextBox";
+import BasicDropdown from "../../../../components/Dropdown/BasicDropdown";
+import { ImageTextBox } from "../../../../components";
+import BasicButton from "../../../../components/Button/BasicButton";
 
-const ShortCategoryForm = () => {
+const AddCategoryForm = () => {
   // Category list util
-  const {
-    tempFilterCategory,
-    createCategoryListDropdown,
-    addCategory,
-    isProccessing,
-  } = useCategories({ defCategoryTitle: "Chọn danh mục" });
+  const { selectedCategory, categoryDropdown, addCategory, isProccessing } =
+    useCategories({ placeholderCategoryTitle: "Chọn danh mục" });
 
   const [selectedImage, setSelectedImage] = React.useState(null);
 
@@ -36,16 +35,29 @@ const ShortCategoryForm = () => {
     mode: "onSubmit",
   });
 
+  const { uploadImage } = useUpload();
+
   async function onSubmit(data) {
-    console.log("onSubmit", data);
-    await addCategory(data, reset());
+    try {
+      const image = await uploadImage(selectedImage);
+      const submitData = { ...data, image };
+      console.log("onSubmit", submitData);
+      await addCategory(submitData, resetForm());
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function resetForm(params) {
+    reset();
+    setSelectedImage(null);
   }
 
   React.useEffect(() => {
-    setValue(ADD_CATEGORY_OBJ.PARENT_ID, tempFilterCategory.id);
+    setValue(ADD_CATEGORY_OBJ.PARENT_ID, selectedCategory.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tempFilterCategory]);
+  }, [selectedCategory]);
 
   return (
     <form
@@ -99,10 +111,11 @@ const ShortCategoryForm = () => {
             classNameTitle="select-none"
             highlightClass="!bg-blue-500 rounded-md !text-white"
             itemClass="hover:!bg-blue-500 hover:!text-white rounded-md"
-            dropdownClass=""
-            title={tempFilterCategory.title}
+            dropdownClass="max-h-[400px] overflow-y-scroll"
+            isSearch={true}
+            title={selectedCategory.title}
             noTooltip={true}
-            items={createCategoryListDropdown()}
+            items={categoryDropdown}
             disabled={isProccessing}
             titleWrapperClass="!px-2"
           />
@@ -137,4 +150,4 @@ const ShortCategoryForm = () => {
   );
 };
 
-export default ShortCategoryForm;
+export default AddCategoryForm;

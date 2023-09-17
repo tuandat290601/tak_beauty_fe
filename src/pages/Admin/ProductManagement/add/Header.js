@@ -8,9 +8,16 @@ import { useNavigate } from "react-router-dom";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 const Header = ({ submitStatus }) => {
   const navigate = useNavigate();
-  const page = window.location.href.includes("product")
-    ? PRODUCT_TYPE.PRODUCT
-    : PRODUCT_TYPE.COURSE;
+  let page;
+  if (window.location.href.includes("product")) {
+    page = PRODUCT_TYPE.PRODUCT;
+  }
+  if (window.location.href.includes("course")) {
+    page = PRODUCT_TYPE.COURSE;
+  }
+  if (window.location.href.includes("service")) {
+    page = PRODUCT_TYPE.SERVICE;
+  }
   return (
     <HeaderMainPage>
       <div className="flex gap-[10px] mr-[10px] justify-end px-[10px] py-2 bg-white">
@@ -28,7 +35,9 @@ const Header = ({ submitStatus }) => {
           onClick={() => {
             if (page === PRODUCT_TYPE.PRODUCT)
               navigate("/admin/product/product-management");
-            else navigate("/admin/course/course-management");
+            else if (page === PRODUCT_TYPE.COURSE)
+              navigate("/admin/course/course-management");
+            else navigate("/admin/service/service-management");
           }}
         ></BasicButton>
       </div>

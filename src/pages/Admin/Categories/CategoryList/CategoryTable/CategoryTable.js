@@ -1,14 +1,16 @@
 import React from "react";
-import CircleSpinLoading from "../../../../components/Loading/CircleSpinLoading";
-import BasicCheckbox from "../../../../components/Checkbox/BasicCheckbox";
 import { useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import BasicButton from "../../../../components/Button/BasicButton";
-import Table from "../../../../components/Table/Table";
 import { FaEye } from "react-icons/fa6";
-import ConfirmPopup from "../../../../components/Popup/ConfirmPopup.jsx";
-import usePopup from "../../../../hooks/usePopup";
-import { PAGE_PATH } from "../../../../configuration/routeConfig";
+import usePopup from "../../../../../hooks/usePopup";
+import Table from "../../../../../components/Table/Table";
+import BasicCheckbox from "../../../../../components/Checkbox/BasicCheckbox";
+import Config from "../../../../../configuration";
+import { IMG_PATH } from "../../../../../configuration/imagePath";
+import BasicButton from "../../../../../components/Button/BasicButton";
+import { PAGE_PATH } from "../../../../../configuration/routeConfig";
+import CircleSpinLoading from "../../../../../components/Loading/CircleSpinLoading";
+import ConfirmPopup from "../../../../../components/Popup/ConfirmPopup";
 
 const CategoryTable = ({
   isLoading = false,
@@ -18,6 +20,7 @@ const CategoryTable = ({
   delItemsList = [],
   setDelItemsList = () => {},
 }) => {
+  // console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
   const titleClass = "";
   const actionClass = "w-[130px]";
   const checkboxClass = "p-3 w-12 z-[1]";
@@ -133,13 +136,15 @@ const CategoryTable = ({
                     </td>
                     <td className={`px-6 py-3 text-gray-900 ${titleClass}`}>
                       <div className="flex gap-x-1">
-                        {item.img ? (
-                          <img
-                            src={item.img}
-                            alt="category-img"
-                            className="h-[30px] object-cover"
-                          />
-                        ) : null}
+                        <img
+                          src={
+                            item.image
+                              ? Config.apiConfig.imageEndPoint + item?.image
+                              : IMG_PATH.NO_IMG
+                          }
+                          alt="category-img"
+                          className="h-[30px] w-[30px] object-cover"
+                        />
 
                         <div className="max-w-[90%]">
                           <p className="truncate">
@@ -167,13 +172,13 @@ const CategoryTable = ({
                       <div className="flex gap-x-1">
                         <BasicButton
                           icon={<FaTrash className="w-4 h-4" />}
-                          className="border !p-2 red-btn"
+                          className="btn text-white !p-2 red-btn"
                           // onClick={() => delCategory(item.id)}
                           onClick={() => delBtnClick(item)}
                         />
                         <BasicButton
                           icon={<FaPencilAlt className="w-4 h-4" />}
-                          className="border !p-2 blue-btn"
+                          className="btn text-white !p-2 blue-btn"
                           onClick={() => {
                             navigate(
                               `${PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES(
@@ -195,11 +200,7 @@ const CategoryTable = ({
       {/* Empty */}
       {!isLoading && categoryList?.length === 0 ? (
         <div className="flex flex-col items-center justify-center my-10 gap-y-10">
-          <img
-            src="/images/empty/empty-box.png"
-            alt="Empty img"
-            className="w-40"
-          />
+          <img src={IMG_PATH.EMPTY_BOX} alt="Empty img" className="w-40" />
           <h4 className="font-medium text-2xl">Không tìm thấy kết quả nào</h4>
         </div>
       ) : null}

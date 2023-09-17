@@ -1,4 +1,3 @@
-import HelpIcon from "@mui/icons-material/Help";
 import { Dialog, DialogActions, DialogContent, Stack } from "@mui/material";
 import React from "react";
 import Transition from "./Transition";
@@ -19,7 +18,8 @@ const ConfirmPopup = ({
   wrapperClass = "",
   fullWidth = false,
   btnWrapperClass = "",
-  icon = <HelpIcon className="!text-[50px] self-center" />,
+  icon = <></>,
+  positionTop = false,
 }) => {
   return (
     <Dialog
@@ -29,44 +29,33 @@ const ConfirmPopup = ({
       onClose={clickOutside}
       sx={style}
       fullWidth={fullWidth}
+      classes={{
+        paper: `absolute left-1/2 -translate-x-1/2 
+        ${positionTop ? "!top-0" : ""}`,
+      }}
     >
-      <DialogContent
-        sx={{
-          pt: 4,
-          pb: 0,
-          margin: "auto",
-
-          textAlign: "center",
-        }}
-        className={`w-[100%] !p-0 sm:!px-6 sm:!pt-8 sm:w-[450px] ${wrapperClass}`}
-      >
+      <DialogContent className={`w-full  sm:w-[450px] ${wrapperClass}`}>
         <Stack>
           {icon}
           {children}
         </Stack>
       </DialogContent>
-      <DialogActions
-        sx={{ margin: "auto", gap: 1 }}
-        className={`mt-4 p-0 sm:!pb-8 ${btnWrapperClass}`}
-      >
+      <DialogActions className={`${btnWrapperClass}`}>
         <BasicButton
-          title={noBtnLabel}
           onClick={handleReject}
           loading={isConfirming}
-          noGradient={true}
-          variant="none"
-          className="!px-8 !py-1 !rounded-lg !font-bold"
-        ></BasicButton>
+          className="!px-8 !py-1 !rounded-lg !font-bold border !border-gray-400 hover:bg-black hover:text-white btn"
+          title={noBtnLabel}
+        />
         <BasicButton
-          title={yesBtnLabel}
           onClick={() => {
             handleConfirm();
             handleReject();
           }}
           loading={isConfirming}
-          noGradient={true}
-          className={` !text-white !px-8 !py-1 !rounded-lg ${yesClassName}`}
-        ></BasicButton>
+          className={` !text-white !px-8 !py-1 !rounded-lg btn ${yesClassName}`}
+          title={yesBtnLabel}
+        />
       </DialogActions>
     </Dialog>
   );

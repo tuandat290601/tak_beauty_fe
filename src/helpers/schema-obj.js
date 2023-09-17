@@ -4,6 +4,11 @@ export const ADD_CATEGORY_OBJ = {
   IMAGE: "image",
 };
 
+export const ADD_MULTI_CATEGORY_OBJ = {
+  TITLE_LIST: "titleList",
+  PARENT_ID: "parentId",
+};
+
 export const ADD_PRODUCT_OBJ = {
   TITLE: "title",
   DESCRIPTION: "description",
@@ -16,6 +21,7 @@ export const ADD_PRODUCT_OBJ = {
   RATING: "rating",
   SKU: "sku",
   IMAGE: "image",
+  FEEDBACK: "feedback",
 };
 
 // ====== Authen ======

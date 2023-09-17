@@ -5,7 +5,6 @@ import { BasicTextBox } from "../../../../components";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PriceAndCode from "./PriceAndCode";
-import { BasicEditor } from "../../../../components/Editor/BasicEditor";
 import Footer from "./Footer";
 import { addProductShcema } from "../../../../helpers/form-schema";
 import productApi from "../../../../api/productApi";
@@ -15,17 +14,31 @@ import { useQueryClient } from "@tanstack/react-query";
 import { reactQueryKey } from "../../../../configuration/reactQueryKey";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../../common/constant";
 import { useNavigate } from "react-router-dom";
-import { fileApi } from "../../../../api";
+import Feedback from "./Feedback";
+import { feedbackApi } from "../../../../api/feedbackApi";
+import useUpload from "../../../../hooks/useUpload";
+import MultipleImageTextBox from "../../../../components/Input/MultipleImageTextBox";
+import {
+  navigateToBoardBaseOnProductType,
+  productTypeToString,
+} from "../../../../helpers/util";
 
 const AddProduct = () => {
   const contentRef = useRef(null);
   const navigate = useNavigate();
   const [footerWidth, setFooterWidth] = useState(0);
   const [checkedCategories, setCheckedCategories] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const page = window.location.href.includes("product")
-    ? PRODUCT_TYPE.PRODUCT
-    : PRODUCT_TYPE.COURSE;
+  const [selectedImage, setSelectedImage] = useState([]);
+  let page;
+  if (window.location.href.includes("product")) {
+    page = PRODUCT_TYPE.PRODUCT;
+  }
+  if (window.location.href.includes("course")) {
+    page = PRODUCT_TYPE.COURSE;
+  }
+  if (window.location.href.includes("service")) {
+    page = PRODUCT_TYPE.SERVICE;
+  }
 
   useEffect(() => {
     setFooterWidth(contentRef.current.offsetWidth);
@@ -55,27 +68,13 @@ const AddProduct = () => {
   const [submitStatus, setSubmitStatus] = useState();
   const queryClient = useQueryClient();
 
-  const onUploadImage = async () => {
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("file", selectedImage);
+  const { uploadMultipleImage } = useUpload();
 
-      const res = await fileApi.uploadFile(formData);
-      if ((res.status = SUBMIT_STATUS.SUCCESS)) {
-        const { responseData } = res;
-        return responseData.path;
-        //save path
-      } else {
-        return "";
-      }
-    } else return "";
-  };
   const onSumbit = async (data) => {
-    setSubmitStatus(SUBMIT_STATUS.LOADING);
-    const image = await onUploadImage();
+    // setSubmitStatus(SUBMIT_STATUS.LOADING);
+    const image = await uploadMultipleImage(selectedImage);
     const listCategoriesId = checkedCategories.map((item) => item.id);
     let createProductData = {
-      // type: "PRODUCT",
       title: data[ADD_PRODUCT_OBJ.TITLE],
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
@@ -83,7 +82,6 @@ const AddProduct = () => {
       image: image,
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
-
       categoryIds: listCategoriesId,
       type: page,
     };
@@ -97,29 +95,37 @@ const AddProduct = () => {
         },
       };
     }
-    console.log(data);
-    console.log(createProductData);
     if (createProductData.categoryIds.length === 0) {
       delete createProductData.categoryIds;
     }
+    if (image.length === 0) {
+      delete createProductData.image;
+    }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
-      toast.success(
-        `Thêm ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } thành công`
-      );
+      console.log("🚀 ~ file: AddProduct.js:108 ~ onSumbit ~ res:", res);
+      toast.success(`Thêm ${productTypeToString(page)} thành công`);
+
+      //add feedback
+      const productId = res.responseData[0].id;
+
+      const { feedback } = data;
+      if (feedback.length > 0) {
+        const formatFeedback = feedback.map((item) => ({
+          ...item,
+          productId,
+          courseId: productId,
+        }));
+
+        feedbackApi.addFeedback(formatFeedback);
+      }
+
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
-      setSubmitStatus(SUBMIT_STATUS.SUCCESS);
-      if (page === PRODUCT_TYPE.PRODUCT)
-        navigate("/admin/product/product-management");
-      else navigate("/admin/course/course-management");
+      navigate(navigateToBoardBaseOnProductType(page));
     } else {
       console.log("fail");
       toast.error(
-        `Đã có lỗi xảy ra, thêm ${
-          page === PRODUCT_TYPE.PRODUCT ? "sản phẩm" : "khóa học"
-        } không thành công`
+        `Đã có lỗi xảy ra, thêm ${productTypeToString(page)} không thành công`
       );
       // queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setSubmitStatus(SUBMIT_STATUS.ERROR);
@@ -154,15 +160,29 @@ const AddProduct = () => {
                 defaultValue="5"
               />
             </div>
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <MultipleImageTextBox
+                haveLabel
+                label="Chọn ảnh"
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+              ></MultipleImageTextBox>
+            </div>
           </div>
-          <PriceAndCode
-            control={control}
-            errors={errors}
-            setCheckedCategories={setCheckedCategories}
-            checkedCategories={checkedCategories}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
+          <div className="w-1/3">
+            <PriceAndCode
+              control={control}
+              errors={errors}
+              setCheckedCategories={setCheckedCategories}
+              checkedCategories={checkedCategories}
+            />
+            <Feedback
+              control={control}
+              getValues={getValues}
+              errors={errors}
+              setValue={setValue}
+            />
+          </div>
         </div>
         <Footer submitStatus={submitStatus} width={footerWidth} />
       </form>
