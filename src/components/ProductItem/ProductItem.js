@@ -7,14 +7,16 @@ import StarRatingComponent from "react-star-rating-component";
 import { Link } from "react-router-dom";
 
 const ProductItem = (props) => {
-  const { category, image, title, discountPrice, originPrice, rating, comments, buys } =
+  const { id, image, title, discountPrice, originPrice, rating, connects, sold } =
     props;
 
   const [show, setShow] = useState(null);
 
   useEffect(() => {
-    setShow(image);
-  }, [image]);
+    if (show == null && image && image.length > 0) {
+      setShow(image[0]);
+    }
+  }, [show, image]);
 
   const handleFavorite = () => {
     console.log(title);
@@ -44,13 +46,13 @@ const ProductItem = (props) => {
             );
           })}
         </div>
-        <Link to="">
+        <Link to={`/san-pham/${id}`}>
           <div className="product-item-detail">
-            <h2>{category.title}</h2>
             <h1>{title}</h1>
-            <div className="originPrice">
-              {toVNDCurrency(originPrice - (originPrice * discountPrice) / 100)}
-              <span>{toVNDCurrency(originPrice)}</span>
+            <div className="price">
+              <span>{toVNDCurrency(+originPrice * 1000)}</span>
+              <br />
+              {toVNDCurrency(+discountPrice * 1000)}
             </div>
             <div className="rating">
               <StarRatingComponent
@@ -59,11 +61,12 @@ const ProductItem = (props) => {
                 renderStarIcon={() => <BsStarFill />}
                 starCount={5}
                 value={rating}
+                name="rating"
               />
-              <span>{`(${comments} đánh giá)`}</span>
+              <span>{`(${connects?.filter(con => con?.feedback?.type === 'RATING').length} đánh giá)`}</span>
             </div>
             <div className="buy">
-              Lượt mua: <span>{buys}</span>
+              Lượt mua: <span>{sold}</span>
             </div>
           </div>
         </Link>

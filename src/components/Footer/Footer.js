@@ -26,7 +26,6 @@ const Footer = () => {
               width={'100%'}
               style={{ aspectRatio: '1/1' }}
               height={'auto'}
-              allowfullscreen=""
 
               loading="lazy"
               title="map"

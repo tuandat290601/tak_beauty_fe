@@ -6,7 +6,7 @@ import "highlight.js/styles/monokai-sublime.css";
 import "./BasicEditor.scss";
 export const BasicEditor = ({
   theme = "snow",
-  handleChange = (html) => {},
+  handleChange = (html) => { },
   value,
   title,
   className = "",
@@ -28,12 +28,10 @@ export const BasicEditor = ({
         modules={BasicEditor.modules}
         formats={BasicEditor.formats}
         bounds={".app"}
-        className={`${
-          disabled ? "bg-gray-100 text-gray-500" : ""
-        } ${className}`}
+        className={`${disabled ? "bg-gray-100 text-gray-500" : ""
+          } ${className}`}
         readOnly={disabled}
         onPaste={(e) => {
-          console.log("You've pasted some thing");
         }}
         {...props}
       />

@@ -8,15 +8,42 @@ import "./DiscountProduct.sass";
 import TimeSpan from "./TimeSpan/TimeSpan";
 import Slider from "react-slick";
 import { createSetting } from "../../../helpers/SlickSettings";
-import { products } from "../../../helpers/data";
+import { useDispatch, useSelector } from "react-redux";
+import { productApi } from "../../../api";
+import { setMostDiscountList } from "../../../features/productSlice";
+import useBreakpoint from "../../../hooks/useBreakpoint";
 
 const DiscountProduct = () => {
+  const mostDiscountList = useSelector(store => store.product.mostDiscountList)
+  const dispatch = useDispatch();
   // eslint-disable-next-line
   const [setting, setSetting] = useState(null);
 
+  const breakpoint = useBreakpoint();
+
   useEffect(() => {
-    createSetting(4, 2).then((x) => setSetting(x));
-  }, []);
+    if (breakpoint < 576) {
+      createSetting(2, 1).then((x) => setSetting(x));
+    }
+    else if (breakpoint < 768) {
+      createSetting(3, 2).then((x) => setSetting(x));
+    }
+    else { createSetting(4, 2).then((x) => setSetting(x)); }
+  }, [breakpoint]);
+
+  useEffect(() => {
+    if (mostDiscountList?.length === 0) {
+      productApi.getProducts({
+        payload: {
+          sortField: "discount",
+          sortOrder: "desc"
+        }
+      }).then(result => {
+        dispatch(setMostDiscountList(result.responseData?.rows))
+      })
+    }
+  }, [mostDiscountList])
+
 
   const timeSection = [
     {
@@ -36,6 +63,7 @@ const DiscountProduct = () => {
       duration: 1,
     },
   ];
+
 
   return (
     <section id="discount-product">
@@ -76,9 +104,9 @@ const DiscountProduct = () => {
               })}
             </div>
             <div className="container px-0">
-              {products?.length && (
+              {mostDiscountList?.length && (
                 <Slider {...setting}>
-                  {products.map((item, index) => {
+                  {mostDiscountList?.map((item, index) => {
                     return (
                       <div className="p-2" key={index}>
                         <ProductItem {...item} />

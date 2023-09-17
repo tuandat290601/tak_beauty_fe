@@ -10,7 +10,6 @@ import { PAGE_PATH } from "../../configuration/routeConfig";
 
 const Header = () => {
   const { register, handleSubmit } = useForm();
-
   return (
     <nav id="header" className="p-3">
       <div className="container">

@@ -7,6 +7,8 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const rootElement = document.getElementById("root");
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -31,11 +33,11 @@ const theme = createTheme({
 });
 
 root.render(
-  <>
+  <Provider store={store}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
     </StyledEngineProvider>
-  </>
+  </Provider>
 );
