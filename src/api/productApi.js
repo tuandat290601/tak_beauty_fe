@@ -2,9 +2,13 @@ import axiosClient from "./axiosClient";
 
 const productApi = {
   getProducts: ({ payload, signal }) => {
-    const url = `/products?currentPage=${payload.currentPage ?? 1}&pageSize=${payload.pageSize ?? 10
-      }&filters=${encodeURIComponent(payload.filters ?? "")}&categoryListIds=${payload.categoryListIds ?? ""
-      }`;
+    const url = `/products?currentPage=${payload.currentPage ?? 1}&pageSize=${
+      payload.pageSize ?? 10
+    }&filters=${encodeURIComponent(payload.filters ?? "")}&categoryListIds=${
+      payload.categoryListIds ?? ""
+    }&sortOrder=${encodeURIComponent(
+      payload.sortOrder ?? ""
+    )}&sortField=${encodeURIComponent(payload.sortField ?? "")}`;
     return axiosClient.get(url, { signal });
   },
 

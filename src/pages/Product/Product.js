@@ -1,84 +1,141 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query'
-import { productApi, categoryApi } from "../../api";
+import { useQuery } from "@tanstack/react-query";
+import { productApi } from "../../api";
 import { ProductItem } from "../../components";
 import "./Product.sass";
-import configuration from "../../configuration"
+import configuration from "../../configuration";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { productList } from "../../features/productSlice";
+import ReactPaginate from "react-paginate";
 
 const Product = () => {
-  const [categoryId, setCategoryId] = useState("49a30440-cc1a-4c0b-bda9-fd609d397f3d") // This is mock, change it
+  const [categoryId, setCategoryId] = useState(
+    "49a30440-cc1a-4c0b-bda9-fd609d397f3d"
+  ); // This is mock, change it
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
-    pageSize: 10,
-    filters: "type==PRODUCT",
-    sortField: null,
-    sortOrder: null
-  })
-  const [listProduct, setListProduct] = useState([])
-  // const { category, images, name, discount, price, rate, comments, buys } =
-  const [sort, setSort] = useState("price-asc");
+    pageSize: 9,
+    // filters: "type==PRODUCT",
+    sortField: "discountPrice",
+    sortOrder: "asc",
+  });
+  const [listProduct, setListProduct] = useState([]);
+  const [totalPages, setTotalPages] = useState(0)
+  const [page, setPage] = useState(1)
+  const [sort, setSort] = useState("discountPrice-asc");
 
-  const { data, isLoading, error, isError, isSuccess } =
-    useQuery({
-      queryKey: ["getProducts"],
-      queryFn: async ({ signal }) => {
-        return await productApi.getProducts({ payload: productQueries, signal })
-      }
-    })
+  const { data, isLoading, error, isError, isSuccess } = useQuery({
+    queryKey: ["getProducts", productQueries],
+    queryFn: async ({ signal }) => {
+      return await productApi.getProducts({ payload: productQueries, signal });
+    },
+  });
 
   useEffect(() => {
     // api call
     if (isSuccess)
-      setListProduct(data.responseData.rows.map((item) => ({
-        ...item,
-        image: item?.image && item?.image?.length !== 0 ? item?.image?.map((img) => configuration.apiConfig.imageEndPoint + img) : [],
-        category: item.connects.filter(cate => cate.categoryId !== null)
-      })))
-  }, [data, isSuccess])
+      setListProduct(
+        data.responseData.rows.map((item) => ({
+          ...item,
+          image:
+            item?.image && item?.image?.length !== 0
+              ? item?.image?.map(
+                  (img) => configuration.apiConfig.imageEndPoint + img
+                )
+              : [],
+          category: item.connects.filter((cate) => cate.categoryId !== null),
+        }))
+      );
+      setTotalPages(data?.responseData?.totalPages)
+  }, [data, isSuccess]);
 
-  const handleSort = () => {
+  const handleSort = (e) => {
+    setSort(e.target.value);
+  };
 
-  }
+  useEffect(() => {
+    const queries = sort.split("-");
+    setProductQueries((old) => ({
+      ...old,
+      sortField: queries[0],
+      sortOrder: queries[1],
+    }));
+  }, [sort]);
+
+  const handlePageClick = (selectedPage) => {
+    setPage(selectedPage.selected);
+  };
+
+  useEffect(() => {
+    setProductQueries(old => ({...old, currentPage: page + 1}))
+  }, [page])
 
   return (
     <div className="product-page">
       <div className="container">
         <div className="row">
-          <div className="col-3">
-            Filter
-          </div>
+          <div className="col-3">Filter</div>
           <div className="col-9">
             <div className="row pe-1">
               <div className="d-flex justify-content-end">
                 <div className="d-flex">
-                  <InputLabel sx={{ display: "flex", alignItems: "center", color: "white" }} htmlFor="sort">Sắp xếp theo</InputLabel>
-                  <FormControl sx={{ marginLeft: "1rem", minWidth: 151 }} >
+                  <InputLabel
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: "white",
+                    }}
+                    htmlFor="sort"
+                  >
+                    Sắp xếp theo
+                  </InputLabel>
+                  <FormControl sx={{ marginLeft: "1rem", minWidth: 151 }}>
                     <Select
                       autoWidth={true}
                       id="sort"
                       sx={{ background: "white" }}
                       value={sort}
-                      onChange={(e) => setSort(e.target.value)}
+                      onChange={(e) => handleSort(e)}
                     >
-                      <MenuItem value={'price-asc'}>Giá: Tăng dần</MenuItem>
-                      <MenuItem value={'price-desc'}>Giá: Giảm dần</MenuItem>
-                      <MenuItem value={'title-asc'}>Tên: A-Z</MenuItem>
-                      <MenuItem value={'title-desc'}>Tên: Z-A</MenuItem>
-                      <MenuItem value={'createdAt-asc'}>Cũ nhất</MenuItem>
-                      <MenuItem value={'createdAt-desc'}>Mới nhất</MenuItem>
-                      <MenuItem value={'sold-desc'}>Bán chạy nhất</MenuItem>
+                      <MenuItem value={"discountPrice-asc"}>
+                        Giá: Tăng dần
+                      </MenuItem>
+                      <MenuItem value={"discountPrice-desc"}>
+                        Giá: Giảm dần
+                      </MenuItem>
+                      <MenuItem value={"title-asc"}>Tên: A-Z</MenuItem>
+                      <MenuItem value={"title-desc"}>Tên: Z-A</MenuItem>
+                      <MenuItem value={"createdAt-asc"}>Cũ nhất</MenuItem>
+                      <MenuItem value={"createdAt-desc"}>Mới nhất</MenuItem>
+                      <MenuItem value={"sold-desc"}>Bán chạy nhất</MenuItem>
                     </Select>
                   </FormControl>
                 </div>
               </div>
             </div>
             <div className="row">
-              {listProduct?.map((item) => <div className="col-4 p-3" key={item.id}>
-                <ProductItem {...item} />
-              </div>)}
+              {listProduct?.map((item) => (
+                <div className="col-4 p-3" key={item.id}>
+                  <ProductItem {...item} />
+                </div>
+              ))}
+            </div>
+            <div className="row">
+              <div className="d-flex justify-content-center">
+              {
+                totalPages > 1 && <ReactPaginate
+              breakLabel="..."
+        nextLabel=">"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={totalPages}
+        previousLabel="<"
+        renderOnZeroPageCount={null}
+        forcePage={page}
+        className="pagination"
+      />
+              }
+              </div>
             </div>
           </div>
         </div>
