@@ -10,7 +10,7 @@ import BasicButton from "../../../../components/Button/BasicButton";
 import { FaSave } from "react-icons/fa";
 import { addMultiCategorySchema } from "../../../../helpers/form-schema";
 
-const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
+const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => { } }) => {
   const {
     handleSubmit,
     control,
@@ -40,7 +40,6 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
         title: data[ADD_MULTI_CATEGORY_OBJ.TITLE_LIST].split("\n"),
         parentId: data.parentId,
       };
-      console.log("onSubmit", submitData);
       await addMultiCategory(submitData, onCloseForm());
     } catch (error) {
       console.error(error);
@@ -63,7 +62,7 @@ const QuickAddCategories = ({ isOpen = false, closeQuickAdd = () => {} }) => {
       open={isOpen}
       handleClose={onCloseForm}
       fullWidth={true}
-      clickOutside={() => {}}
+      clickOutside={() => { }}
       haveCloseBtn={true}
     >
       <h4 className="text-2xl font-medium">Thêm danh mục</h4>

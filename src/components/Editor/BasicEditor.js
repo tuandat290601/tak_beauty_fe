@@ -100,7 +100,6 @@ BasicEditor.modules = {
       const res = await fileApi.uploadFile(formData);
       if ((res.status = SUBMIT_STATUS.SUCCESS)) {
         const { responseData } = res;
-        console.log(Config.apiConfig.imageEndPoint + responseData.path);
         return Config.apiConfig.imageEndPoint + responseData.path;
       } else {
         return "";

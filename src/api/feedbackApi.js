@@ -5,7 +5,6 @@ export const feedbackApi = {
     return axiosClient.post(url, data);
   },
   deleteFeedback: (id) => {
-    console.log(id);
     const url = "/feedback";
     return axiosClient.delete(`${url}?id=${id}`);
   },

@@ -89,8 +89,6 @@ const useCategories = ({
         (item) => item.id === curCategory.parentId
       );
 
-      // console.log("🚀 After while:", curParent, curCategory);
-
       level++;
     } while (true);
 
@@ -126,7 +124,6 @@ const useCategories = ({
     try {
       setIsProccessing(true);
       const resp = await categoryApi.deleteCategoryById(categoryId);
-      console.log("🚀 ~ file: useCategories.js:40 ~ delCategory ~ resp:", resp);
 
       if (resp.status === "success") {
         queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
@@ -141,15 +138,11 @@ const useCategories = ({
     }
   }
 
-  async function delMultiCategory(categoryIdList, onSuccess = () => {}) {
+  async function delMultiCategory(categoryIdList, onSuccess = () => { }) {
     try {
       setIsProccessing(true);
       const categoryIds = categoryIdList.join("|");
       const resp = await categoryApi.deleteCategoryById(categoryIds);
-      console.log(
-        "🚀 ~ file: useCategories.js:135 ~ delMultiCategory ~ resp:",
-        resp
-      );
 
       if (resp.status === "success") {
         queryClient.invalidateQueries(reactQueryKey.GET_CATEGORIES);
@@ -165,12 +158,11 @@ const useCategories = ({
     }
   }
 
-  async function addCategory({ title, parentId, image }, onSuccess = () => {}) {
+  async function addCategory({ title, parentId, image }, onSuccess = () => { }) {
     try {
       setIsProccessing(true);
       const data = [emptyStringToNull({ title, parentId, image })];
       const resp = await categoryApi.postCategory(data);
-      console.log("🚀 ~ file: useCategories.js:65 ~ addCategory ~ resp:", resp);
 
       if (resp.status === "success") {
         toast.success(CATEGORY_RESP_MSG.ADD_SUCCESS);
@@ -193,7 +185,7 @@ const useCategories = ({
 
   async function addMultiCategory(
     { title = [], parentId },
-    onSuccess = () => {}
+    onSuccess = () => { }
   ) {
     try {
       setIsProccessing(true);
@@ -201,7 +193,6 @@ const useCategories = ({
         emptyStringToNull({ title: item, parentId })
       );
       const resp = await categoryApi.postCategory(data);
-      console.log("🚀 ~ file: useCategories.js:197 ~ resp:", resp);
 
       if (resp.status === SUBMIT_STATUS.SUCCESS) {
         toast.success(CATEGORY_RESP_MSG.ADD_SUCCESS);
@@ -228,10 +219,6 @@ const useCategories = ({
         image: image || null,
       };
       const resp = await categoryApi.updateCategoryById({ id, data });
-      console.log(
-        "🚀 ~ file: useCategories.js:193 ~ updateCategory ~ resp:",
-        resp
-      );
 
       if (resp.status === SUBMIT_STATUS.SUCCESS) {
         toast.success(CATEGORY_RESP_MSG.UPDATE_SUCCESS);
@@ -281,12 +268,12 @@ const useCategories = ({
     categoryList:
       categoryList && sortedCategoryList
         ? {
-            ...categoryList,
-            responseData: {
-              ...categoryList?.responseData,
-              rows: sortedCategoryList,
-            },
-          }
+          ...categoryList,
+          responseData: {
+            ...categoryList?.responseData,
+            rows: sortedCategoryList,
+          },
+        }
         : null,
     isSuccess,
     isLoading:

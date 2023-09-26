@@ -4,9 +4,9 @@ import fileApi from "../../api/file";
 import Config from "../../configuration";
 const ImageTextBox = ({
   name = "upload",
-  setSelectedImage = () => {},
+  setSelectedImage = () => { },
   selectedImage = {},
-  setPathName = () => {},
+  setPathName = () => { },
   label = null,
   haveLabel = false,
   btnTitle = "Chọn ảnh",
@@ -40,7 +40,6 @@ const ImageTextBox = ({
         type="file"
         name="myImage"
         onChange={(event) => {
-          console.log(event.target.files[0]);
           setSelectedImage(event.target.files[0]);
         }}
       />

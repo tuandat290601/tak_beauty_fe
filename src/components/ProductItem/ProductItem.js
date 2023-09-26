@@ -19,7 +19,6 @@ const ProductItem = (props) => {
   }, [show, image]);
 
   const handleFavorite = () => {
-    console.log(title);
   };
 
   return (
@@ -38,9 +37,9 @@ const ProductItem = (props) => {
           </ul>
         </div>
         <div className="product-item-subimages">
-          {[image].map((img, index) => {
+          {image?.map((img, index) => {
             return (
-              <div key={index} onClick={() => setShow(img)}>
+              <div key={index} onClick={() => setShow(img)} style={{ border: `${img === show ? "1px solid black" : "1px solid transparent"}` }}>
                 <img src={img} alt={`${title}`} />
               </div>
             );

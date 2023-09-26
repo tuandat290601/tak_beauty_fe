@@ -103,7 +103,6 @@ const AddProduct = () => {
     }
     const res = await productApi.addNewProduct([createProductData]);
     if (res.status === "success") {
-      console.log("🚀 ~ file: AddProduct.js:108 ~ onSumbit ~ res:", res);
       toast.success(`Thêm ${productTypeToString(page)} thành công`);
 
       //add feedback
@@ -123,7 +122,6 @@ const AddProduct = () => {
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       navigate(navigateToBoardBaseOnProductType(page));
     } else {
-      console.log("fail");
       toast.error(
         `Đã có lỗi xảy ra, thêm ${productTypeToString(page)} không thành công`
       );

@@ -100,13 +100,11 @@ const EditProduct = () => {
     page = PRODUCT_TYPE.SERVICE;
   }
   const [product, setProduct] = useState();
-  console.log("🚀 ~ file: EditProduct.js:79 ~ EditProduct ~ product:", product);
   useEffect(() => {
     const fetchProduct = async () => {
       setIsReady(false);
       const res = await productApi.getProductDetails(id);
       if (res.status === "success") {
-        console.log(res.responseData.rows[0]);
         const { image = [] } = res.responseData.rows[0];
         const formatImange = image?.map((item) => ({ name: item }));
         setSelectedImage(formatImange);
@@ -230,7 +228,6 @@ const EditProduct = () => {
       setSubmitStatus(SUBMIT_STATUS.SUCCESS);
       navigate(navigateToBoardBaseOnProductType(page));
     } else {
-      console.log("fail");
       toast.error(
         `Đã có lỗi xảy ra, cập nhật ${productTypeToString(
           page

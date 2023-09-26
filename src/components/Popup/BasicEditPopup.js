@@ -15,7 +15,6 @@ export const BasicEditablePopup = ({
   const { show, setShow, nodeRef } = useClickOutside();
   const [editValue, setEditValue] = useState(initValue);
   const handleShowEditPopup = () => {
-    console.log(nodeRef.current?.getBoundingClientRect());
     setShow(true);
   };
   const handleOnClosePopup = () => {

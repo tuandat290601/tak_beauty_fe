@@ -41,9 +41,6 @@ const CategoryList = () => {
   } = usePopup();
 
   function startFilter() {
-    // console.log("srch key", searchTextbox.current?.value);
-    // console.log("filter", tempFilterCategory?.id);
-
     setSearchParams({
       keyword: searchTextbox.current?.value,
       category: selectedCategory?.id,
@@ -81,9 +78,8 @@ const CategoryList = () => {
       <div className="filter-bar flex justify-between items-center py-3 px-2">
         <BasicButton
           icon={<FaTrash />}
-          className={`red-btn !px-2 ${
-            delItemsList?.length > 0 ? "visible" : "invisible"
-          }`}
+          className={`red-btn !px-2 ${delItemsList?.length > 0 ? "visible" : "invisible"
+            }`}
           disabled={isLoading}
           onClick={() => openConfirmDelete()}
         />

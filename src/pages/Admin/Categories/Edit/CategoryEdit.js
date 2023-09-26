@@ -78,7 +78,6 @@ const CategoryEdit = () => {
         submitData = { ...data, image };
       }
 
-      console.log("onSubmit", submitData);
       await updateCategory(id, submitData);
       navigate("../");
     } catch (error) {
@@ -221,7 +220,6 @@ const CategoryEdit = () => {
             <div className={`bg-white mt-2 ${cardClass}`}>
               <ImageTextBox
                 control={control}
-                onBtnClick={() => console.log("image")}
                 label={"Hình ảnh"}
                 btnTitle="Chọn ảnh"
                 btnClassName={"!bg-blue-500"}

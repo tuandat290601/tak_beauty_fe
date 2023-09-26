@@ -137,7 +137,6 @@ export const ProductManagement = () => {
     });
   };
   const handleSearchWithFilter = () => {
-    console.log(searchKey + ", " + selectedCategoryFilter);
     setProductQueries({
       ...productQueries,
       filters: `title@=${searchKey},type==${page}`,
@@ -148,7 +147,6 @@ export const ProductManagement = () => {
     setSearchKey(e.target.value);
   };
   const handleCheckAll = (event) => {
-    console.log("handleCheckAll");
     if (listProduct.every((item) => item.checked === true)) {
       const newListProduct = listProduct.map((item) => {
         return { ...item, checked: false };
@@ -194,10 +192,8 @@ export const ProductManagement = () => {
       (item, index) => item.checked === true
     );
     const listId = listChecked.map((item) => item.id);
-    console.log(listId);
     const queryListId = listId.join("|");
     const res = await productApi.deleteProduct(queryListId);
-    // console.log(queryListId);
     if (res.status === "success") {
       toast.success(`Xoá ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
@@ -232,7 +228,6 @@ export const ProductManagement = () => {
       if (categoriesIsSuccess) {
         const categoryListDropdown = createCategoryListDropdown();
         const resCategories = [...categoryListDropdown];
-        // console.log(resCategories);
         // if (
         //   !resCategories?.some(
         //     (item) => item.title === "Tất cả" && item.id === ""
@@ -406,9 +401,8 @@ export const ProductManagement = () => {
                       handleCheck={handleCheckItem}
                       index={index}
                       page={page}
-                      className={`${
-                        index % 2 === 0 ? "bg-gray-100" : ""
-                      } hover:bg-gray-200`}
+                      className={`${index % 2 === 0 ? "bg-gray-100" : ""
+                        } hover:bg-gray-200`}
                       handleDeleteProduct={handleDeleteProduct}
                     ></TableItem>
                   ))}
@@ -422,9 +416,8 @@ export const ProductManagement = () => {
               {pageSizeOption.map((item) => (
                 <BasicIconButton
                   key={item.size}
-                  className={`${
-                    pageSize === item.size ? "!bg-blue-500 text-white" : ""
-                  } `}
+                  className={`${pageSize === item.size ? "!bg-blue-500 text-white" : ""
+                    } `}
                   onClick={() => handleSetPageSize(item)}
                 >
                   {item.size}

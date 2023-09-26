@@ -15,12 +15,11 @@ import ConfirmPopup from "../../../../../components/Popup/ConfirmPopup";
 const CategoryTable = ({
   isLoading = false,
   categoryList = [],
-  delCategory = () => {},
-  checkCategoryLevel = () => {},
+  delCategory = () => { },
+  checkCategoryLevel = () => { },
   delItemsList = [],
-  setDelItemsList = () => {},
+  setDelItemsList = () => { },
 }) => {
-  // console.log("🚀 ~ file: CategoryTable.js:23 ~ categoryList:", categoryList);
   const titleClass = "";
   const actionClass = "w-[130px]";
   const checkboxClass = "p-3 w-12 z-[1]";
@@ -123,74 +122,73 @@ const CategoryTable = ({
           <tbody>
             {categoryList?.length > 0
               ? categoryList?.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="hover:!bg-gray-200 odd:!bg-gray-100 group"
-                  >
-                    <td className={checkboxClass}>
-                      <BasicCheckbox
-                        onChange={onChangeCheckBox}
-                        value={item.id}
-                        checked={delItemsList.includes(item.id)}
+                <tr
+                  key={item.id}
+                  className="hover:!bg-gray-200 odd:!bg-gray-100 group"
+                >
+                  <td className={checkboxClass}>
+                    <BasicCheckbox
+                      onChange={onChangeCheckBox}
+                      value={item.id}
+                      checked={delItemsList.includes(item.id)}
+                    />
+                  </td>
+                  <td className={`px-6 py-3 text-gray-900 ${titleClass}`}>
+                    <div className="flex gap-x-1">
+                      <img
+                        src={
+                          item.image
+                            ? Config.apiConfig.imageEndPoint + item?.image
+                            : IMG_PATH.NO_IMG
+                        }
+                        alt="category-img"
+                        className="h-[30px] w-[30px] object-cover"
                       />
-                    </td>
-                    <td className={`px-6 py-3 text-gray-900 ${titleClass}`}>
-                      <div className="flex gap-x-1">
-                        <img
-                          src={
-                            item.image
-                              ? Config.apiConfig.imageEndPoint + item?.image
-                              : IMG_PATH.NO_IMG
-                          }
-                          alt="category-img"
-                          className="h-[30px] w-[30px] object-cover"
-                        />
 
-                        <div className="max-w-[90%]">
-                          <p className="truncate">
-                            {[...Array(checkCategoryLevel(item))].map(
-                              () => "|---"
-                            )}
-                            {item.title}
-                          </p>
-                          <div className="text-sm flex items-center gap-x-2 invisible group-hover:!visible">
-                            <span className="text-slate-400 border-r-2 border-gray-400 pr-2">
-                              ID: {item.id}
-                            </span>
-                            <BasicButton
-                              icon={<FaEye />}
-                              className="!p-0 text-blue-500 hover:opacity-80"
-                              onClick={() => {
-                                console.log(`navigate to product ${item.id}`);
-                              }}
-                            />
-                          </div>
+                      <div className="max-w-[90%]">
+                        <p className="truncate">
+                          {[...Array(checkCategoryLevel(item))].map(
+                            () => "|---"
+                          )}
+                          {item.title}
+                        </p>
+                        <div className="text-sm flex items-center gap-x-2 invisible group-hover:!visible">
+                          <span className="text-slate-400 border-r-2 border-gray-400 pr-2">
+                            ID: {item.id}
+                          </span>
+                          <BasicButton
+                            icon={<FaEye />}
+                            className="!p-0 text-blue-500 hover:opacity-80"
+                            onClick={() => {
+                            }}
+                          />
                         </div>
                       </div>
-                    </td>
-                    <td className={`px-6 py-3 w-4 ${actionClass}`}>
-                      <div className="flex gap-x-1">
-                        <BasicButton
-                          icon={<FaTrash className="w-4 h-4" />}
-                          className="btn text-white !p-2 red-btn"
-                          // onClick={() => delCategory(item.id)}
-                          onClick={() => delBtnClick(item)}
-                        />
-                        <BasicButton
-                          icon={<FaPencilAlt className="w-4 h-4" />}
-                          className="btn text-white !p-2 blue-btn"
-                          onClick={() => {
-                            navigate(
-                              `${PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES(
-                                item.id
-                              )}`
-                            );
-                          }}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                    </div>
+                  </td>
+                  <td className={`px-6 py-3 w-4 ${actionClass}`}>
+                    <div className="flex gap-x-1">
+                      <BasicButton
+                        icon={<FaTrash className="w-4 h-4" />}
+                        className="btn text-white !p-2 red-btn"
+                        // onClick={() => delCategory(item.id)}
+                        onClick={() => delBtnClick(item)}
+                      />
+                      <BasicButton
+                        icon={<FaPencilAlt className="w-4 h-4" />}
+                        className="btn text-white !p-2 blue-btn"
+                        onClick={() => {
+                          navigate(
+                            `${PAGE_PATH.PRODUCTS_CATEGORIES.EDIT_CATEGORIES(
+                              item.id
+                            )}`
+                          );
+                        }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
               : null}
           </tbody>
         )}

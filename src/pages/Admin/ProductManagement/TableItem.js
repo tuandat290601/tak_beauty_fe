@@ -67,9 +67,9 @@ export const TableItem = ({
   const [hoverRef, isHovered] = useHover();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const handleAddFavTag = () => {};
-  const handleAddHotSellTag = () => {};
-  const handleAddOutStandingTag = () => {};
+  const handleAddFavTag = () => { };
+  const handleAddHotSellTag = () => { };
+  const handleAddOutStandingTag = () => { };
   const [updateUpdateOriginPriceStatus, setUpdateOriginPriceStatus] =
     useState();
   const [updateUpdateDiscountPriceStatus, setUpdateDiscountPriceStatus] =
@@ -114,7 +114,6 @@ export const TableItem = ({
     };
     const res = await productApi.updateProduct(data);
     if (res.status === "success") {
-      console.log("success");
       toast.success(`Cập nhật giá gốc ${productTypeToString(page)} thành công`);
       queryClient.invalidateQueries(reactQueryKey.GET_PRODUCTS);
       setUpdateOriginPriceStatus(SUBMIT_STATUS.SUCCESS);
@@ -168,9 +167,8 @@ export const TableItem = ({
           </span>
         </div>
         <div
-          className={`flex gap-2 justify-start items-center ${
-            isHovered ? "visible" : "invisible"
-          }`}
+          className={`flex gap-2 justify-start items-center ${isHovered ? "visible" : "invisible"
+            }`}
         >
           {page === PRODUCT_TYPE.PRODUCT && (
             <h5 className="text-xs text-gray-400">
@@ -198,10 +196,9 @@ export const TableItem = ({
                   <BasicTag label={item?.category?.title || ""} />
                 ))}
               <BasicTag
-                label={`+${
-                  product?.connects?.filter((item) => item.categoryId !== null)
+                label={`+${product?.connects?.filter((item) => item.categoryId !== null)
                     .length - 3
-                }`}
+                  }`}
               />
             </>
           ) : (

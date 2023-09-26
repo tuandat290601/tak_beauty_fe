@@ -28,13 +28,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   async function onSubmit(data) {
-    console.log(data);
     try {
       const resp = await usersApi.login(data);
-      console.log("🚀 ~ file: Login.js:29 ~ onSubmit ~ resp:", resp);
 
       if (resp?.status === "success") {
-        console.log("Login success");
         sessionStorage.setItem(
           Config.storageKey.auth,
           JSON.stringify({

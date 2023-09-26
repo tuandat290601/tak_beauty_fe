@@ -4,13 +4,11 @@ import "./CourseItem.sass";
 
 const CourseItem = (props) => {
   const { isRightSide, name, image, content } = props;
-  console.log(props);
   return (
     <div className="course-item w-100">
       <div
-        className={`row ${
-          isRightSide && "justify-content-end"
-        } position-relative`}
+        className={`row ${isRightSide && "justify-content-end"
+          } position-relative`}
       >
         <div className="col-7">
           <div className="course-item-image">
@@ -18,9 +16,8 @@ const CourseItem = (props) => {
           </div>
         </div>
         <div
-          className={`course-item-info ${
-            isRightSide && "course-item-info-left"
-          } position-absolute rounded-3`}
+          className={`course-item-info ${isRightSide && "course-item-info-left"
+            } position-absolute rounded-3`}
         >
           <h1>{name}</h1>
           <p>{content}</p>

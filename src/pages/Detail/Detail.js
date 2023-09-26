@@ -29,8 +29,6 @@ const Detail = () => {
     }
   }, [productId, product])
 
-  console.log(product)
-
   return <div className="main-product">
     <div class="main-product-breadcrumb">
       <div class="container">

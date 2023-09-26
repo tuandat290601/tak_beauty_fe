@@ -14,8 +14,6 @@ const Products = () => {
   const [parentCategories, setParentCategories] = useState(null)
   const [productShow, setProductShow] = useState(null)
 
-  console.log(productShow)
-
   useEffect(() => {
     createSetting(4, 2).then(x => setSetting(x))
   }, [])

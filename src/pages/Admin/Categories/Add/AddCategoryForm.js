@@ -41,7 +41,6 @@ const AddCategoryForm = () => {
     try {
       const image = await uploadImage(selectedImage);
       const submitData = { ...data, image };
-      console.log("onSubmit", submitData);
       await addCategory(submitData, resetForm());
     } catch (error) {
       console.error(error);
