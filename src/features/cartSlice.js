@@ -16,7 +16,13 @@ export const cart = createSlice({
         },
         adjustItem: (state, action) => {
             const adjustedItem = state.cartList.findIndex(item => item.id === action.payload.id)
-            state.cartList[adjustedItem] = action.payload
+            switch (action.type) {
+                case "INCREASE":
+                    state.cartList[adjustedItem] = {
+                        ...state.cartList[adjustedItem],
+                        amount
+                    }
+            }
         }
     },
 });
