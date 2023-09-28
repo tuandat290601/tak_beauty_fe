@@ -9,13 +9,10 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import ReactPaginate from "react-paginate";
 
 const Product = () => {
-  const [categoryId, setCategoryId] = useState(
-    "49a30440-cc1a-4c0b-bda9-fd609d397f3d"
-  ); // This is mock, change it
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: 9,
-    // filters: "type==PRODUCT",
+    filters: "type==PRODUCT",
     sortField: "discountPrice",
     sortOrder: "asc",
   });

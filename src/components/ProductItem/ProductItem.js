@@ -7,7 +7,7 @@ import StarRatingComponent from "react-star-rating-component";
 import { Link } from "react-router-dom";
 
 const ProductItem = (props) => {
-  const { id, image, title, discountPrice, originPrice, rating, connects, sold } =
+  const { id, image, title, discountPrice, originPrice, rating, connects, sold, discountPercent } =
     props;
 
   const [show, setShow] = useState(null);
@@ -49,9 +49,19 @@ const ProductItem = (props) => {
           <div className="product-item-detail">
             <h1>{title}</h1>
             <div className="price">
-              <span>{toVNDCurrency(+originPrice * 1000)}</span>
+              {
+                +discountPrice > 0 ? 
+                <>
+                <div>
+                  <span>{toVNDCurrency(+originPrice)}</span>
               <br />
-              {toVNDCurrency(+discountPrice * 1000)}
+              {toVNDCurrency(+discountPrice)}
+                </div>
+                </> : 
+                <div>
+                  <span>{toVNDCurrency(+discountPrice)}</span>
+                </div>
+              }
             </div>
             <div className="rating">
               <StarRatingComponent
