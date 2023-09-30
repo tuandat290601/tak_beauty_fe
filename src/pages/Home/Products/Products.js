@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { ProductItem, SectionTitle } from "../../../components";
+import configuration from "../../../configuration";
+
 
 import "./Products.sass";
 import { createSetting } from "../../../helpers/SlickSettings";
 import Slider from "react-slick";
 import useCategories from "../../../hooks/Categories/useCategories";
-import { productApi } from "../../../api";
+import { categoryApi, productApi } from "../../../api";
+import { useQuery } from "@tanstack/react-query";
+
 
 const Products = () => {
   const [show, setShow] = useState(null);
   const [setting, setSetting] = useState(null);
-  const { categoryList } = useCategories({});
   const [parentCategories, setParentCategories] = useState(null)
   const [productShow, setProductShow] = useState(null)
 
@@ -18,27 +21,50 @@ const Products = () => {
     createSetting(4, 2).then(x => setSetting(x))
   }, [])
 
-  useEffect(() => {
-    if (!parentCategories) {
-      setParentCategories(categoryList?.responseData?.rows?.filter(category => category.parentId !== null))
+  const {data: categoryData, isSuccess: categoryIsSucess} = useQuery({
+    queryKey: ["getCategories"],
+    queryFn: async () => {
+      return await categoryApi.getCategories()
     }
-    if (!show && parentCategories) {
-      setShow(parentCategories[0])
+  })
+
+  const {data: productData, isSuccess: productIsSuccess} = useQuery({
+    queryKey: ["getData", show],
+    queryFn: async ({signal}) => {
+    const payload = {
+    currentPage: 1,
+    pageSize: 10,
+    filters: "type==PRODUCT",
+    categoryListIds: show.id
+  }
+      return await productApi.getProducts({payload, signal})
     }
-  }, [categoryList, parentCategories, show])
+  })
 
   useEffect(() => {
-    if (show) {
-      productApi.getProducts({
-        payload: {
-          currentPage: 1,
-          pageSize: 10,
-          categoryListIds: [show.id]
-        }
-      }).then(result => setProductShow(result.responseData.rows))
+    if(categoryIsSucess) {
+      const categories = categoryData.responseData.rows.filter(category => category.parentId == null).map(category => ({
+        ...category,
+        image: configuration.apiConfig.imageEndPoint + category.image
+      }))
+      setParentCategories(categories)
+      setShow(categories[0])
     }
-  }, [show])
+  }, [categoryIsSucess])
 
+  useEffect(() => {
+    if(show) {
+      if(productIsSuccess) {
+        const productList = productData.responseData.rows.map(product => ({
+          ...product,
+          image: [...product.image].map(img => configuration.apiConfig.imageEndPoint + img)
+        }))
+        setProductShow(productList)
+      }
+    }
+  }, [show, productIsSuccess])
+
+  console.log(show)
 
   return (
     <section id="products" className="products">
