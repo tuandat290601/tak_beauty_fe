@@ -5,6 +5,7 @@ import "./ProductItem.sass";
 import { toVNDCurrency } from "../../helpers/CurrencyUtil";
 import StarRatingComponent from "react-star-rating-component";
 import { Link } from "react-router-dom";
+import Image from "../Image/Image";
 
 const ProductItem = (props) => {
   const { id, image, title, discountPrice, originPrice, rating, connects, sold, discountPercent } =
@@ -25,8 +26,8 @@ const ProductItem = (props) => {
     <div className="product">
       <div className="product-item">
         <div className="product-item-image">
-          <img src={show} alt={title} />
-          {discountPrice && <span>-{discountPrice}%</span>}
+          <Image src={show} alt={title}/>
+          {+discountPercent !== 0 && <text>-{discountPercent}%</text>}
           <ul>
             <li onClick={handleFavorite}>
               <BsHeart />
@@ -40,7 +41,7 @@ const ProductItem = (props) => {
           {image?.map((img, index) => {
             return (
               <div key={index} onClick={() => setShow(img)} style={{ border: `${img === show ? "1px solid black" : "1px solid transparent"}` }}>
-                <img src={img} alt={`${title}`} />
+                <Image src={img} alt={`${title}`}/>
               </div>
             );
           })}

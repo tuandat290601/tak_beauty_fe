@@ -29,7 +29,7 @@ const Products = () => {
   })
 
   const {data: productData, isSuccess: productIsSuccess} = useQuery({
-    queryKey: ["getData", show],
+    queryKey: ["getProducts", show],
     queryFn: async ({signal}) => {
     const payload = {
     currentPage: 1,
@@ -89,7 +89,7 @@ const Products = () => {
             </ul>
           </div>
           <div className="col-9 p-2 products-banner">
-            <img src={show?.image} alt={show?.title} />
+            <img src={show?.image[0]} alt={show?.title} />
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ import BasicDropdown from "./Dropdown/BasicDropdown";
 import { TableDropdown } from "./Dropdown/TableDropdown";
 import { BasicEditablePopup } from "./Popup/BasicEditPopup";
 import { BasicTag } from "./Tag/BasicTag";
-
+import Image from "./Image/Image"
 export {
   Header,
   Navbar,
@@ -27,4 +27,5 @@ export {
   TableDropdown,
   BasicEditablePopup,
   BasicTag,
+  Image
 };

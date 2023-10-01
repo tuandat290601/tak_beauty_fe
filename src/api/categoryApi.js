@@ -7,6 +7,11 @@ const categoryApi = {
     return axiosClient.get(url);
   },
 
+  getCategoryById: (id) => {
+    const url = `/categories/?filters=id==${id}`;
+    return axiosClient.get(url)
+  },
+
   postCategory: (payload = [{}]) => {
     // const data = removeEmptyValue({ title, parentId, image });
 
