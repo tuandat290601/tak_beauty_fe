@@ -26,7 +26,7 @@ const ProductItem = (props) => {
     <div className="product">
       <div className="product-item">
         <div className="product-item-image">
-          <Image src={show} alt={title}/>
+          <Image src={show} alt={title} />
           {+discountPercent !== 0 && <text>-{discountPercent}%</text>}
           <ul>
             <li onClick={handleFavorite}>
@@ -41,7 +41,7 @@ const ProductItem = (props) => {
           {image?.map((img, index) => {
             return (
               <div key={index} onClick={() => setShow(img)} style={{ border: `${img === show ? "1px solid black" : "1px solid transparent"}` }}>
-                <Image src={img} alt={`${title}`}/>
+                <Image src={img} alt={title} />
               </div>
             );
           })}
@@ -51,17 +51,17 @@ const ProductItem = (props) => {
             <h1>{title}</h1>
             <div className="price">
               {
-                +discountPrice > 0 ? 
-                <>
-                <div>
-                  <span>{toVNDCurrency(+originPrice)}</span>
-              <br />
-              {toVNDCurrency(+discountPrice)}
-                </div>
-                </> : 
-                <div>
-                  <span>{toVNDCurrency(+discountPrice)}</span>
-                </div>
+                +discountPrice > 0 ?
+                  <>
+                    <div>
+                      <span>{toVNDCurrency(+originPrice)}</span>
+                      <br />
+                      {toVNDCurrency(+discountPrice)}
+                    </div>
+                  </> :
+                  <div>
+                    <span>{toVNDCurrency(+discountPrice)}</span>
+                  </div>
               }
             </div>
             <div className="rating">

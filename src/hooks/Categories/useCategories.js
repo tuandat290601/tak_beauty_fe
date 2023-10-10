@@ -287,6 +287,7 @@ const useCategories = ({
     updateCategory,
     addMultiCategory,
     checkCategoryLevel,
+    sortCategory,
     categoryDropdown,
     resetCategoryDropdown,
   };

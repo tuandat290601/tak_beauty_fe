@@ -4,6 +4,9 @@ import { BsList } from "react-icons/bs";
 import Dropdown from "react-multilevel-dropdown";
 
 import "./Navbar.sass";
+import useCategories from "../../hooks/Categories/useCategories";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const NavItem = (props) => {
   const { title, path } = props;
@@ -19,31 +22,26 @@ const NavItem = (props) => {
 const Navbar = () => {
   const navList = [
     { title: "Trang chủ", path: "/" },
-    { title: "Giới thiệu", path: "/" },
     { title: "Sản phẩm", path: "/san-pham" },
-    { title: "Tin tức", path: "/" },
     { title: "Liên hệ", path: "/" },
-    { title: "Khóa học", path: "/khoa-hoc" },
   ];
 
-  const dropList = [
-    { title: "Filler", path: "/" },
-    { title: "Botox", path: "/" },
-    {
-      title: "Tinh Chất Làm Đẹp",
-      path: "/",
-      subList: [
-        { title: "Trang chủ", path: "/" },
-        { title: "Trang chủ", path: "/" },
-      ],
-    },
-    { title: "Chỉ White Medience", path: "/" },
-    { title: "Dụng Cụ Y Khoa", path: "/" },
-  ];
+  const { sortCategory } = useCategories({})
+
+  const [dropList, setDropList] = useState([])
+
+  console.log(dropList)
+
+  useEffect(() => {
+    if (dropList.length === 0) {
+      const categories = sortCategory();
+      setDropList(categories);
+    }
+  }, [dropList])
 
   return (
     <div className="row my-4" id="navbar">
-      <div className="col-3">
+      <div className="col-5">
         <div className="dropdown">
           <Dropdown
             title={[<BsList key={999} />, "Danh mục sản phẩm"]}
@@ -72,7 +70,7 @@ const Navbar = () => {
           </Dropdown>
         </div>
       </div>
-      <div className="col-9">
+      <div className="col-7">
         <ul className="navbar-list">
           {navList.map((item, index) => (
             <NavItem key={index} {...item} />

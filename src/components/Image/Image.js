@@ -1,10 +1,28 @@
-import React from 'react'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import React, { useState } from 'react'
 
-const Image = ({src, alt}) => {
+const Image = ({ src, alt }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  function onLoad() {
+    setIsLoading(false)
+  }
+
   return (
-    <LazyLoadImage src={src} alt={alt} placeholderSrc='https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM='/>
-  )
+    <>
+      <img
+        alt={alt}
+        src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"
+        style={{ display: isLoading ? "block" : "none", objectFit: "cover", width: "100%", height: "100%" }}
+      />
+      <img
+        alt={alt}
+        src={src}
+        style={{ display: isLoading ? "none" : "block", objectFit: "cover", width: "100%", height: "100%" }}
+        onLoad={onLoad}
+      />
+    </>
+  );
 }
+
 
 export default Image

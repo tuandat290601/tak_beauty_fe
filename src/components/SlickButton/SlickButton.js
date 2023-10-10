@@ -9,7 +9,7 @@ export const PrevButton = (props) => {
       style={{
         position: "absolute",
         top: "50%",
-        left: isBanner ? "3rem" : "-2rem",
+        left: isBanner ? "3rem" : "-1rem",
         color: "var(--white)",
         background: isBanner && "var(--dark)",
         zIndex: "9999",
@@ -30,7 +30,7 @@ export const NextButton = (props) => {
       style={{
         position: "absolute",
         top: "50%",
-        right: isBanner ? "3rem" : "-2rem",
+        right: isBanner ? "3rem" : "-1rem",
         color: "var(--white)",
         background: isBanner && "var(--dark)",
         zIndex: "9999",

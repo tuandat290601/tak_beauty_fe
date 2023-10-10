@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { productApi } from "../../api";
@@ -18,7 +18,7 @@ const Product = () => {
   });
   const [listProduct, setListProduct] = useState([]);
   const [totalPages, setTotalPages] = useState(0)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [sort, setSort] = useState("discountPrice-asc");
 
   const { data, isLoading, error, isError, isSuccess } = useQuery({
@@ -37,13 +37,13 @@ const Product = () => {
           image:
             item?.image && item?.image?.length !== 0
               ? item?.image?.map(
-                  (img) => configuration.apiConfig.imageEndPoint + img
-                )
+                (img) => configuration.apiConfig.imageEndPoint + img
+              )
               : [],
           category: item.connects.filter((cate) => cate.categoryId !== null),
         }))
       );
-      setTotalPages(data?.responseData?.totalPages)
+    setTotalPages(data?.responseData?.totalPages)
   }, [data, isSuccess]);
 
   const handleSort = (e) => {
@@ -59,12 +59,14 @@ const Product = () => {
     }));
   }, [sort]);
 
+  console.log(data)
+
   const handlePageClick = (selectedPage) => {
     setPage(selectedPage.selected);
   };
 
   useEffect(() => {
-    setProductQueries(old => ({...old, currentPage: page + 1}))
+    setProductQueries(old => ({ ...old, currentPage: page + 1 }))
   }, [page])
 
   return (
@@ -119,19 +121,19 @@ const Product = () => {
             </div>
             <div className="row">
               <div className="d-flex justify-content-center">
-              {
-                totalPages > 1 && <ReactPaginate
-              breakLabel="..."
-        nextLabel=">"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={totalPages}
-        previousLabel="<"
-        renderOnZeroPageCount={null}
-        forcePage={page}
-        className="pagination"
-      />
-              }
+                {
+                  totalPages > 1 && <ReactPaginate
+                    breakLabel="..."
+                    nextLabel=">"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={5}
+                    pageCount={totalPages}
+                    previousLabel="<"
+                    renderOnZeroPageCount={null}
+                    forcePage={page}
+                    className="pagination"
+                  />
+                }
               </div>
             </div>
           </div>
