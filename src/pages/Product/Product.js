@@ -7,6 +7,7 @@ import "./Product.sass";
 import configuration from "../../configuration";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import ReactPaginate from "react-paginate";
+import Filter from "./Filter/Filter";
 
 const Product = () => {
   const [productQueries, setProductQueries] = useState({
@@ -17,9 +18,10 @@ const Product = () => {
     sortOrder: "asc",
   });
   const [listProduct, setListProduct] = useState([]);
-  const [totalPages, setTotalPages] = useState(0)
-  const [page, setPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(0);
   const [sort, setSort] = useState("discountPrice-asc");
+  const [filter, setFilter] = useState([]);
 
   const { data, isLoading, error, isError, isSuccess } = useQuery({
     queryKey: ["getProducts", productQueries],
@@ -37,13 +39,13 @@ const Product = () => {
           image:
             item?.image && item?.image?.length !== 0
               ? item?.image?.map(
-                (img) => configuration.apiConfig.imageEndPoint + img
-              )
+                  (img) => configuration.apiConfig.imageEndPoint + img
+                )
               : [],
           category: item.connects.filter((cate) => cate.categoryId !== null),
         }))
       );
-    setTotalPages(data?.responseData?.totalPages)
+    setTotalPages(data?.responseData?.totalPages);
   }, [data, isSuccess]);
 
   const handleSort = (e) => {
@@ -59,21 +61,23 @@ const Product = () => {
     }));
   }, [sort]);
 
-  console.log(data)
-
   const handlePageClick = (selectedPage) => {
     setPage(selectedPage.selected);
   };
 
   useEffect(() => {
-    setProductQueries(old => ({ ...old, currentPage: page + 1 }))
-  }, [page])
+    setProductQueries((old) => ({ ...old, currentPage: page + 1 }));
+  }, [page]);
+
+  const handleFilter = (criteria, value) => {};
 
   return (
     <div className="product-page">
       <div className="container">
         <div className="row">
-          <div className="col-3">Filter</div>
+          <div className="col-3">
+            <Filter />
+          </div>
           <div className="col-9">
             <div className="row pe-1">
               <div className="d-flex justify-content-end">
@@ -121,8 +125,8 @@ const Product = () => {
             </div>
             <div className="row">
               <div className="d-flex justify-content-center">
-                {
-                  totalPages > 1 && <ReactPaginate
+                {totalPages > 1 && (
+                  <ReactPaginate
                     breakLabel="..."
                     nextLabel=">"
                     onPageChange={handlePageClick}
@@ -133,7 +137,7 @@ const Product = () => {
                     forcePage={page}
                     className="pagination"
                   />
-                }
+                )}
               </div>
             </div>
           </div>
