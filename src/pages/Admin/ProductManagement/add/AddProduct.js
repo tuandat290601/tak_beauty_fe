@@ -90,8 +90,7 @@ const AddProduct = () => {
         ...createProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
         attributes: {
-          size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-          weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
+          region: data[ADD_PRODUCT_OBJ.REGION],
         },
       };
     }

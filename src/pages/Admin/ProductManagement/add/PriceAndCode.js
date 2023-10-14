@@ -13,9 +13,9 @@ import MultipleImageTextBox from "../../../../components/Input/MultipleImageText
 const PriceAndCode = ({
   control,
   errors,
-  setCheckedCategories = () => {},
+  setCheckedCategories = () => { },
   checkedCategories = [],
-  setSelectedImage = () => {},
+  setSelectedImage = () => { },
   selectedImage = [],
   initImage,
 }) => {
@@ -58,7 +58,7 @@ const PriceAndCode = ({
 const Code = ({
   control,
   errors,
-  setCheckedCategories = () => {},
+  setCheckedCategories = () => { },
   checkedCategories = [],
   categories = [],
 }) => {
@@ -133,7 +133,7 @@ const Code = ({
 };
 const CheckedCategories = ({
   checkedCategories = [],
-  handleCheckCategories = () => {},
+  handleCheckCategories = () => { },
 }) => {
   return (
     <div>
@@ -157,8 +157,8 @@ const CheckedCategories = ({
 };
 const DropdownCategories = ({
   categories = [],
-  handleCheckCategories = () => {},
-  inCheckedList = () => {},
+  handleCheckCategories = () => { },
+  inCheckedList = () => { },
   search = "",
 }) => {
   const newCategories = categories?.filter((item) =>
@@ -199,7 +199,7 @@ const Price = ({ control, errors }) => {
             ? errors[ADD_PRODUCT_OBJ.ORIGIN_PRICE]?.message
             : null
         }
-        label={"Giá"}
+        label={"Giá ảo"}
         hideSubtitle
         defaultValue={0}
       />
@@ -212,7 +212,7 @@ const Price = ({ control, errors }) => {
             ? errors[ADD_PRODUCT_OBJ.DISCOUNT_PRICE]?.message
             : null
         }
-        label={"Giá khuyến mãi"}
+        label={"Giá thực bán"}
         hideSubtitle
         defaultValue={0}
       />
@@ -220,24 +220,10 @@ const Price = ({ control, errors }) => {
         <BasicTextBox
           wrapperClass="m-0"
           control={control}
-          name={"weight"}
-          errMsg={errors["weight"] ? errors["weight"]?.message : null}
-          label={"Cân nặng"}
+          name={"region"}
+          errMsg={errors["region"] ? errors["region"]?.message : null}
+          label={"Thương hiệu"}
           hideSubtitle={false}
-          subtitle="Đơn vị tính bằng gram"
-          defaultValue={"0"}
-        />
-      )}
-      {page === PRODUCT_TYPE.PRODUCT && (
-        <BasicTextBox
-          wrapperClass="m-0"
-          control={control}
-          name={"size"}
-          errMsg={errors["size"] ? errors["size"]?.message : null}
-          label={"Kích thước"}
-          hideSubtitle={false}
-          subtitle="Đơn vị tính bằng cm"
-          defaultValue={"0"}
         />
       )}
     </Wrapper>
@@ -246,7 +232,7 @@ const Price = ({ control, errors }) => {
 const ImageProduct = ({
   control,
   errors,
-  setSelectedImage = () => {},
+  setSelectedImage = () => { },
   selectedImage = [],
   initImage,
 }) => {

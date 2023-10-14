@@ -7,8 +7,8 @@ import { MenuItem, Select } from "@mui/material";
 
 const Feedback = ({
   control,
-  getValues = () => {},
-  setValue = () => {},
+  getValues = () => { },
+  setValue = () => { },
   errors,
 }) => {
   const { fields, append, remove } = useFieldArray({
@@ -20,8 +20,10 @@ const Feedback = ({
     remove(index);
   }
   function handleAddSet() {
-    append({ content: "", type: "RATING" });
+    append({ ratingContent: "", commentContent: "" });
   }
+
+  console.log(control)
 
   return (
     <div className="px-[10px] py-4 rounded-md bg-[#f9fafb] mt-2">
@@ -31,22 +33,32 @@ const Feedback = ({
         return (
           <div key={item.id}>
             <div className="flex gap-x-2 items-center justify-center relative mb-1">
-              <SelectType
+              <BasicTextBox
                 setValue={setValue}
                 index={index}
                 control={control}
-                defaultLabel={getValues(`feedback[${index}].type`) || "RATING"}
-              />
-              <BasicTextBox
-                control={control}
-                name={`feedback[${index}].content`}
+                name={`feedback[${index}].ratingContent`}
                 autoComplete="off"
                 errors={
                   errors.feedback
                     ? errors.feedback[index]?.content?.message
                     : null
                 }
-                defaultValue={getValues(`feedback[${index}].content`)}
+                className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
+                focus:border-black focus:font-medium focus:text-black transition-all"
+                wrapperClass="w-full"
+              />
+              <BasicTextBox
+                setValue={setValue}
+                index={index}
+                control={control}
+                name={`feedback[${index}].commentContent`}
+                autoComplete="off"
+                errors={
+                  errors.feedback
+                    ? errors.feedback[index]?.content?.message
+                    : null
+                }
                 className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
@@ -84,7 +96,7 @@ const Feedback = ({
 const SelectType = ({
   index = 0,
   control,
-  setValue = () => {},
+  setValue = () => { },
   defaultLabel = "RATING",
 }) => {
   const [type, setType] = useState(defaultLabel || "RATING");

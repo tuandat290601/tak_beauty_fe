@@ -22,6 +22,7 @@ export const ADD_PRODUCT_OBJ = {
   SKU: "sku",
   IMAGE: "image",
   FEEDBACK: "feedback",
+  REGION: "region",
 };
 
 // ====== Authen ======

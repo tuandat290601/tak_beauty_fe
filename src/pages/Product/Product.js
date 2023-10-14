@@ -16,12 +16,19 @@ const Product = () => {
     filters: "type==PRODUCT",
     sortField: "discountPrice",
     sortOrder: "asc",
+    categoryListIds: [],
+    region: "",
   });
   const [listProduct, setListProduct] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("discountPrice-asc");
-  const [filter, setFilter] = useState([]);
+  const [payload, setPayload] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    filters: "type==PRODUCT",
+
+  });
 
   const { data, isLoading, error, isError, isSuccess } = useQuery({
     queryKey: ["getProducts", productQueries],
@@ -29,6 +36,8 @@ const Product = () => {
       return await productApi.getProducts({ payload: productQueries, signal });
     },
   });
+
+  console.log(payload)
 
   useEffect(() => {
     // api call
@@ -39,8 +48,8 @@ const Product = () => {
           image:
             item?.image && item?.image?.length !== 0
               ? item?.image?.map(
-                  (img) => configuration.apiConfig.imageEndPoint + img
-                )
+                (img) => configuration.apiConfig.imageEndPoint + img
+              )
               : [],
           category: item.connects.filter((cate) => cate.categoryId !== null),
         }))
@@ -69,14 +78,12 @@ const Product = () => {
     setProductQueries((old) => ({ ...old, currentPage: page + 1 }));
   }, [page]);
 
-  const handleFilter = (criteria, value) => {};
-
   return (
     <div className="product-page">
       <div className="container">
         <div className="row">
           <div className="col-3">
-            <Filter />
+            <Filter productQueries={productQueries} setProductQueries={setProductQueries} />
           </div>
           <div className="col-9">
             <div className="row pe-1">
