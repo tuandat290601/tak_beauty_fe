@@ -137,9 +137,8 @@ const EditProduct = () => {
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
     if (page === PRODUCT_TYPE.PRODUCT) {
-      defaultValues.size = product?.attributes?.size || 0;
-      defaultValues.weight = product?.attributes?.weight || 0;
       defaultValues.sku = product?.sku;
+      defaultValues.region = product?.region;
     }
     const listCategories = product?.connects
       .map((item) => {
@@ -211,10 +210,7 @@ const EditProduct = () => {
       updateProductData = {
         ...updateProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
-        attributes: {
-          size: parseInt(data[ADD_PRODUCT_OBJ.SIZE]),
-          weight: parseInt(data[ADD_PRODUCT_OBJ.WEIGHT]),
-        },
+        region: data[ADD_PRODUCT_OBJ.REGION]
       };
     }
 

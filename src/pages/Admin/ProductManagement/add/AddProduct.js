@@ -89,9 +89,7 @@ const AddProduct = () => {
       createProductData = {
         ...createProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
-        attributes: {
-          region: data[ADD_PRODUCT_OBJ.REGION],
-        },
+        region: data[ADD_PRODUCT_OBJ.REGION],
       };
     }
     if (createProductData.categoryIds.length === 0) {
@@ -128,6 +126,7 @@ const AddProduct = () => {
       setSubmitStatus(SUBMIT_STATUS.ERROR);
     }
   };
+
   return (
     <div className="">
       <form onSubmit={handleSubmit(onSumbit)}>

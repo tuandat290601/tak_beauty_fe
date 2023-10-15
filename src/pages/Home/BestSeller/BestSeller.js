@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { ProductItem, SectionTitle } from '../../../components';
-
-import './BestSeller.sass';
-import { products } from '../../../helpers/data';
+import configuration from "../../../configuration";
 import { productApi } from '../../../api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMostSoldList } from '../../../features/productSlice';
+import './BestSeller.sass';
 
 const BestSeller = () => {
   const mostSoldList = useSelector(store => store.product.mostSoldList)
@@ -19,7 +18,12 @@ const BestSeller = () => {
           sortOrder: "desc"
         }
       }).then(result => {
-        dispatch(setMostSoldList(result.responseData?.rows))
+        dispatch(setMostSoldList(result.responseData?.rows?.map(item => {
+          return {
+            ...item,
+            image: [...item.image.map(img => configuration.apiConfig.imageEndPoint + img)]
+          }
+        })))
       })
     }
   }, [mostSoldList])

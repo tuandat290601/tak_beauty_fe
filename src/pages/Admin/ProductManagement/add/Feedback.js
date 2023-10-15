@@ -20,10 +20,8 @@ const Feedback = ({
     remove(index);
   }
   function handleAddSet() {
-    append({ ratingContent: "", commentContent: "" });
+    append({ userName: "", ratingContent: "", commentContent: "" });
   }
-
-  console.log(control)
 
   return (
     <div className="px-[10px] py-4 rounded-md bg-[#f9fafb] mt-2">
@@ -93,31 +91,6 @@ const Feedback = ({
     </div>
   );
 };
-const SelectType = ({
-  index = 0,
-  control,
-  setValue = () => { },
-  defaultLabel = "RATING",
-}) => {
-  const [type, setType] = useState(defaultLabel || "RATING");
-  return (
-    <Select
-      labelId="demo-select-small-label"
-      id="demo-select-small"
-      value={type}
-      label="Loại"
-      className="h-10 bg-white"
-      style={{ minWidth: 120 }}
-      control={control}
-      onChange={(e) => {
-        setValue(`feedback[${index}].type`, e.target.value);
-        setType(e.target.value);
-      }}
-    >
-      <MenuItem value={"RATING"}>Rating</MenuItem>
-      <MenuItem value={"COMMENT"}>Comment</MenuItem>
-    </Select>
-  );
-};
+
 
 export default Feedback;

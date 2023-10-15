@@ -52,8 +52,6 @@ const Detail = () => {
     }
   }, [product]);
 
-  console.log(product);
-
   return (
     <>
       {product && (

@@ -63,8 +63,6 @@ const Products = () => {
     }
   }, [show, productIsSuccess])
 
-  console.log(show)
-
   return (
     <section id="products" className="products">
       <SectionTitle title="Sản phẩm" />

@@ -30,8 +30,6 @@ const Navbar = () => {
 
   const [dropList, setDropList] = useState([])
 
-  console.log(dropList)
-
   useEffect(() => {
     if (dropList.length === 0) {
       const categories = sortCategory();

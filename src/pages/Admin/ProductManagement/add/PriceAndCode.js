@@ -220,7 +220,7 @@ const Price = ({ control, errors }) => {
         <BasicTextBox
           wrapperClass="m-0"
           control={control}
-          name={"region"}
+          name={ADD_PRODUCT_OBJ.REGION}
           errMsg={errors["region"] ? errors["region"]?.message : null}
           label={"Thương hiệu"}
           hideSubtitle={false}

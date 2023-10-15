@@ -13,22 +13,15 @@ const Product = () => {
   const [productQueries, setProductQueries] = useState({
     currentPage: 1,
     pageSize: 9,
-    filters: "type==PRODUCT",
+    filters: "",
     sortField: "discountPrice",
     sortOrder: "asc",
     categoryListIds: [],
-    region: "",
   });
   const [listProduct, setListProduct] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("discountPrice-asc");
-  const [payload, setPayload] = useState({
-    currentPage: 1,
-    pageSize: 10,
-    filters: "type==PRODUCT",
-
-  });
 
   const { data, isLoading, error, isError, isSuccess } = useQuery({
     queryKey: ["getProducts", productQueries],
@@ -36,8 +29,6 @@ const Product = () => {
       return await productApi.getProducts({ payload: productQueries, signal });
     },
   });
-
-  console.log(payload)
 
   useEffect(() => {
     // api call
@@ -123,28 +114,32 @@ const Product = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
-              {listProduct?.map((item) => (
-                <div className="col-4 p-3" key={item.id}>
-                  <ProductItem {...item} />
+            <div className="product-page-container">
+              <div className="row">
+                {
+                  listProduct && listProduct.length > 0 ? listProduct?.map((item) => (
+                    <div className="col-4 p-3" key={item.id}>
+                      <ProductItem {...item} />
+                    </div>
+                  )) : <h4 className="fs-4 text-white">Không tìm thấy sản phẩm nào</h4>
+                }
+              </div>
+              <div className="row">
+                <div className="d-flex justify-content-center">
+                  {totalPages > 1 && (
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel=">"
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={5}
+                      pageCount={totalPages}
+                      previousLabel="<"
+                      renderOnZeroPageCount={null}
+                      forcePage={page}
+                      className="pagination"
+                    />
+                  )}
                 </div>
-              ))}
-            </div>
-            <div className="row">
-              <div className="d-flex justify-content-center">
-                {totalPages > 1 && (
-                  <ReactPaginate
-                    breakLabel="..."
-                    nextLabel=">"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={5}
-                    pageCount={totalPages}
-                    previousLabel="<"
-                    renderOnZeroPageCount={null}
-                    forcePage={page}
-                    className="pagination"
-                  />
-                )}
               </div>
             </div>
           </div>
