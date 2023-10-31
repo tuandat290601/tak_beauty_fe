@@ -7,8 +7,8 @@ import { MenuItem, Select } from "@mui/material";
 
 const Feedback = ({
   control,
-  getValues = () => { },
-  setValue = () => { },
+  getValues = () => {},
+  setValue = () => {},
   errors,
 }) => {
   const { fields, append, remove } = useFieldArray({
@@ -20,7 +20,7 @@ const Feedback = ({
     remove(index);
   }
   function handleAddSet() {
-    append({ userName: "", ratingContent: "", commentContent: "" });
+    append({ username: "", rating: "", content: "" });
   }
 
   return (
@@ -35,7 +35,7 @@ const Feedback = ({
                 setValue={setValue}
                 index={index}
                 control={control}
-                name={`feedback[${index}].ratingContent`}
+                name={`feedback[${index}].username`}
                 autoComplete="off"
                 errors={
                   errors.feedback
@@ -45,12 +45,13 @@ const Feedback = ({
                 className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
+                placeHolder={"Tên người dùng"}
               />
               <BasicTextBox
                 setValue={setValue}
                 index={index}
                 control={control}
-                name={`feedback[${index}].commentContent`}
+                name={`feedback[${index}].content`}
                 autoComplete="off"
                 errors={
                   errors.feedback
@@ -60,6 +61,23 @@ const Feedback = ({
                 className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
+                placeHolder={"Đánh giá sao trên thang 5"}
+              />
+              <BasicTextBox
+                setValue={setValue}
+                index={index}
+                control={control}
+                name={`feedback[${index}].rating`}
+                autoComplete="off"
+                errors={
+                  errors.feedback
+                    ? errors.feedback[index]?.content?.message
+                    : null
+                }
+                className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
+                focus:border-black focus:font-medium focus:text-black transition-all"
+                wrapperClass="w-full"
+                placeHolder={"Bình luận"}
               />
 
               <button
@@ -91,6 +109,5 @@ const Feedback = ({
     </div>
   );
 };
-
 
 export default Feedback;

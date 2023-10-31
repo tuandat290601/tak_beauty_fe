@@ -29,22 +29,21 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setWidthScreen(window.innerWidth))
+    dispatch(setWidthScreen(window.innerWidth));
     // eslint-disable-next-line
   }, []);
 
-
-  const handleWindowResize = useCallback(event => {
-    dispatch(setWidthScreen(window.innerWidth))
+  const handleWindowResize = useCallback((event) => {
+    dispatch(setWidthScreen(window.innerWidth));
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
+    window.addEventListener("resize", handleWindowResize);
     return () => {
-      window.removeEventListener('resize', handleWindowResize);
+      window.removeEventListener("resize", handleWindowResize);
     };
   }, [handleWindowResize]);
   return (
@@ -55,12 +54,7 @@ const App = () => {
         <BrowserRouter>
           <Suspense fallback={"Loading..."}>
             <Routes>
-              <Route path="/" element={<StandardLayout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/khoa-hoc" element={<Course />} />
-                <Route path="/san-pham" element={<Product />} />
-                <Route path="/san-pham/:productId" element={<Detail />} />
-              </Route>
+              <Route path="/" element={<Admin />} />
               <Route path="/admin/*" element={<Admin />} />
               <Route path="/users/login" element={<Login />} />
             </Routes>
