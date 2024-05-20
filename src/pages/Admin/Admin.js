@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SideMenu from "./SideMenu/SideMenu";
 import Dashboard from "./Dashboard/Dashboard";
 import Content from "./Content/Content";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, redirect, useNavigate } from "react-router-dom";
 import "./Admin.scss";
 import Article from "./Article/Article";
 import Feedback from "./Feedback/Feedback";
@@ -22,8 +22,25 @@ import { ProductManagement } from "./ProductManagement/ProductManagement";
 import { PAGE_PATH } from "../../configuration/routeConfig";
 import AddProduct from "./ProductManagement/add/AddProduct";
 import EditProduct from "./ProductManagement/edit/EditProduct";
+import { getToken } from "../../helpers/util";
 
 const Admin = () => {
+  const [tokenFromSession, setTokenFromSession] = useState(null);
+  const token = getToken();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      setTokenFromSession(token);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!tokenFromSession && !token) {
+      navigate("/users/login");
+    }
+  }, [tokenFromSession]);
+
   return (
     <div id="admin">
       <SideMenu />

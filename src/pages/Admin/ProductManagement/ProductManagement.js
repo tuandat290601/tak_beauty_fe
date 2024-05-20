@@ -1,14 +1,3 @@
-import React, { useEffect, useState } from "react";
-import "./ProductManagement.scss";
-import HeaderMainPage from "../Header/HeaderMainPage";
-import BasicButton from "../../../components/Button/BasicButton";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { MdEdit } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
-import { BsSearch } from "react-icons/bs";
-import Table from "../../../components/Table/Table";
-import BasicIconButton from "../../../components/Button/BasicIconButton";
-import BasicPagination from "../../../components/Pagination/BasicPagination";
 import {
   Checkbox,
   Divider,
@@ -17,23 +6,33 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
-import { useNavigate } from "react-router-dom";
-import productApi from "../../../api/productApi";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useCategories from "../../../hooks/Categories/useCategories";
-import useMenu from "../../../hooks/useMenu";
-import { TableItem, TableItemSkeleton } from "./TableItem";
-import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
-import usePopup from "../../../hooks/usePopup";
+import React, { useEffect, useState } from "react";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
+import { FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { reactQueryKey } from "../../../configuration/reactQueryKey";
+import productApi from "../../../api/productApi";
 import { PRODUCT_TYPE } from "../../../common/constant";
+import BasicButton from "../../../components/Button/BasicButton";
+import BasicIconButton from "../../../components/Button/BasicIconButton";
+import { TableDropdown } from "../../../components/Dropdown/TableDropdown";
+import BasicPagination from "../../../components/Pagination/BasicPagination";
+import ConfirmPopup from "../../../components/Popup/ConfirmPopup";
+import Table from "../../../components/Table/Table";
 import { IMG_PATH } from "../../../configuration/imagePath";
+import { reactQueryKey } from "../../../configuration/reactQueryKey";
 import {
   navigateToAddBaseOnProductType,
   productTypeToString,
 } from "../../../helpers/util";
+import useCategories from "../../../hooks/Categories/useCategories";
+import useMenu from "../../../hooks/useMenu";
+import usePopup from "../../../hooks/usePopup";
+import HeaderMainPage from "../Header/HeaderMainPage";
+import "./ProductManagement.scss";
+import { TableItem, TableItemSkeleton } from "./TableItem";
 
 let page;
 if (window.location.href.includes("product")) {
@@ -269,7 +268,10 @@ export const ProductManagement = () => {
       <div className="ui-layout">
         <div className="py-[25px]">
           <h1 className="text-[28px] text-blue-950 font-semibold">
-            Danh sách {productTypeToString(page)}
+            Danh sách{" "}
+            {page === PRODUCT_TYPE.COURSE
+              ? "bài viết"
+              : productTypeToString(page)}
           </h1>
         </div>
         <div>
@@ -347,11 +349,6 @@ export const ProductManagement = () => {
                   ))
               ) : listProduct.length === 0 ? (
                 <div className="flex flex-col items-center justify-center my-10 gap-y-10">
-                  <img
-                    src={IMG_PATH.EMPTY_BOX}
-                    alt="Empty img"
-                    className="w-40"
-                  />
                   <h4 className="font-medium text-2xl">
                     Không tìm thấy kết quả nào
                   </h4>
@@ -401,8 +398,9 @@ export const ProductManagement = () => {
                       handleCheck={handleCheckItem}
                       index={index}
                       page={page}
-                      className={`${index % 2 === 0 ? "bg-gray-100" : ""
-                        } hover:bg-gray-200`}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-100" : ""
+                      } hover:bg-gray-200`}
                       handleDeleteProduct={handleDeleteProduct}
                     ></TableItem>
                   ))}
@@ -416,8 +414,9 @@ export const ProductManagement = () => {
               {pageSizeOption.map((item) => (
                 <BasicIconButton
                   key={item.size}
-                  className={`${pageSize === item.size ? "!bg-blue-500 text-white" : ""
-                    } `}
+                  className={`${
+                    pageSize === item.size ? "!bg-blue-500 text-white" : ""
+                  } `}
                   onClick={() => handleSetPageSize(item)}
                 >
                   {item.size}

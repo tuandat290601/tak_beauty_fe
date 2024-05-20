@@ -1,4 +1,4 @@
 export const IMG_PATH = {
-  NO_IMG: "/image/no_image.png",
-  EMPTY_BOX: "/images/empty/empty-box.png",
+  NO_IMG: "/images/file-1716213075887-406384819.jpg",
+  EMPTY_BOX: "/images/file-1716213075887-406384819.jpg",
 };

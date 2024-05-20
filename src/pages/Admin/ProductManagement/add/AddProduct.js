@@ -79,7 +79,7 @@ const AddProduct = () => {
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
       rating: data[ADD_PRODUCT_OBJ.RATING],
-      image: image,
+      image: image.join(";"),
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
       categoryIds: listCategoriesId,
@@ -90,6 +90,7 @@ const AddProduct = () => {
         ...createProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
         region: data[ADD_PRODUCT_OBJ.REGION],
+        is_active: true,
       };
     }
     if (createProductData.categoryIds.length === 0) {

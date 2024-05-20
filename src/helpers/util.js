@@ -1,4 +1,5 @@
 import { PRODUCT_TYPE } from "../common/constant";
+import Config from "../configuration";
 
 // Product
 export const productTypeToString = (type) => {
@@ -51,4 +52,12 @@ export const navigateToEditBaseOnProductType = (type, id) => {
     default:
       return "";
   }
+};
+
+export const getToken = () => {
+  const auth = {
+    ...JSON.parse(sessionStorage.getItem(Config.storageKey.auth)),
+  };
+
+  return auth.token;
 };

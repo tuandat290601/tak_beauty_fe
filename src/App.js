@@ -1,20 +1,19 @@
-import React, { Suspense, useCallback, useEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { Course, Detail, Home, Product, Admin, Login } from "./pages";
 import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "react-datetime/css/react-datetime.css";
-import "./App.sass";
-import StandardLayout from "./components/Layout/StandardLayout";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ToastContainer } from "react-toastify";
+import React, { Suspense, useCallback, useEffect } from "react";
+import "react-datetime/css/react-datetime.css";
 import { useDispatch } from "react-redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import "./App.sass";
 import { setWidthScreen } from "./features/pageControlSlice";
+import { Admin, Login } from "./pages";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({

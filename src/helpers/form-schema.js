@@ -95,7 +95,7 @@ export const loginSchema = yup.object({
   [LOGIN_OBJ.EMAIL]: yup
     .string()
     .trim()
-    .email("Email không hợp lệ")
+    // .email("Email không hợp lệ")
     .required("Vui lòng nhập email"),
   [LOGIN_OBJ.PASSWORD]: yup.string().trim().required("Vui lòng nhập mật khẩu"),
 });

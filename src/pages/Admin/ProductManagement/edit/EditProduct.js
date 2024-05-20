@@ -106,7 +106,7 @@ const EditProduct = () => {
       const res = await productApi.getProductDetails(id);
       if (res.status === "success") {
         const { image = [] } = res.responseData.rows[0];
-        const formatImange = image?.map((item) => ({ name: item }));
+        const formatImange = image?.split(";").map((item) => ({ name: item }));
         setSelectedImage(formatImange);
         setProduct({ ...res.responseData.rows[0], image: formatImange });
       }
@@ -200,17 +200,19 @@ const EditProduct = () => {
       originPrice: data[ADD_PRODUCT_OBJ.ORIGIN_PRICE],
       discountPrice: data[ADD_PRODUCT_OBJ.DISCOUNT_PRICE],
       rating: data[ADD_PRODUCT_OBJ.RATING],
-      image: image !== "" ? image : data[ADD_PRODUCT_OBJ.IMAGE],
+      image:
+        image !== "" ? image.join(";") : data[ADD_PRODUCT_OBJ.IMAGE].join(";"),
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
       categoryIds: listCategoriesId,
       type: page,
+      is_active: true,
     };
     if (page === PRODUCT_TYPE.PRODUCT) {
       updateProductData = {
         ...updateProductData,
         sku: data[ADD_PRODUCT_OBJ.SKU],
-        region: data[ADD_PRODUCT_OBJ.REGION]
+        region: data[ADD_PRODUCT_OBJ.REGION],
       };
     }
 

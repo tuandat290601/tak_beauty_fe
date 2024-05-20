@@ -19,9 +19,6 @@ export const NavBar = () => {
                   <div className="menu-arrow">
                     <div></div>
                   </div>
-                  <div className="menu-image">
-                    <img alt="menu-item" src={item.imgSrc} />
-                  </div>
                   <div className="menu-name">{item.name}</div>
                 </Link>
                 {item.subMenu && (

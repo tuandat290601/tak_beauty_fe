@@ -12,7 +12,7 @@ import { BasicEditablePopup, BasicTag } from "../../../components";
 import BasicIconButton from "../../../components/Button/BasicIconButton";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PRODUCT_TYPE, SUBMIT_STATUS } from "../../../common/constant";
 import { productApi } from "../../../api";
 import { toast } from "react-toastify";
@@ -67,13 +67,14 @@ export const TableItem = ({
   const [hoverRef, isHovered] = useHover();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const handleAddFavTag = () => { };
-  const handleAddHotSellTag = () => { };
-  const handleAddOutStandingTag = () => { };
+  const handleAddFavTag = () => {};
+  const handleAddHotSellTag = () => {};
+  const handleAddOutStandingTag = () => {};
   const [updateUpdateOriginPriceStatus, setUpdateOriginPriceStatus] =
     useState();
   const [updateUpdateDiscountPriceStatus, setUpdateDiscountPriceStatus] =
     useState();
+
   const handleUpdateDiscountPrice = async (editPrice) => {
     setUpdateDiscountPriceStatus(SUBMIT_STATUS.LOADING);
     if (editPrice > parseInt(product.originPrice)) {
@@ -142,7 +143,7 @@ export const TableItem = ({
         <img
           src={
             product?.image?.length > 0 && product?.image[0] !== ""
-              ? Config.apiConfig.imageEndPoint + product?.image[0]
+              ? Config.apiConfig.imageEndPoint + product?.image.split(";")[0]
               : IMG_PATH.NO_IMG
           }
           alt="thumb"
@@ -167,8 +168,9 @@ export const TableItem = ({
           </span>
         </div>
         <div
-          className={`flex gap-2 justify-start items-center ${isHovered ? "visible" : "invisible"
-            }`}
+          className={`flex gap-2 justify-start items-center ${
+            isHovered ? "visible" : "invisible"
+          }`}
         >
           {page === PRODUCT_TYPE.PRODUCT && (
             <h5 className="text-xs text-gray-400">
@@ -196,9 +198,10 @@ export const TableItem = ({
                   <BasicTag label={item?.category?.title || ""} />
                 ))}
               <BasicTag
-                label={`+${product?.connects?.filter((item) => item.categoryId !== null)
+                label={`+${
+                  product?.connects?.filter((item) => item.categoryId !== null)
                     .length - 3
-                  }`}
+                }`}
               />
             </>
           ) : (

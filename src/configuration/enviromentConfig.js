@@ -1,12 +1,11 @@
 const enviromentConfig = {
-    development: {
-        endPoint: 'https://ckwhite-d3ov6wzrda-as.a.run.app/api/v1.0',
-        imageEndPoint: 'https://ckwhite-d3ov6wzrda-as.a.run.app'
-    },
-    production: {
-        endPoint: 'https://ckwhite-d3ov6wzrda-as.a.run.app/api/v1.0',
-        imageEndPoint: 'https://ckwhite-d3ov6wzrda-as.a.run.app/'
-    },
-
+  development: {
+    endPoint: "http://112.78.3.135:3000/api/v1.0",
+    imageEndPoint: "http://112.78.3.135:3000",
+  },
+  production: {
+    endPoint: "http://112.78.3.135:3000/api/v1.0",
+    imageEndPoint: "http://112.78.3.135:3000",
+  },
 };
 export default enviromentConfig;
