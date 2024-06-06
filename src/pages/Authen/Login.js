@@ -38,7 +38,7 @@ const Login = () => {
             token: resp?.responseData?.accessToken,
           })
         );
-        navigate(`/admin${PAGE_PATH.ADMIN_DASHBOARD}`);
+        navigate(`${PAGE_PATH.PRODUCT_MANAGEMENT}`);
       }
     } catch (error) {
       switch (error.response?.status) {

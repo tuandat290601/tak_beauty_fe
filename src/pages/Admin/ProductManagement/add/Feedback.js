@@ -61,7 +61,7 @@ const Feedback = ({
                 className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
-                placeHolder={"Đánh giá sao trên thang 5"}
+                placeHolder={"Bình luận"}
               />
               <BasicTextBox
                 setValue={setValue}
@@ -77,7 +77,7 @@ const Feedback = ({
                 className="w-full px-10 py-2 !pr-10 outline-none border rounded-md border-slate-400
                 focus:border-black focus:font-medium focus:text-black transition-all"
                 wrapperClass="w-full"
-                placeHolder={"Bình luận"}
+                placeHolder={"Đánh giá"}
               />
 
               <button

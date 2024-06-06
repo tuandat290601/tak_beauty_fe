@@ -82,6 +82,7 @@ const AddProduct = () => {
       image: image.join(";"),
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
+      meta: data[ADD_PRODUCT_OBJ.META],
       categoryIds: listCategoriesId,
       type: page,
     };
@@ -140,6 +141,17 @@ const AddProduct = () => {
               getValues={getValues}
               setValue={setValue}
             ></Tab>
+
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <BasicTextBox
+                wrapperClass="m-0"
+                control={control}
+                name={ADD_PRODUCT_OBJ.META}
+                label={"Thêm thẻ meta"}
+                hideSubtitle
+                type="text"
+              />
+            </div>
 
             <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
               <BasicTextBox

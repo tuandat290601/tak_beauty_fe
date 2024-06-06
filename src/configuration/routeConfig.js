@@ -38,7 +38,6 @@ const PAGE_PATH = {
       : `/service/service-management/edit/${id}`,
   // Admin
   ADMIN: ADMIN_BASE,
-  ADMIN_DASHBOARD: "/dashboard",
 };
 
 export { PAGE_PATH };

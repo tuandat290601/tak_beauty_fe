@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import SideMenu from "./SideMenu/SideMenu";
-import Dashboard from "./Dashboard/Dashboard";
 import Content from "./Content/Content";
 import { Routes, Route, redirect, useNavigate } from "react-router-dom";
 import "./Admin.scss";
@@ -46,8 +45,6 @@ const Admin = () => {
       <SideMenu />
       <div className="page-content">
         <Routes>
-          <Route path={PAGE_PATH.HOME} element={<Dashboard />} />
-          <Route path={PAGE_PATH.ADMIN_DASHBOARD} element={<Dashboard />} />
           <Route path="/content" element={<Content />} />
           <Route path="/service-pack" element={<ServicePack />} />
           <Route path="/services" element={<Services />} />

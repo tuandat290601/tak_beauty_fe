@@ -187,6 +187,7 @@ const EditProduct = () => {
         courseId: product.id,
       }));
       const res = await feedbackApi.addFeedback(formatFeedback);
+      console.log(res);
       if (res.status === "fail") toast.error("Thêm feedback không thành công");
     }
     const { defaultImages, newImages } = getDefaultAndNewImage(selectedImage);
@@ -204,6 +205,7 @@ const EditProduct = () => {
         image !== "" ? image.join(";") : data[ADD_PRODUCT_OBJ.IMAGE].join(";"),
       description: data[ADD_PRODUCT_OBJ.DESCRIPTION],
       detail: data[ADD_PRODUCT_OBJ.DETAIL],
+      meta: data[ADD_PRODUCT_OBJ.META],
       categoryIds: listCategoriesId,
       type: page,
       is_active: true,
@@ -258,6 +260,17 @@ const EditProduct = () => {
               <BasicTextBox
                 wrapperClass="m-0"
                 control={control}
+                name={ADD_PRODUCT_OBJ.META}
+                label={"Thêm thẻ meta"}
+                hideSubtitle
+                type="text"
+              />
+            </div>
+
+            <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
+              <BasicTextBox
+                wrapperClass="m-0"
+                control={control}
                 name={ADD_PRODUCT_OBJ.RATING}
                 errMsg={
                   errors[ADD_PRODUCT_OBJ.RATING]
@@ -270,6 +283,7 @@ const EditProduct = () => {
                 defaultValue="5"
               />
             </div>
+
             <div className="bg-white px-[10px] pt-3 pb-4 rounded-md">
               <MultipleImageTextBox
                 haveLabel
