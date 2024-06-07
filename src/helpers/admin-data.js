@@ -55,9 +55,8 @@ export const adminNavbar = [
       { name: "Sản phẩm", path: "/admin/product/product-management" },
       { name: "Bài viết", path: "/admin/course/course-management" },
       { name: "Dịch vụ", path: "/admin/service/service-management" },
-      { name: "danh mục", path: "products/products-categories" },
-      { name: "thuộc tính", path: "#" },
-      { name: "cài đặt", path: "#" },
+      { name: "Danh mục", path: "products/products-categories" },
+      { name: "Quản lý đơn hàng", path: "/admin/cart/cart-management" },
     ],
   },
   // {

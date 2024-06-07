@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from "react";
-import SideMenu from "./SideMenu/SideMenu";
-import Content from "./Content/Content";
-import { Routes, Route, redirect, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { PAGE_PATH } from "../../configuration/routeConfig";
+import { getToken } from "../../helpers/util";
 import "./Admin.scss";
 import Article from "./Article/Article";
-import Feedback from "./Feedback/Feedback";
-import Product from "./Product/Product";
-import Order from "./Order/Order";
-import Library from "./Library/Library";
-import Theme from "./Theme/Theme";
-import StarRating from "./StarRating/StarRating";
-import Marketing from "./Marketing/Marketing";
-import Services from "./Services/Services";
-import ServicePack from "./ServicePack/ServicePack";
-import Member from "./Member/Member";
-import System from "./System/System";
-import ProductsCategories from "./Categories/ProductsCategories";
+import Cart from "./Cart/Cart";
 import CategoryEdit from "./Categories/Edit/CategoryEdit";
+import ProductsCategories from "./Categories/ProductsCategories";
+import Content from "./Content/Content";
+import Feedback from "./Feedback/Feedback";
+import Library from "./Library/Library";
+import Marketing from "./Marketing/Marketing";
+import Member from "./Member/Member";
+import Order from "./Order/Order";
+import Product from "./Product/Product";
 import { ProductManagement } from "./ProductManagement/ProductManagement";
-import { PAGE_PATH } from "../../configuration/routeConfig";
 import AddProduct from "./ProductManagement/add/AddProduct";
 import EditProduct from "./ProductManagement/edit/EditProduct";
-import { getToken } from "../../helpers/util";
+import ServicePack from "./ServicePack/ServicePack";
+import Services from "./Services/Services";
+import SideMenu from "./SideMenu/SideMenu";
+import StarRating from "./StarRating/StarRating";
+import System from "./System/System";
+import Theme from "./Theme/Theme";
 
 const Admin = () => {
   const [tokenFromSession, setTokenFromSession] = useState(null);
@@ -51,6 +52,7 @@ const Admin = () => {
           <Route path="/article" element={<Article />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/cart/cart-management" element={<Cart />} />
 
           <Route path={PAGE_PATH.PRODUCTS_CATEGORIES.BASE}>
             <Route index={true} element={<ProductsCategories />} />
@@ -77,6 +79,7 @@ const Admin = () => {
           <Route path={PAGE_PATH.ADD_SERVICE} element={<AddProduct />} />
           <Route path={PAGE_PATH.EDIT_COURSE()} element={<EditProduct />} />
           <Route path={PAGE_PATH.ADD_COURSE} element={<AddProduct />} />
+          <Route path={PAGE_PATH.EDIT_CART()} element={<AddProduct />} />
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
           <Route path="/theme" element={<Theme />} />

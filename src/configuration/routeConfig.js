@@ -38,6 +38,13 @@ const PAGE_PATH = {
       : `/service/service-management/edit/${id}`,
   // Admin
   ADMIN: ADMIN_BASE,
+
+  // Cart
+  CART_MANAGEMENT: "/cart/cart-management",
+  EDIT_CART: (id) =>
+    id === undefined
+      ? `/service/service-management/edit/:id`
+      : `/service/service-management/edit/${id}`,
 };
 
 export { PAGE_PATH };
