@@ -45,6 +45,9 @@ const PAGE_PATH = {
     id === undefined
       ? `/service/service-management/edit/:id`
       : `/service/service-management/edit/${id}`,
+
+  // Banner
+  BANNER_MANAGEMENT: "/banner/banner-management",
 };
 
 export { PAGE_PATH };

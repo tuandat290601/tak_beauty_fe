@@ -107,6 +107,7 @@ const EditProduct = () => {
       if (res.status === "success") {
         const { image = [] } = res.responseData.rows[0];
         const formatImange = image?.split(";").map((item) => ({ name: item }));
+        console.log(formatImange);
         setSelectedImage(formatImange);
         setProduct({ ...res.responseData.rows[0], image: formatImange });
       }

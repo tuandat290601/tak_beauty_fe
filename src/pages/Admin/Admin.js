@@ -4,6 +4,7 @@ import { PAGE_PATH } from "../../configuration/routeConfig";
 import { getToken } from "../../helpers/util";
 import "./Admin.scss";
 import Article from "./Article/Article";
+import Banners from "./Banners/Banners";
 import Cart from "./Cart/Cart";
 import CategoryEdit from "./Categories/Edit/CategoryEdit";
 import ProductsCategories from "./Categories/ProductsCategories";
@@ -80,6 +81,8 @@ const Admin = () => {
           <Route path={PAGE_PATH.EDIT_COURSE()} element={<EditProduct />} />
           <Route path={PAGE_PATH.ADD_COURSE} element={<AddProduct />} />
           <Route path={PAGE_PATH.EDIT_CART()} element={<AddProduct />} />
+          <Route path={PAGE_PATH.BANNER_MANAGEMENT} element={<Banners />} />
+
           <Route path="/order" element={<Order />} />
           <Route path="/library" element={<Library />} />
           <Route path="/theme" element={<Theme />} />

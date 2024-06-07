@@ -58,8 +58,13 @@ const MultipleImageTextBox = ({
       </div>
       <div className="grid grid-cols-5 gap-2">
         {files?.length > 0 &&
-          files?.map((item) => (
-            <ImageItem item={item} checked={checked} setChecked={setChecked} />
+          files?.map((item, index) => (
+            <ImageItem
+              item={item}
+              checked={checked}
+              setChecked={setChecked}
+              key={Date.now() + index}
+            />
           ))}
         <label
           htmlFor={name}
