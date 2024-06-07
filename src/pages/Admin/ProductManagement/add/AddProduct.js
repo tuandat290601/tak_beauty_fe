@@ -85,6 +85,7 @@ const AddProduct = () => {
       meta: data[ADD_PRODUCT_OBJ.META],
       categoryIds: listCategoriesId,
       type: page,
+      sold: data[ADD_PRODUCT_OBJ.SOLD] ?? 0,
     };
     if (page === PRODUCT_TYPE.PRODUCT) {
       createProductData = {
@@ -150,6 +151,15 @@ const AddProduct = () => {
                 label={"Thêm thẻ meta"}
                 hideSubtitle
                 type="text"
+              />
+
+              <BasicTextBox
+                wrapperClass="m-0"
+                control={control}
+                name={ADD_PRODUCT_OBJ.SOLD}
+                label={"Số lượng đã bán"}
+                hideSubtitle
+                type="number"
               />
             </div>
 

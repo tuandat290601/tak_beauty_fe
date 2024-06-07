@@ -24,6 +24,7 @@ export const ADD_PRODUCT_OBJ = {
   FEEDBACK: "feedback",
   REGION: "region",
   META: "meta",
+  SOLD: "sold",
 };
 
 // ====== Authen ======

@@ -136,6 +136,8 @@ const EditProduct = () => {
     defaultValues.image = product?.image;
     defaultValues.originPrice = parseInt(product?.originPrice);
     defaultValues.discountPrice = parseInt(product?.discountPrice);
+    defaultValues.meta = product?.meta;
+    defaultValues.sold = parseInt(product?.sold);
     if (page === PRODUCT_TYPE.PRODUCT) {
       defaultValues.sku = product?.sku;
       defaultValues.region = product?.region;
@@ -209,6 +211,7 @@ const EditProduct = () => {
       categoryIds: listCategoriesId,
       type: page,
       is_active: true,
+      sold: data[ADD_PRODUCT_OBJ.SOLD] ?? 0,
     };
     if (page === PRODUCT_TYPE.PRODUCT) {
       updateProductData = {
@@ -264,6 +267,15 @@ const EditProduct = () => {
                 label={"Thêm thẻ meta"}
                 hideSubtitle
                 type="text"
+              />
+
+              <BasicTextBox
+                wrapperClass="m-0"
+                control={control}
+                name={ADD_PRODUCT_OBJ.SOLD}
+                label={"Số lượng đã bán"}
+                hideSubtitle
+                type="number"
               />
             </div>
 
