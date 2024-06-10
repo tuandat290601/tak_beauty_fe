@@ -14,7 +14,7 @@ const bannerApi = {
   },
 
   deleteBanners: (data) => {
-    return axiosFormData.delete(`/banners/?filters=id==${data.id}`);
+    return axiosFormData.delete(`/banners?filters=id==${data.id}`);
   },
 };
 

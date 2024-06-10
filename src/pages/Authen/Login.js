@@ -38,7 +38,7 @@ const Login = () => {
             token: resp?.responseData?.accessToken,
           })
         );
-        navigate(`/admin/${PAGE_PATH.PRODUCT_MANAGEMENT}`);
+        navigate(`/admin${PAGE_PATH.PRODUCT_MANAGEMENT}`);
       }
     } catch (error) {
       switch (error.response?.status) {

@@ -21,6 +21,7 @@ axiosClient.interceptors.request.use(async (config) => {
       ...JSON.parse(sessionStorage.getItem(Config.storageKey.auth)),
     };
     if (auth.token) {
+      console.log(auth.token);
       config.headers.Authorization = `Bearer ${auth.token}`;
     }
   }

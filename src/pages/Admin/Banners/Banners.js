@@ -8,6 +8,7 @@ import HeaderMainPage from "../Header/HeaderMainPage";
 import bannerApi from "../../../api/bannerApi";
 import { toast } from "react-toastify";
 import { emptyStringToNull } from "../../../helpers/ObjectUtil";
+import { fileApi } from "../../../api";
 
 const Banners = () => {
   const {
@@ -39,11 +40,9 @@ const Banners = () => {
         emptyStringToNull({ image: img, sortOrder: index + 1 })
       );
 
-      const res = await bannerApi.uploadBanner(data);
+      await bannerApi.uploadBanner(data);
 
-      if (res.status === "success") {
-        toast.success("Thêm banner thành công");
-      }
+      toast.success("Cập nhật banner thành công");
     } catch (error) {
       console.error(error);
     }

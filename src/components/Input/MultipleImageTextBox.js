@@ -4,6 +4,7 @@ import { Checkbox } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import Config from "../../configuration";
+import { fileApi } from "../../api";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const MultipleImageTextBox = ({
   name = "upload",
@@ -22,6 +23,10 @@ const MultipleImageTextBox = ({
   const files = Array.from(selectedImage);
   const onDelete = () => {
     const filter = files.filter((item) => !checked.includes(item.name));
+    console.log(checked);
+    checked.forEach((img) => {
+      fileApi.deleteFile(img).then((res) => console.log(res));
+    });
     setSelectedImage(filter);
     setChecked([]);
   };

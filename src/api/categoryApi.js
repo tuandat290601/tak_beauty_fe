@@ -9,7 +9,7 @@ const categoryApi = {
 
   getCategoryById: (id) => {
     const url = `/categories/?filters=id==${id}`;
-    return axiosClient.get(url)
+    return axiosClient.get(url);
   },
 
   postCategory: (payload = [{}]) => {
