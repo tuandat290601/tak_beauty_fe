@@ -20,7 +20,7 @@ const Feedback = ({
     remove(index);
   }
   function handleAddSet() {
-    append({ username: "", rating: "", content: "" });
+    append({ username: "", rating: 0, content: "" });
   }
 
   return (

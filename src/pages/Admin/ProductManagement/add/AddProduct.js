@@ -159,6 +159,7 @@ const AddProduct = () => {
                 name={ADD_PRODUCT_OBJ.SOLD}
                 label={"Số lượng đã bán"}
                 hideSubtitle
+                defaultValue="0"
                 type="number"
               />
             </div>
