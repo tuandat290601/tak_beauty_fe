@@ -5,7 +5,7 @@ import HeaderMainPage from "../Header/HeaderMainPage";
 
 import { Tooltip } from "@mui/material";
 import { IoMdEye, IoMdTrash } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BasicIconButton from "../../../components/Button/BasicIconButton";
 import Table from "../../../components/Table/Table";
 import "../ProductManagement/ProductManagement.scss";
@@ -13,12 +13,16 @@ import "../ProductManagement/ProductManagement.scss";
 import { vi } from "date-fns/locale";
 import { formatDistance, parseISO } from "date-fns";
 import axiosClient from "../../../api/axiosClient";
-const Cart = () => {
-  const [carts, setCarts] = useState([]);
+import CartItem from "./CartItem";
+
+const CartDetail = () => {
+  const [cart, setCart] = useState([]);
+  const [formatted, setFormatted] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
   const getBackground = (cart) => {
-    switch (cart.status.name) {
-      case "Đang chờ": {
+    switch (cart.status) {
+      case "Mới": {
         return "bg-sky-200";
       }
       case "Đã liên hệ": {
@@ -34,10 +38,21 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    axiosClient.get("/cart?sortOrder=desc&sortField=createdAt").then((res) => {
-      setCarts(res.responseData.rows);
+    axiosClient.get("/cart?filters=id==" + id).then((res) => {
+      setCart(res.responseData.rows[0]);
     });
   }, []);
+
+  useEffect(() => {
+    if (cart && typeof cart.connects === "object" && formatted === false) {
+      const a = cart.connects;
+      setCart({
+        ...cart,
+        connects: [{ ...a }],
+      });
+      setFormatted(true);
+    }
+  }, [cart, formatted]);
 
   const getDate = (cart) => {
     console.log(Date(Date.now), Date(cart.createdAt));
@@ -51,13 +66,6 @@ const Cart = () => {
     );
 
     return compareTwoDate;
-  };
-
-  const handleDelete = (id) => {
-    console.log(id);
-    axiosClient
-      .delete("/cart?filters=id==" + id)
-      .then((res) => console.log(res));
   };
 
   return (
@@ -76,14 +84,14 @@ const Cart = () => {
       <div className="ui-layout">
         <div className="py-[25px]">
           <h1 className="text-[28px] text-blue-950 font-semibold">
-            Danh sách đơn hàng
+            Chi tiết đơn hàng
           </h1>
         </div>
         <div>
           <Table>
             <thead></thead>
             <tbody>
-              {carts?.length === 0 ? (
+              {cart?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center my-10 gap-y-10">
                   <h4 className="font-medium text-2xl">
                     Không tìm thấy kết quả nào
@@ -92,48 +100,15 @@ const Cart = () => {
               ) : (
                 <>
                   <tr className="sticky z-9 shadow-md">
-                    <th>Mã đơn hàng</th>
-                    <th>Khách hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Ngày tạo</th>
-                    <th>Trạng thái</th>
-                    <th></th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
                   </tr>
-                  {carts.map((item, index) => {
-                    const bg = getBackground(item);
-                    const date = getDate(item);
-                    return (
-                      <tr key={item.id.toString().split("-")[0]}>
-                        <td className="!py-[10px] !px-[14px]">
-                          {item.id.toString().split("-")[0]}
-                        </td>
-                        <td>{item.name}</td>
-                        <td>{item.phone}</td>
-                        <td>{date}</td>
-                        <td>
-                          <span className={`${bg + " px-2 py-0.5 rounded"} `}>
-                            {item.status.name}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="flex gap-1">
-                            <Tooltip title="Xem chi tiết" arrow placement="top">
-                              <BasicIconButton
-                                className="!bg-blue-500"
-                                handleOnClick={() => {
-                                  navigate(
-                                    `/admin/cart/cart-management/edit/${item.id}`
-                                  );
-                                }}
-                              >
-                                <IoMdEye color="white"></IoMdEye>
-                              </BasicIconButton>
-                            </Tooltip>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {Array.isArray(cart?.connects) &&
+                    cart.connects.map((item, index) => {
+                      return <CartItem key={item.id} {...item} />;
+                    })}
                 </>
               )}
             </tbody>
@@ -144,4 +119,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default CartDetail;

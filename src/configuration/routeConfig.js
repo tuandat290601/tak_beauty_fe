@@ -43,8 +43,8 @@ const PAGE_PATH = {
   CART_MANAGEMENT: "/cart/cart-management",
   EDIT_CART: (id) =>
     id === undefined
-      ? `/service/service-management/edit/:id`
-      : `/service/service-management/edit/${id}`,
+      ? `/cart/cart-management/edit/:id`
+      : `/cart/cart-management/edit/${id}`,
 
   // Banner
   BANNER_MANAGEMENT: "/banner/banner-management",

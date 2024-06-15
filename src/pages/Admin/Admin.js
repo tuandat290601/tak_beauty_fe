@@ -24,6 +24,7 @@ import SideMenu from "./SideMenu/SideMenu";
 import StarRating from "./StarRating/StarRating";
 import System from "./System/System";
 import Theme from "./Theme/Theme";
+import CartDetail from "./Cart/CartDetail";
 
 const Admin = () => {
   const [tokenFromSession, setTokenFromSession] = useState(null);
@@ -80,7 +81,7 @@ const Admin = () => {
           <Route path={PAGE_PATH.ADD_SERVICE} element={<AddProduct />} />
           <Route path={PAGE_PATH.EDIT_COURSE()} element={<EditProduct />} />
           <Route path={PAGE_PATH.ADD_COURSE} element={<AddProduct />} />
-          <Route path={PAGE_PATH.EDIT_CART()} element={<AddProduct />} />
+          <Route path={PAGE_PATH.EDIT_CART()} element={<CartDetail />} />
           <Route path={PAGE_PATH.BANNER_MANAGEMENT} element={<Banners />} />
 
           <Route path="/order" element={<Order />} />
