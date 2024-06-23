@@ -3,25 +3,23 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import BasicButton from "../../../components/Button/BasicButton";
 import HeaderMainPage from "../Header/HeaderMainPage";
 
-import { Tooltip } from "@mui/material";
-import { IoMdEye, IoMdTrash } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
-import BasicIconButton from "../../../components/Button/BasicIconButton";
 import Table from "../../../components/Table/Table";
 import "../ProductManagement/ProductManagement.scss";
-
 import { vi } from "date-fns/locale";
-import { formatDistance, parseISO } from "date-fns";
+import { format, formatDistance, parseISO } from "date-fns";
+import { toast } from "react-toastify";
 import axiosClient from "../../../api/axiosClient";
 import CartItem from "./CartItem";
+import parse from "date-fns/parse";
 
 const CartDetail = () => {
   const [cart, setCart] = useState([]);
-  const [formatted, setFormatted] = useState(false);
+  const [statusList, setStatusList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
   const getBackground = (cart) => {
-    switch (cart.status) {
+    switch (cart?.status?.name) {
       case "Mới": {
         return "bg-sky-200";
       }
@@ -31,42 +29,56 @@ const CartDetail = () => {
       case "Đã thanh toán": {
         return "bg-emerald-200";
       }
-      case "Đã hủy": {
+      case "Đã huỷ": {
         return "bg-rose-300";
       }
+      default:
+        return "bg-sky-200";
     }
   };
 
-  useEffect(() => {
+  const getCart = () => {
     axiosClient.get("/cart?filters=id==" + id).then((res) => {
       setCart(res.responseData.rows[0]);
     });
-  }, []);
+  };
 
   useEffect(() => {
-    if (cart && typeof cart.connects === "object" && formatted === false) {
-      const a = cart.connects;
-      setCart({
-        ...cart,
-        connects: [{ ...a }],
-      });
-      setFormatted(true);
-    }
-  }, [cart, formatted]);
+    getCart();
+    axiosClient
+      .get("/status")
+      .then((res) => setStatusList(res.responseData.rows));
+  }, []);
 
-  const getDate = (cart) => {
-    console.log(Date(Date.now), Date(cart.createdAt));
-    const compareTwoDate = formatDistance(
-      parseISO(cart.createdAt),
-      Date.now(),
-      {
-        locale: vi, // Fall back to English locale if Vietnamese is unavailable
-        addSuffix: true,
+  const handleDeleteCart = () => {
+    axiosClient.delete(`/cart?filters=id==${id}`).then((res) => {
+      if (res.status === "success") {
+        toast.success("Xóa đơn hàng thành công!");
+      } else {
+        toast.error("Xóa đơn hàng không thành công!");
+        navigate("/admin/cart/cart-management");
       }
-    );
-
-    return compareTwoDate;
+    });
   };
+
+  const handleUpdateStatus = (status) => {
+    const statusId = statusList.find((s) => s.name == status).id;
+    axiosClient
+      .put(`/cart/` + id, {
+        statusId: statusId,
+      })
+      .then((res) => {
+        if (res.status === "success") {
+          toast.success("Chuyển đổi trạng thái đơn hàng thành công!");
+          getCart();
+          navigate("/admin/cart/cart-management");
+        } else {
+          toast.error("Chuyển đổi trạng thái đơn hàng không thành công!");
+        }
+      });
+  };
+
+  console.log(cart);
 
   return (
     <div className="page-body">
@@ -86,6 +98,49 @@ const CartDetail = () => {
           <h1 className="text-[28px] text-blue-950 font-semibold">
             Chi tiết đơn hàng
           </h1>
+          <div className="flex justify-content-between">
+            <div className="">
+              <div>
+                Trạng thái:{" "}
+                <span className={`${getBackground(cart)} px-3 rounded`}>
+                  {cart?.status?.name}
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-content-end space-x-1">
+              <p className="mr-2">Đánh dấu: </p>
+              {cart?.status?.name !== "Đã liên hệ" && (
+                <button
+                  className="rounded bg-amber-200 px-3 border-1 border-black"
+                  onClick={() => handleUpdateStatus("Đã liên hệ")}
+                >
+                  Đã liên hệ
+                </button>
+              )}
+              {cart?.status?.name !== "Đã thanh toán" && (
+                <button
+                  className="rounded bg-emerald-200 px-3 border-1 border-black"
+                  onClick={() => handleUpdateStatus("Đã thanh toán")}
+                >
+                  Đã thanh toán
+                </button>
+              )}
+              {cart?.status?.name !== "Đã huỷ" && (
+                <button
+                  className="rounded bg-rose-300 px-3 border-1 border-black"
+                  onClick={() => handleUpdateStatus("Đã huỷ")}
+                >
+                  Đã huỷ
+                </button>
+              )}
+              <button
+                className="rounded bg-rose-300 px-3 border-1 border-black"
+                onClick={handleDeleteCart}
+              >
+                Xóa đơn hàng
+              </button>
+            </div>
+          </div>
         </div>
         <div>
           <Table>

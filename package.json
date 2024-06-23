@@ -56,7 +56,8 @@
   "scripts": {
     "gen-api": "rm -rf src/api && openapi-generator-cli generate -i ./swagger.json -g javascript -o src/api",
     "start": "set PORT=3001 && vite start",
-    "build": "vite build"
+    "build": "vite build",
+    "dev": "vite"
   },
   "eslintConfig": {
     "extends": [

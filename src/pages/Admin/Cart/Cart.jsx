@@ -11,14 +11,14 @@ import Table from "../../../components/Table/Table";
 import "../ProductManagement/ProductManagement.scss";
 
 import { vi } from "date-fns/locale";
-import { formatDistance, parseISO } from "date-fns";
+import { format, formatDistance, parseISO } from "date-fns";
 import axiosClient from "../../../api/axiosClient";
 const Cart = () => {
   const [carts, setCarts] = useState([]);
   const navigate = useNavigate();
   const getBackground = (cart) => {
     switch (cart.status.name) {
-      case "Đang chờ": {
+      case "Mới": {
         return "bg-sky-200";
       }
       case "Đã liên hệ": {
@@ -27,9 +27,11 @@ const Cart = () => {
       case "Đã thanh toán": {
         return "bg-emerald-200";
       }
-      case "Đã hủy": {
+      case "Đã huỷ": {
         return "bg-rose-300";
       }
+      default:
+        return "bg-sky-200";
     }
   };
 
@@ -40,7 +42,7 @@ const Cart = () => {
   }, []);
 
   const getDate = (cart) => {
-    console.log(Date(Date.now), Date(cart.createdAt));
+    console.log(Date(Date.now), new Date(cart.createdAt));
     const compareTwoDate = formatDistance(
       parseISO(cart.createdAt),
       Date.now(),
@@ -51,13 +53,6 @@ const Cart = () => {
     );
 
     return compareTwoDate;
-  };
-
-  const handleDelete = (id) => {
-    console.log(id);
-    axiosClient
-      .delete("/cart?filters=id==" + id)
-      .then((res) => console.log(res));
   };
 
   return (
@@ -109,7 +104,10 @@ const Cart = () => {
                         </td>
                         <td>{item.name}</td>
                         <td>{item.phone}</td>
-                        <td>{date}</td>
+                        <td>
+                          {format(new Date(item.createdAt), "dd/MM/yyyy")} (
+                          {date})
+                        </td>
                         <td>
                           <span className={`${bg + " px-2 py-0.5 rounded"} `}>
                             {item.status.name}
